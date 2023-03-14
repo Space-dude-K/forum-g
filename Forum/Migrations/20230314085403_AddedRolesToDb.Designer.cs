@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum.Migrations
 {
     [DbContext(typeof(ForumContext))]
-    partial class ForumContextModelSnapshot : ModelSnapshot
+    [Migration("20230314085403_AddedRolesToDb")]
+    partial class AddedRolesToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,13 +158,11 @@ namespace Forum.Migrations
 
                     b.Property<string>("ForumSubTitle")
                         .HasMaxLength(256)
-                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ForumTitle")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ForumUserId")
@@ -178,26 +179,6 @@ namespace Forum.Migrations
                     b.HasIndex("ForumUserId");
 
                     b.ToTable("ForumBase", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = "14.03.2023",
-                            ForumCategoryId = 1,
-                            ForumSubTitle = "Test forum subtitle 1",
-                            ForumTitle = "Test forum title 1",
-                            ForumUserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = "14.03.2023",
-                            ForumCategoryId = 2,
-                            ForumSubTitle = "Test forum subtitle 2",
-                            ForumTitle = "Test forum title 2",
-                            ForumUserId = 2
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.ForumCategory", b =>
@@ -216,7 +197,6 @@ namespace Forum.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UpdatedAt")
@@ -228,22 +208,6 @@ namespace Forum.Migrations
                     b.HasIndex("ForumUserId");
 
                     b.ToTable("ForumCategory", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = "14.03.2023",
-                            ForumUserId = 1,
-                            Name = "Test subtopic 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = "14.03.2023",
-                            ForumUserId = 2,
-                            Name = "Test subtopic 2"
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.ForumPost", b =>
@@ -265,7 +229,6 @@ namespace Forum.Migrations
 
                     b.Property<string>("PostName")
                         .HasMaxLength(256)
-                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UpdatedAt")
@@ -279,24 +242,6 @@ namespace Forum.Migrations
                     b.HasIndex("ForumUserId");
 
                     b.ToTable("ForumPost", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = "14.03.2023",
-                            ForumTopicId = 1,
-                            ForumUserId = 1,
-                            PostName = "Post name 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = "14.03.2023",
-                            ForumTopicId = 2,
-                            ForumUserId = 2,
-                            PostName = "Post name 2"
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.ForumTopic", b =>
@@ -318,7 +263,6 @@ namespace Forum.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TopicViewCounter")
@@ -335,26 +279,6 @@ namespace Forum.Migrations
                     b.HasIndex("ForumUserId");
 
                     b.ToTable("ForumTopic", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = "14.03.2023",
-                            ForumBaseId = 1,
-                            ForumUserId = 1,
-                            Name = "Test forum topic 1",
-                            TopicViewCounter = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = "14.03.2023",
-                            ForumBaseId = 2,
-                            ForumUserId = 2,
-                            Name = "Test forum topic 2",
-                            TopicViewCounter = 0
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.ForumUser", b =>
@@ -366,6 +290,9 @@ namespace Forum.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Karma")
@@ -401,6 +328,7 @@ namespace Forum.Migrations
                         {
                             Id = 1,
                             CreatedAt = "14.03.2023",
+                            Email = "test1@mail.ru",
                             Karma = 0,
                             Lastname = "Сергеевич",
                             Name = "Константин",
@@ -410,6 +338,7 @@ namespace Forum.Migrations
                         {
                             Id = 2,
                             CreatedAt = "14.03.2023",
+                            Email = "test2@mail.ru",
                             Karma = 0,
                             Lastname = "Григорьевич",
                             Name = "Александр",
@@ -446,13 +375,13 @@ namespace Forum.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "21f1e89a-ffcc-4dd4-8bad-2665ec44a687",
+                            Id = "bf71b575-9905-49ec-95da-dac8c6849058",
                             Name = "USER",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "5bd65d66-9a98-49b0-9de7-28ee8a9e5d18",
+                            Id = "5594b5fc-f1e8-41ff-a187-99476e51e6f2",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

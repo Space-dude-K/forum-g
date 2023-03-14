@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum.Migrations
 {
     [DbContext(typeof(ForumContext))]
-    partial class ForumContextModelSnapshot : ModelSnapshot
+    [Migration("20230314093600_ForumTopicUnicodeSupport_ForumTopicDataSeed")]
+    partial class ForumTopicUnicodeSupport_ForumTopicDataSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,7 +268,6 @@ namespace Forum.Migrations
 
                     b.Property<string>("PostName")
                         .HasMaxLength(256)
-                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UpdatedAt")
@@ -279,24 +281,6 @@ namespace Forum.Migrations
                     b.HasIndex("ForumUserId");
 
                     b.ToTable("ForumPost", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = "14.03.2023",
-                            ForumTopicId = 1,
-                            ForumUserId = 1,
-                            PostName = "Post name 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = "14.03.2023",
-                            ForumTopicId = 2,
-                            ForumUserId = 2,
-                            PostName = "Post name 2"
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.ForumTopic", b =>
@@ -446,13 +430,13 @@ namespace Forum.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "21f1e89a-ffcc-4dd4-8bad-2665ec44a687",
+                            Id = "ccec49bb-4b3e-4fe0-bd45-77193f2593e4",
                             Name = "USER",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "5bd65d66-9a98-49b0-9de7-28ee8a9e5d18",
+                            Id = "d4d78dda-78ad-4b71-ba48-44cc5d356c0c",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

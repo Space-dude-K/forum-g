@@ -17,23 +17,22 @@ namespace Entities.Configuration
                 .IsRequired(true);
             builder
                 .Property(p => p.Name)
-                .HasColumnType("TEXT")
+                .HasColumnType("NVARCHAR")
                 .HasMaxLength(256)
-                .IsRequired(false);
+                .IsRequired(false)
+                .IsUnicode(true);
             builder
                 .Property(p => p.Surname)
-                .HasColumnType("TEXT")
+                .HasColumnType("NVARCHAR")
                 .HasMaxLength(256)
-                .IsRequired(false);
+                .IsRequired(false)
+                .IsUnicode(true);
             builder
                 .Property(p => p.Lastname)
-                .HasColumnType("TEXT")
+                .HasColumnType("NVARCHAR")
                 .HasMaxLength(256)
-                .IsRequired(false);
-            builder
-                .Property(p => p.Email)
-                .HasColumnType("TEXT")
-                .IsRequired(false);
+                .IsRequired(false)
+                .IsUnicode(true);
             builder
                 .Property(p => p.Karma)
                 .HasColumnType("INTEGER")
@@ -46,18 +45,31 @@ namespace Entities.Configuration
             builder
                 .Property(p => p.UpdatedAt)
                 .HasColumnType("TEXT")
-            .IsRequired(false);
+                .IsRequired(false);
 
             builder
                 .HasKey(p => p.Id)
                 .HasName("PK_ForumUser");
-            builder
-                .HasOne(e => e.ApplicationUser)
-                .WithOne(p => p.ForumUser)
-                .HasForeignKey<ForumUser>(e => e.ApplicationUserId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_ForumUser_AspNetUser_UserId")
-                .OnDelete(DeleteBehavior.Restrict);
+
+            // Data seed
+            builder.HasData(
+                new ForumUser()
+                {
+                    Id = 1,
+                    Name = "Константин",
+                    Surname = "Феофанов",
+                    Lastname = "Сергеевич",
+                    CreatedAt = DateTime.Now.ToShortDateString()
+                },
+                new ForumUser()
+                {
+                    Id = 2,
+                    Name = "Александр",
+                    Surname = "Петров",
+                    Lastname = "Григорьевич",
+                    CreatedAt = DateTime.Now.ToShortDateString()
+                }
+            );
         }
     }
 }

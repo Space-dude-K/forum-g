@@ -1,6 +1,8 @@
 ﻿using Contracts;
 using Entities;
+using Entities.Models;
 using LoggerService;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.Extensions
@@ -31,6 +33,22 @@ namespace Forum.Extensions
             opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"),
             b => b.MigrationsAssembly("Forum")
             ));
+        }
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            var builder = services.AddIdentityCore<ApplicationUser>(o =>
+            {
+                o.Password.RequireDigit = true;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 10;
+                o.User.RequireUniqueEmail = true;
+            });
+
+            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
+            builder.AddEntityFrameworkStores<ForumContext>()
+            .AddDefaultTokenProviders();
         }
     }
 }

@@ -8,9 +8,9 @@ namespace Entities.Configuration
     {
         public void Configure(EntityTypeBuilder<ForumCategory> builder)
         {
+            #region DbStructure
             builder
                 .ToTable("ForumCategory");
-
             builder
                 .Property(p => p.Id)
                 .HasColumnType("INTEGER")
@@ -19,7 +19,8 @@ namespace Entities.Configuration
                 .Property(p => p.Name)
                 .HasColumnType("TEXT")
                 .HasMaxLength(256)
-                .IsRequired(false);
+                .IsRequired(false)
+                .IsUnicode(true);
             builder
                 .Property(p => p.CreatedAt)
                 .HasColumnType("TEXT")
@@ -31,7 +32,7 @@ namespace Entities.Configuration
             builder
                 .Property(p => p.ForumUserId)
                 .HasColumnType("INTEGER")
-            .IsRequired(true);
+                .IsRequired(true);
 
             builder
                 .Ignore(c => c.TotalPosts);
@@ -50,6 +51,26 @@ namespace Entities.Configuration
                 .WithMany()
                 .HasConstraintName("FK_ForumCategory_ForumUser_Id")
                 .OnDelete(DeleteBehavior.Restrict);
+            #endregion
+
+            #region DbDataSeed
+            builder.HasData(
+                new ForumCategory()
+                {
+                    Id = 1,
+                    Name = "Test subtopic 1",
+                    CreatedAt = DateTime.Now.ToShortDateString(),
+                    ForumUserId = 1
+                },
+                new ForumCategory()
+                {
+                    Id = 2,
+                    Name = "Test subtopic 2",
+                    CreatedAt = DateTime.Now.ToShortDateString(),
+                    ForumUserId = 2
+                }
+            );
+            #endregion
         }
     }
 }

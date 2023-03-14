@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum.Migrations
 {
     [DbContext(typeof(ForumContext))]
-    partial class ForumContextModelSnapshot : ModelSnapshot
+    [Migration("20230314093215_ForumBaseUnicodeSupport_ForumBaseDataSeed")]
+    partial class ForumBaseUnicodeSupport_ForumBaseDataSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,7 +268,6 @@ namespace Forum.Migrations
 
                     b.Property<string>("PostName")
                         .HasMaxLength(256)
-                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UpdatedAt")
@@ -279,24 +281,6 @@ namespace Forum.Migrations
                     b.HasIndex("ForumUserId");
 
                     b.ToTable("ForumPost", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = "14.03.2023",
-                            ForumTopicId = 1,
-                            ForumUserId = 1,
-                            PostName = "Post name 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = "14.03.2023",
-                            ForumTopicId = 2,
-                            ForumUserId = 2,
-                            PostName = "Post name 2"
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.ForumTopic", b =>
@@ -318,7 +302,6 @@ namespace Forum.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TopicViewCounter")
@@ -335,26 +318,6 @@ namespace Forum.Migrations
                     b.HasIndex("ForumUserId");
 
                     b.ToTable("ForumTopic", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = "14.03.2023",
-                            ForumBaseId = 1,
-                            ForumUserId = 1,
-                            Name = "Test forum topic 1",
-                            TopicViewCounter = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = "14.03.2023",
-                            ForumBaseId = 2,
-                            ForumUserId = 2,
-                            Name = "Test forum topic 2",
-                            TopicViewCounter = 0
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.ForumUser", b =>
@@ -446,13 +409,13 @@ namespace Forum.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "21f1e89a-ffcc-4dd4-8bad-2665ec44a687",
+                            Id = "667d023b-3bc1-451b-8f91-e1ae0e6e062f",
                             Name = "USER",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "5bd65d66-9a98-49b0-9de7-28ee8a9e5d18",
+                            Id = "b4165309-0db7-48eb-92e2-370f7cdc275b",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
