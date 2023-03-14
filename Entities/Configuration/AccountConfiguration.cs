@@ -18,13 +18,6 @@ namespace Entities.Configuration
                 .Property(p => p.AccountTypeId)
                 .HasColumnType("INTEGER")
                 .IsRequired(true);
-            builder.Property(p => p.Login)
-                .HasColumnType("TEXT")
-                .IsRequired(false);
-            builder
-                .Property(p => p.Password)
-                .HasColumnType("TEXT")
-                .IsRequired(false);
             builder
                 .Property(p => p.Ip)
                 .HasColumnType("TEXT")

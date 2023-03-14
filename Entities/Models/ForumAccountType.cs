@@ -11,7 +11,6 @@ namespace Entities.Models
         public int Id { get; set; }
         public string TypeName { get; set; }
         
-
         public virtual ForumAccount ForumAccount { get; set; }
     }
 }
