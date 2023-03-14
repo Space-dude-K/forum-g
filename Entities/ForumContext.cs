@@ -1,5 +1,7 @@
 ﻿using Entities.Configuration;
+using Entities.Configuration.Forum;
 using Entities.Models;
+using Entities.Models.Forum;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,7 +9,7 @@ namespace Entities
 {
     public class ForumContext : IdentityDbContext<ApplicationUser>
     {
-        public ForumContext(DbContextOptions options) : base(options)
+        public ForumContext(DbContextOptions<ForumContext> options) : base(options)
         {
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

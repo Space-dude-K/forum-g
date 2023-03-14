@@ -33,6 +33,10 @@ namespace Forum.Extensions
             opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"),
             b => b.MigrationsAssembly("Forum")
             ));
+            services.AddDbContext<PrinterContext>(opts =>
+            opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"),
+            b => b.MigrationsAssembly("Forum")
+            ));
         }
         public static void ConfigureIdentity(this IServiceCollection services)
         {
