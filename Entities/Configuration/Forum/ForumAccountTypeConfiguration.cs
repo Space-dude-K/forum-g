@@ -1,8 +1,8 @@
-﻿using Entities.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Entities.Models.Forum;
 
-namespace Entities.Configuration
+namespace Entities.Configuration.Forum
 {
     public class ForumAccountTypeConfiguration : IEntityTypeConfiguration<ForumAccountType>
     {

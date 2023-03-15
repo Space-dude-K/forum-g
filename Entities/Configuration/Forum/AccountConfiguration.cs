@@ -1,8 +1,8 @@
-﻿using Entities.Models;
+﻿using Entities.Models.Forum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Configuration
+namespace Entities.Configuration.Forum
 {
     public class AccountConfiguration : IEntityTypeConfiguration<ForumAccount>
     {
@@ -18,13 +18,6 @@ namespace Entities.Configuration
                 .Property(p => p.AccountTypeId)
                 .HasColumnType("INTEGER")
                 .IsRequired(true);
-            builder.Property(p => p.Login)
-                .HasColumnType("TEXT")
-                .IsRequired(false);
-            builder
-                .Property(p => p.Password)
-                .HasColumnType("TEXT")
-                .IsRequired(false);
             builder
                 .Property(p => p.Ip)
                 .HasColumnType("TEXT")
@@ -33,12 +26,12 @@ namespace Entities.Configuration
                 .HasKey(p => p.Id)
                 .HasName("PK_ForumAccount");
             builder
-                .HasOne<ForumUser>(p => p.ForumUser)
+                .HasOne(p => p.ForumUser)
                 .WithOne(p => p.ForumAccount)
                 .HasForeignKey<ForumAccount>(p => p.Id)
                 .HasConstraintName("FK_ForumAccount_ForumUser_Id");
             builder
-                .HasOne<ForumAccountType>(p => p.ForumAccountType)
+                .HasOne(p => p.ForumAccountType)
                 .WithOne(p => p.ForumAccount)
                 .HasForeignKey<ForumAccount>(p => p.AccountTypeId)
                 .HasConstraintName("FK_ForumAccount_ForumAccountType_Id")

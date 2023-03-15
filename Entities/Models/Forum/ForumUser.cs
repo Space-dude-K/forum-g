@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Models
+namespace Entities.Models.Forum
 {
     public class ForumUser
     {
@@ -15,12 +15,9 @@ namespace Entities.Models
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Lastname { get; set; }
-        public string Email { get; set; }
         public int Karma { get; set; }
         public string CreatedAt { get; set; }
         public string UpdatedAt { get; set; }
         public virtual ForumAccount ForumAccount { get; set; }
-        public virtual ApplicationUser ApplicationUser { get; set; }
-        public string ApplicationUserId { get; set; }
     }
 }

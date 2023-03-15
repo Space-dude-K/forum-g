@@ -24,6 +24,8 @@ namespace Forum
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(Configuration);
 
+            services.AddAuthentication();
+            services.ConfigureIdentity();
 
             services.AddControllers();
         }
@@ -45,13 +47,18 @@ namespace Forum
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");
 
+            
+
             // will forward proxy headers to the current request. This will help us during application deployment
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.All
             });
             app.UseRouting();
-            // app.UseAuthorization();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

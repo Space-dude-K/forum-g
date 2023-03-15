@@ -4,23 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Models
+namespace Entities.Models.Forum
 {
-    public class ForumCategory
+    public class ForumTopic
     {
-        private int totalPost;
-
         public int Id { get; set; }
         public string Name { get; set; }
         public string CreatedAt { get; set; }
         public string UpdatedAt { get; set; }
-        public int TotalPosts
-        {
-            get
-            {
-                return ForumBases.Sum(f => f.ForumTopics.Sum(t => t.ForumPosts.Count));
-            }
-        }
+        public int TotalPosts { get; set; }
+        public int TopicViewCounter { get; set; }
         /// <summary>
         /// Navigation property.
         /// </summary>
@@ -29,6 +22,11 @@ namespace Entities.Models
         /// <summary>
         /// Navigation property.
         /// </summary>
-        public virtual ICollection<ForumBase> ForumBases { get; set; }
+        public virtual ForumBase ForumBase { get; set; }
+        public int ForumBaseId { get; set; }
+        /// <summary>
+        /// Navigation property.
+        /// </summary>
+        public virtual ICollection<ForumPost> ForumPosts { get; set; }
     }
 }

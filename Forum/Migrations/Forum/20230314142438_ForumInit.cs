@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Forum.Migrations
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace Forum.Migrations.Forum
 {
     /// <inheritdoc />
-    public partial class DatabaseCreation : Migration
+    public partial class ForumInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +32,8 @@ namespace Forum.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -61,6 +65,24 @@ namespace Forum.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ForumAccountType", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ForumUser",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: true),
+                    Surname = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: true),
+                    Lastname = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: true),
+                    Karma = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
+                    CreatedAt = table.Column<string>(type: "TEXT", nullable: true),
+                    UpdatedAt = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ForumUser", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,39 +192,11 @@ namespace Forum.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ForumUser",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    Surname = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    Lastname = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    Karma = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
-                    CreatedAt = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<string>(type: "TEXT", nullable: true),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ForumUser", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ForumUser_AspNetUser_UserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ForumAccount",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false),
                     AccountTypeId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Login = table.Column<string>(type: "TEXT", nullable: true),
-                    Password = table.Column<string>(type: "TEXT", nullable: true),
                     Ip = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -333,6 +327,60 @@ namespace Forum.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "133a70b4-92b2-4672-a7ca-4b1219fbc35e", null, "Administrator", "ADMINISTRATOR" },
+                    { "df12f069-6683-4737-8f8c-da44ad12398f", null, "USER", "USER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ForumUser",
+                columns: new[] { "Id", "CreatedAt", "Lastname", "Name", "Surname", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, "14.03.2023", "Сергеевич", "Константин", "Феофанов", null },
+                    { 2, "14.03.2023", "Григорьевич", "Александр", "Петров", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ForumCategory",
+                columns: new[] { "Id", "CreatedAt", "ForumUserId", "Name", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, "14.03.2023", 1, "Test subtopic 1", null },
+                    { 2, "14.03.2023", 2, "Test subtopic 2", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ForumBase",
+                columns: new[] { "Id", "CreatedAt", "ForumCategoryId", "ForumSubTitle", "ForumTitle", "ForumUserId", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, "14.03.2023", 1, "Test forum subtitle 1", "Test forum title 1", 1, null },
+                    { 2, "14.03.2023", 2, "Test forum subtitle 2", "Test forum title 2", 2, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ForumTopic",
+                columns: new[] { "Id", "CreatedAt", "ForumBaseId", "ForumUserId", "Name", "TopicViewCounter", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, "14.03.2023", 1, 1, "Test forum topic 1", 0, null },
+                    { 2, "14.03.2023", 2, 2, "Test forum topic 2", 0, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ForumPost",
+                columns: new[] { "Id", "CreatedAt", "ForumTopicId", "ForumUserId", "PostName", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, "14.03.2023", 1, 1, "Post name 1", null },
+                    { 2, "14.03.2023", 2, 2, "Post name 2", null }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -412,12 +460,6 @@ namespace Forum.Migrations
                 name: "IX_ForumTopic_ForumUserId",
                 table: "ForumTopic",
                 column: "ForumUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ForumUser_ApplicationUserId",
-                table: "ForumUser",
-                column: "ApplicationUserId",
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -448,6 +490,9 @@ namespace Forum.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
                 name: "ForumAccountType");
 
             migrationBuilder.DropTable(
@@ -461,9 +506,6 @@ namespace Forum.Migrations
 
             migrationBuilder.DropTable(
                 name: "ForumUser");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
         }
     }
 }

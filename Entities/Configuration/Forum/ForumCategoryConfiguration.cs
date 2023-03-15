@@ -1,16 +1,16 @@
-﻿using Entities.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Entities.Models.Forum;
 
-namespace Entities.Configuration
+namespace Entities.Configuration.Forum
 {
     public class ForumCategoryConfiguration : IEntityTypeConfiguration<ForumCategory>
     {
         public void Configure(EntityTypeBuilder<ForumCategory> builder)
         {
+            #region DbStructure
             builder
                 .ToTable("ForumCategory");
-
             builder
                 .Property(p => p.Id)
                 .HasColumnType("INTEGER")
@@ -19,7 +19,8 @@ namespace Entities.Configuration
                 .Property(p => p.Name)
                 .HasColumnType("TEXT")
                 .HasMaxLength(256)
-                .IsRequired(false);
+                .IsRequired(false)
+                .IsUnicode(true);
             builder
                 .Property(p => p.CreatedAt)
                 .HasColumnType("TEXT")
@@ -31,7 +32,7 @@ namespace Entities.Configuration
             builder
                 .Property(p => p.ForumUserId)
                 .HasColumnType("INTEGER")
-            .IsRequired(true);
+                .IsRequired(true);
 
             builder
                 .Ignore(c => c.TotalPosts);
@@ -40,16 +41,36 @@ namespace Entities.Configuration
                 .HasKey(p => p.Id)
                 .HasName("PK_ForumCategory");
             builder
-                .HasMany<ForumBase>(p => p.ForumBases)
+                .HasMany(p => p.ForumBases)
                 .WithOne(p => p.ForumCategory)
                 .HasForeignKey(p => p.ForumCategoryId)
                 .HasConstraintName("FK_ForumCategory_ForumBase_Id")
                 .OnDelete(DeleteBehavior.Restrict);
             builder
-                .HasOne<ForumUser>(p => p.ForumUser)
+                .HasOne(p => p.ForumUser)
                 .WithMany()
                 .HasConstraintName("FK_ForumCategory_ForumUser_Id")
                 .OnDelete(DeleteBehavior.Restrict);
+            #endregion
+
+            #region DbDataSeed
+            builder.HasData(
+                new ForumCategory()
+                {
+                    Id = 1,
+                    Name = "Test subtopic 1",
+                    CreatedAt = DateTime.Now.ToShortDateString(),
+                    ForumUserId = 1
+                },
+                new ForumCategory()
+                {
+                    Id = 2,
+                    Name = "Test subtopic 2",
+                    CreatedAt = DateTime.Now.ToShortDateString(),
+                    ForumUserId = 2
+                }
+            );
+            #endregion
         }
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Forum.Migrations
+namespace Forum.Migrations.Forum
 {
     [DbContext(typeof(ForumContext))]
     partial class ForumContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace Forum.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -40,6 +40,14 @@ namespace Forum.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -87,7 +95,7 @@ namespace Forum.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumAccount", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumAccount", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("INTEGER");
@@ -96,12 +104,6 @@ namespace Forum.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Ip")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Login")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Password")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id")
@@ -113,7 +115,7 @@ namespace Forum.Migrations
                     b.ToTable("ForumAccount", (string)null);
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumAccountType", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumAccountType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -131,7 +133,7 @@ namespace Forum.Migrations
                     b.ToTable("ForumAccountType", (string)null);
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumBase", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumBase", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -147,11 +149,13 @@ namespace Forum.Migrations
 
                     b.Property<string>("ForumSubTitle")
                         .HasMaxLength(256)
+                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ForumTitle")
                         .IsRequired()
                         .HasMaxLength(256)
+                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ForumUserId")
@@ -168,9 +172,29 @@ namespace Forum.Migrations
                     b.HasIndex("ForumUserId");
 
                     b.ToTable("ForumBase", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = "14.03.2023",
+                            ForumCategoryId = 1,
+                            ForumSubTitle = "Test forum subtitle 1",
+                            ForumTitle = "Test forum title 1",
+                            ForumUserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = "14.03.2023",
+                            ForumCategoryId = 2,
+                            ForumSubTitle = "Test forum subtitle 2",
+                            ForumTitle = "Test forum title 2",
+                            ForumUserId = 2
+                        });
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumCategory", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -186,6 +210,7 @@ namespace Forum.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
+                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UpdatedAt")
@@ -197,9 +222,25 @@ namespace Forum.Migrations
                     b.HasIndex("ForumUserId");
 
                     b.ToTable("ForumCategory", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = "14.03.2023",
+                            ForumUserId = 1,
+                            Name = "Test subtopic 1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = "14.03.2023",
+                            ForumUserId = 2,
+                            Name = "Test subtopic 2"
+                        });
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumPost", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumPost", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -218,6 +259,7 @@ namespace Forum.Migrations
 
                     b.Property<string>("PostName")
                         .HasMaxLength(256)
+                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UpdatedAt")
@@ -231,9 +273,27 @@ namespace Forum.Migrations
                     b.HasIndex("ForumUserId");
 
                     b.ToTable("ForumPost", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = "14.03.2023",
+                            ForumTopicId = 1,
+                            ForumUserId = 1,
+                            PostName = "Post name 1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = "14.03.2023",
+                            ForumTopicId = 2,
+                            ForumUserId = 2,
+                            PostName = "Post name 2"
+                        });
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumTopic", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumTopic", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -252,6 +312,7 @@ namespace Forum.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
+                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TopicViewCounter")
@@ -268,9 +329,29 @@ namespace Forum.Migrations
                     b.HasIndex("ForumUserId");
 
                     b.ToTable("ForumTopic", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = "14.03.2023",
+                            ForumBaseId = 1,
+                            ForumUserId = 1,
+                            Name = "Test forum topic 1",
+                            TopicViewCounter = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = "14.03.2023",
+                            ForumBaseId = 2,
+                            ForumUserId = 2,
+                            Name = "Test forum topic 2",
+                            TopicViewCounter = 0
+                        });
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumUser", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -278,14 +359,7 @@ namespace Forum.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Karma")
@@ -295,15 +369,18 @@ namespace Forum.Migrations
 
                     b.Property<string>("Lastname")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .IsUnicode(true)
+                        .HasColumnType("NVARCHAR");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .IsUnicode(true)
+                        .HasColumnType("NVARCHAR");
 
                     b.Property<string>("Surname")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .IsUnicode(true)
+                        .HasColumnType("NVARCHAR");
 
                     b.Property<string>("UpdatedAt")
                         .HasColumnType("TEXT");
@@ -311,10 +388,27 @@ namespace Forum.Migrations
                     b.HasKey("Id")
                         .HasName("PK_ForumUser");
 
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique();
-
                     b.ToTable("ForumUser", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = "14.03.2023",
+                            Karma = 0,
+                            Lastname = "Сергеевич",
+                            Name = "Константин",
+                            Surname = "Феофанов"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = "14.03.2023",
+                            Karma = 0,
+                            Lastname = "Григорьевич",
+                            Name = "Александр",
+                            Surname = "Петров"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -342,6 +436,20 @@ namespace Forum.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "df12f069-6683-4737-8f8c-da44ad12398f",
+                            Name = "USER",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "133a70b4-92b2-4672-a7ca-4b1219fbc35e",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -450,18 +558,18 @@ namespace Forum.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumAccount", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumAccount", b =>
                 {
-                    b.HasOne("Entities.Models.ForumAccountType", "ForumAccountType")
+                    b.HasOne("Entities.Models.Forum.ForumAccountType", "ForumAccountType")
                         .WithOne("ForumAccount")
-                        .HasForeignKey("Entities.Models.ForumAccount", "AccountTypeId")
+                        .HasForeignKey("Entities.Models.Forum.ForumAccount", "AccountTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_ForumAccount_ForumAccountType_Id");
 
-                    b.HasOne("Entities.Models.ForumUser", "ForumUser")
+                    b.HasOne("Entities.Models.Forum.ForumUser", "ForumUser")
                         .WithOne("ForumAccount")
-                        .HasForeignKey("Entities.Models.ForumAccount", "Id")
+                        .HasForeignKey("Entities.Models.Forum.ForumAccount", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_ForumAccount_ForumUser_Id");
@@ -471,16 +579,16 @@ namespace Forum.Migrations
                     b.Navigation("ForumUser");
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumBase", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumBase", b =>
                 {
-                    b.HasOne("Entities.Models.ForumCategory", "ForumCategory")
+                    b.HasOne("Entities.Models.Forum.ForumCategory", "ForumCategory")
                         .WithMany("ForumBases")
                         .HasForeignKey("ForumCategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_ForumCategory_ForumBase_Id");
 
-                    b.HasOne("Entities.Models.ForumUser", "ForumUser")
+                    b.HasOne("Entities.Models.Forum.ForumUser", "ForumUser")
                         .WithMany()
                         .HasForeignKey("ForumUserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -492,9 +600,9 @@ namespace Forum.Migrations
                     b.Navigation("ForumUser");
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumCategory", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumCategory", b =>
                 {
-                    b.HasOne("Entities.Models.ForumUser", "ForumUser")
+                    b.HasOne("Entities.Models.Forum.ForumUser", "ForumUser")
                         .WithMany()
                         .HasForeignKey("ForumUserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -504,16 +612,16 @@ namespace Forum.Migrations
                     b.Navigation("ForumUser");
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumPost", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumPost", b =>
                 {
-                    b.HasOne("Entities.Models.ForumTopic", "ForumTopic")
+                    b.HasOne("Entities.Models.Forum.ForumTopic", "ForumTopic")
                         .WithMany("ForumPosts")
                         .HasForeignKey("ForumTopicId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_ForumTopic_ForumPost_ForumTopicId");
 
-                    b.HasOne("Entities.Models.ForumUser", "ForumUser")
+                    b.HasOne("Entities.Models.Forum.ForumUser", "ForumUser")
                         .WithMany()
                         .HasForeignKey("ForumUserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -525,16 +633,16 @@ namespace Forum.Migrations
                     b.Navigation("ForumUser");
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumTopic", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumTopic", b =>
                 {
-                    b.HasOne("Entities.Models.ForumBase", "ForumBase")
+                    b.HasOne("Entities.Models.Forum.ForumBase", "ForumBase")
                         .WithMany("ForumTopics")
                         .HasForeignKey("ForumBaseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_ForumBase_ForumTopic_ForumBaseId");
 
-                    b.HasOne("Entities.Models.ForumUser", "ForumUser")
+                    b.HasOne("Entities.Models.Forum.ForumUser", "ForumUser")
                         .WithMany()
                         .HasForeignKey("ForumUserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -544,18 +652,6 @@ namespace Forum.Migrations
                     b.Navigation("ForumBase");
 
                     b.Navigation("ForumUser");
-                });
-
-            modelBuilder.Entity("Entities.Models.ForumUser", b =>
-                {
-                    b.HasOne("Entities.Models.ApplicationUser", "ApplicationUser")
-                        .WithOne("ForumUser")
-                        .HasForeignKey("Entities.Models.ForumUser", "ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("FK_ForumUser_AspNetUser_UserId");
-
-                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -609,34 +705,28 @@ namespace Forum.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Entities.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("ForumUser")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Entities.Models.ForumAccountType", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumAccountType", b =>
                 {
                     b.Navigation("ForumAccount")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumBase", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumBase", b =>
                 {
                     b.Navigation("ForumTopics");
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumCategory", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumCategory", b =>
                 {
                     b.Navigation("ForumBases");
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumTopic", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumTopic", b =>
                 {
                     b.Navigation("ForumPosts");
                 });
 
-            modelBuilder.Entity("Entities.Models.ForumUser", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumUser", b =>
                 {
                     b.Navigation("ForumAccount")
                         .IsRequired();
