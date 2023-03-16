@@ -18,10 +18,10 @@ namespace Forum.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            _logger.LogInfo("Here is info message from our values controller.");
+            /*_logger.LogInfo("Here is info message from our values controller.");
             _logger.LogDebug("Here is debug message from our values controller.");
             _logger.LogWarn("Here is warn message from our values controller.");
-            _logger.LogError("Here is an error message from our values controller.");
+            _logger.LogError("Here is an error message from our values controller.");*/
 
            // _repository.ForumUser.
 

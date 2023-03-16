@@ -1,12 +1,7 @@
-﻿using Entities.Models;
-using Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Entities;
 using Contracts.Forum;
 using Entities.Models.Forum;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Repository.Forum
 {
@@ -14,6 +9,23 @@ namespace Repository.Forum
     {
         public ForumCategoryRepository(ForumContext forumContext) : base(forumContext)
         {
+        }
+
+        public void CreateCategory(ForumCategory category)
+        {
+            Create(category);
+        }
+
+        public IEnumerable<ForumCategory> GetAllCategories(bool trackChanges)
+        {
+            return FindAll(trackChanges)
+            .OrderBy(c => c.Name)
+             .ToList();
+        }
+        public ForumCategory GetCategory(int categoryId, bool trackChanges)
+        {
+            return FindByCondition(c => c.Id.Equals(categoryId), trackChanges)
+            .SingleOrDefault();
         }
     }
 }

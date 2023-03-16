@@ -1,10 +1,9 @@
 ﻿using Contracts;
 using Forum.Extensions;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using NLog;
-using NLog.Filters;
-using System.Reflection.PortableExecutable;
-using System.Security.Cryptography.Xml;
 
 namespace Forum
 {
@@ -27,7 +26,20 @@ namespace Forum
             services.AddAuthentication();
             services.ConfigureIdentity();
 
+            services.AddAutoMapper(typeof(Startup));
             services.ConfigureRepositoryManager();
+            services.AddControllers(config =>
+            {
+                config.RespectBrowserAcceptHeader = true;
+                config.ReturnHttpNotAcceptable = true;
+            }).AddXmlDataContractSerializerFormatters();
+
+            // To return 422 instead of 400, the first thing we have to do is to suppress
+            // the BadRequest error when the ModelState is invalid
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
             services.AddControllers();
         }
@@ -43,6 +55,8 @@ namespace Forum
                 // Strict - Transport - Security header
                 app.UseHsts();
             }
+
+            app.ConfigureExceptionHandler(logger);
             app.UseHttpsRedirection();
             // enables using static files for the request. If we don’t set a path to the static files directory, it will use a wwwroot
             // folder in our project by default.

@@ -4,6 +4,7 @@ namespace Contracts.Forum
 {
     public interface IForumBaseRepository
     {
-        IEnumerable<ForumBase> GetAllForums(bool trackChanges);
+        IEnumerable<ForumBase> GetAllForums(int? categoryId, bool trackChanges);
+        void CreateForumForCategory(int categoryId, ForumBase forum);
     }
 }

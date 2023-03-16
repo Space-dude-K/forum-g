@@ -18,16 +18,8 @@ namespace Forum.Controllers
         [HttpGet]
         public IActionResult GetForums()
         {
-            try
-            {
-                var printerDevices = _repository.PrinterDevice.GetAllPrinterDevices(trackChanges: false);
-                return Ok(printerDevices);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong in the {nameof(GetForums)} action {ex}");
-                return StatusCode(500, "Internal server error");
-            }
+            var printerDevices = _repository.PrinterDevice.GetAllPrinterDevices(trackChanges: false);
+            return Ok(printerDevices);
         }
     }
 }

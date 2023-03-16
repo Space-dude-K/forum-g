@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ namespace Entities.Models.Forum
         private int totalPost;
 
         public int Id { get; set; }
+        [Required(ErrorMessage = "Category title is a required field.")]
+        [MaxLength(60, ErrorMessage = "Maximum length for the category title is 60 characters.")]
         public string Name { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

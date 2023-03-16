@@ -13,7 +13,11 @@ namespace Entities.Models.Forum
         [Required(ErrorMessage = "User name is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the Name is 60 characters.")]
         public string Name { get; set; }
+        [Required(ErrorMessage = "User surname is a required field.")]
+        [MaxLength(60, ErrorMessage = "Maximum length for the user surname is 60 characters.")]
         public string Surname { get; set; }
+        [Required(ErrorMessage = "User lastname is a required field.")]
+        [MaxLength(60, ErrorMessage = "Maximum length for the user lastname is 60 characters.")]
         public string Lastname { get; set; }
         public int Karma { get; set; }
         public DateTime? CreatedAt { get; set; }
