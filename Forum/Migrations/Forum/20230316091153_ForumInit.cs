@@ -60,7 +60,7 @@ namespace Forum.Migrations.Forum
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TypeName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true)
+                    TypeName = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,8 +77,8 @@ namespace Forum.Migrations.Forum
                     Surname = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: true),
                     Lastname = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: true),
                     Karma = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
-                    CreatedAt = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<string>(type: "TEXT", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "Date", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "Date", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -197,7 +197,7 @@ namespace Forum.Migrations.Forum
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false),
                     AccountTypeId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Ip = table.Column<string>(type: "TEXT", nullable: true)
+                    Ip = table.Column<string>(type: "NVARCHAR", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -222,9 +222,9 @@ namespace Forum.Migrations.Forum
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    CreatedAt = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<string>(type: "TEXT", nullable: true),
+                    Name = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "Date", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "Date", nullable: true),
                     ForumUserId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -244,10 +244,10 @@ namespace Forum.Migrations.Forum
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ForumTitle = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
-                    ForumSubTitle = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    CreatedAt = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<string>(type: "TEXT", nullable: true),
+                    ForumTitle = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: false),
+                    ForumSubTitle = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "Date", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "Date", nullable: true),
                     ForumCategoryId = table.Column<int>(type: "INTEGER", nullable: false),
                     ForumUserId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -274,9 +274,9 @@ namespace Forum.Migrations.Forum
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    CreatedAt = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<string>(type: "TEXT", nullable: true),
+                    Name = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "Date", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "Date", nullable: true),
                     TopicViewCounter = table.Column<int>(type: "INTEGER", nullable: false),
                     ForumUserId = table.Column<int>(type: "INTEGER", nullable: false),
                     ForumBaseId = table.Column<int>(type: "INTEGER", nullable: false)
@@ -304,9 +304,9 @@ namespace Forum.Migrations.Forum
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PostName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    CreatedAt = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<string>(type: "TEXT", nullable: true),
+                    PostName = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "Date", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "Date", nullable: true),
                     ForumTopicId = table.Column<int>(type: "INTEGER", nullable: false),
                     ForumUserId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -332,8 +332,8 @@ namespace Forum.Migrations.Forum
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "133a70b4-92b2-4672-a7ca-4b1219fbc35e", null, "Administrator", "ADMINISTRATOR" },
-                    { "df12f069-6683-4737-8f8c-da44ad12398f", null, "USER", "USER" }
+                    { "15935560-32c2-4ca7-bbd5-62b4fcb839b8", null, "Administrator", "ADMINISTRATOR" },
+                    { "d14862dd-dd5d-4fca-8b3d-1d87f8006dac", null, "USER", "USER" }
                 });
 
             migrationBuilder.InsertData(
@@ -341,8 +341,8 @@ namespace Forum.Migrations.Forum
                 columns: new[] { "Id", "CreatedAt", "Lastname", "Name", "Surname", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, "14.03.2023", "Сергеевич", "Константин", "Феофанов", null },
-                    { 2, "14.03.2023", "Григорьевич", "Александр", "Петров", null }
+                    { 1, new DateTime(2023, 3, 16, 12, 11, 52, 919, DateTimeKind.Local).AddTicks(5799), "Сергеевич", "Константин", "Феофанов", null },
+                    { 2, new DateTime(2023, 3, 16, 12, 11, 52, 919, DateTimeKind.Local).AddTicks(5810), "Григорьевич", "Александр", "Петров", null }
                 });
 
             migrationBuilder.InsertData(
@@ -350,8 +350,8 @@ namespace Forum.Migrations.Forum
                 columns: new[] { "Id", "CreatedAt", "ForumUserId", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, "14.03.2023", 1, "Test subtopic 1", null },
-                    { 2, "14.03.2023", 2, "Test subtopic 2", null }
+                    { 1, new DateTime(2023, 3, 16, 12, 11, 52, 919, DateTimeKind.Local).AddTicks(9492), 1, "Test subtopic 1", null },
+                    { 2, new DateTime(2023, 3, 16, 12, 11, 52, 919, DateTimeKind.Local).AddTicks(9497), 2, "Test subtopic 2", null }
                 });
 
             migrationBuilder.InsertData(
@@ -359,8 +359,8 @@ namespace Forum.Migrations.Forum
                 columns: new[] { "Id", "CreatedAt", "ForumCategoryId", "ForumSubTitle", "ForumTitle", "ForumUserId", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, "14.03.2023", 1, "Test forum subtitle 1", "Test forum title 1", 1, null },
-                    { 2, "14.03.2023", 2, "Test forum subtitle 2", "Test forum title 2", 2, null }
+                    { 1, new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(2661), 1, "Test forum subtitle 1", "Test forum title 1", 1, null },
+                    { 2, new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(2666), 2, "Test forum subtitle 2", "Test forum title 2", 2, null }
                 });
 
             migrationBuilder.InsertData(
@@ -368,8 +368,8 @@ namespace Forum.Migrations.Forum
                 columns: new[] { "Id", "CreatedAt", "ForumBaseId", "ForumUserId", "Name", "TopicViewCounter", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, "14.03.2023", 1, 1, "Test forum topic 1", 0, null },
-                    { 2, "14.03.2023", 2, 2, "Test forum topic 2", 0, null }
+                    { 1, new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(5884), 1, 1, "Test forum topic 1", 0, null },
+                    { 2, new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(5890), 2, 2, "Test forum topic 2", 0, null }
                 });
 
             migrationBuilder.InsertData(
@@ -377,8 +377,8 @@ namespace Forum.Migrations.Forum
                 columns: new[] { "Id", "CreatedAt", "ForumTopicId", "ForumUserId", "PostName", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, "14.03.2023", 1, 1, "Post name 1", null },
-                    { 2, "14.03.2023", 2, 2, "Post name 2", null }
+                    { 1, new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(7622), 1, 1, "Post name 1", null },
+                    { 2, new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(7627), 2, 2, "Post name 2", null }
                 });
 
             migrationBuilder.CreateIndex(

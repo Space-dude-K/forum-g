@@ -17,9 +17,10 @@ namespace Entities.Configuration.Forum
                 .IsRequired(true);
             builder
                 .Property(p => p.TypeName)
-                .HasColumnType("TEXT")
+                .HasColumnType("NVARCHAR")
                 .HasMaxLength(256)
-            .IsRequired(false);
+                .IsRequired(false)
+                .IsUnicode(true);
 
             builder
                 .HasKey(p => p.Id)

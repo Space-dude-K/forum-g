@@ -40,11 +40,11 @@ namespace Entities.Configuration.Forum
                 .HasDefaultValue(0);
             builder
                 .Property(p => p.CreatedAt)
-                .HasColumnType("TEXT")
-                .IsRequired(false);
+                .HasColumnType("Date")
+                .IsRequired(true);
             builder
                 .Property(p => p.UpdatedAt)
-                .HasColumnType("TEXT")
+                .HasColumnType("Date")
                 .IsRequired(false);
 
             builder
@@ -59,7 +59,7 @@ namespace Entities.Configuration.Forum
                     Name = "Константин",
                     Surname = "Феофанов",
                     Lastname = "Сергеевич",
-                    CreatedAt = DateTime.Now.ToShortDateString()
+                    CreatedAt = DateTime.Now
                 },
                 new ForumUser()
                 {
@@ -67,7 +67,7 @@ namespace Entities.Configuration.Forum
                     Name = "Александр",
                     Surname = "Петров",
                     Lastname = "Григорьевич",
-                    CreatedAt = DateTime.Now.ToShortDateString()
+                    CreatedAt = DateTime.Now
                 }
             );
         }

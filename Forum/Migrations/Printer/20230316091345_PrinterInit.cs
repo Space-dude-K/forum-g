@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -32,8 +33,8 @@ namespace Forum.Migrations.Printer
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Reason = table.Column<string>(type: "NVARCHAR(256)", maxLength: 256, nullable: false),
-                    InstalledAt = table.Column<string>(type: "TEXT", nullable: false),
-                    DeletedAt = table.Column<string>(type: "TEXT", nullable: false),
+                    InstalledAt = table.Column<DateTime>(type: "DATE", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "DATE", nullable: false),
                     PrinterDeviceId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -162,8 +163,8 @@ namespace Forum.Migrations.Printer
                 columns: new[] { "Id", "DeletedAt", "InstalledAt", "PrinterDeviceId", "Reason" },
                 values: new object[,]
                 {
-                    { 1, "14.03.2023", "14.03.2023", 1, "Тех. неисправность" },
-                    { 2, "14.03.2023", "14.03.2023", 2, "Тех. неисправность" }
+                    { 1, new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2064), new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2049), 1, "Тех. неисправность" },
+                    { 2, new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2068), new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2067), 2, "Тех. неисправность" }
                 });
 
             migrationBuilder.InsertData(

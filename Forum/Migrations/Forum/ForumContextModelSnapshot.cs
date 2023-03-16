@@ -104,7 +104,7 @@ namespace Forum.Migrations.Forum
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Ip")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR");
 
                     b.HasKey("Id")
                         .HasName("PK_ForumAccount");
@@ -125,7 +125,8 @@ namespace Forum.Migrations.Forum
 
                     b.Property<string>("TypeName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .IsUnicode(true)
+                        .HasColumnType("NVARCHAR");
 
                     b.HasKey("Id")
                         .HasName("PK_ForumAccountType");
@@ -141,8 +142,8 @@ namespace Forum.Migrations.Forum
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("Date");
 
                     b.Property<int>("ForumCategoryId")
                         .HasColumnType("INTEGER");
@@ -150,19 +151,19 @@ namespace Forum.Migrations.Forum
                     b.Property<string>("ForumSubTitle")
                         .HasMaxLength(256)
                         .IsUnicode(true)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR");
 
                     b.Property<string>("ForumTitle")
                         .IsRequired()
                         .HasMaxLength(256)
                         .IsUnicode(true)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR");
 
                     b.Property<int>("ForumUserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("Date");
 
                     b.HasKey("Id")
                         .HasName("PK_ForumBase");
@@ -177,7 +178,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = "14.03.2023",
+                            CreatedAt = new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(2661),
                             ForumCategoryId = 1,
                             ForumSubTitle = "Test forum subtitle 1",
                             ForumTitle = "Test forum title 1",
@@ -186,7 +187,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = "14.03.2023",
+                            CreatedAt = new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(2666),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 2",
                             ForumTitle = "Test forum title 2",
@@ -202,8 +203,8 @@ namespace Forum.Migrations.Forum
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("Date");
 
                     b.Property<int>("ForumUserId")
                         .HasColumnType("INTEGER");
@@ -211,10 +212,10 @@ namespace Forum.Migrations.Forum
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .IsUnicode(true)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR");
 
-                    b.Property<string>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("Date");
 
                     b.HasKey("Id")
                         .HasName("PK_ForumCategory");
@@ -227,14 +228,14 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = "14.03.2023",
+                            CreatedAt = new DateTime(2023, 3, 16, 12, 11, 52, 919, DateTimeKind.Local).AddTicks(9492),
                             ForumUserId = 1,
                             Name = "Test subtopic 1"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = "14.03.2023",
+                            CreatedAt = new DateTime(2023, 3, 16, 12, 11, 52, 919, DateTimeKind.Local).AddTicks(9497),
                             ForumUserId = 2,
                             Name = "Test subtopic 2"
                         });
@@ -248,8 +249,8 @@ namespace Forum.Migrations.Forum
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("Date");
 
                     b.Property<int>("ForumTopicId")
                         .HasColumnType("INTEGER");
@@ -260,10 +261,10 @@ namespace Forum.Migrations.Forum
                     b.Property<string>("PostName")
                         .HasMaxLength(256)
                         .IsUnicode(true)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR");
 
-                    b.Property<string>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("Date");
 
                     b.HasKey("Id")
                         .HasName("PK_ForumPost");
@@ -278,7 +279,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = "14.03.2023",
+                            CreatedAt = new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(7622),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             PostName = "Post name 1"
@@ -286,7 +287,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = "14.03.2023",
+                            CreatedAt = new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(7627),
                             ForumTopicId = 2,
                             ForumUserId = 2,
                             PostName = "Post name 2"
@@ -301,8 +302,8 @@ namespace Forum.Migrations.Forum
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("Date");
 
                     b.Property<int>("ForumBaseId")
                         .HasColumnType("INTEGER");
@@ -313,13 +314,13 @@ namespace Forum.Migrations.Forum
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .IsUnicode(true)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR");
 
                     b.Property<int>("TopicViewCounter")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("Date");
 
                     b.HasKey("Id")
                         .HasName("PK_ForumTopic");
@@ -334,7 +335,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = "14.03.2023",
+                            CreatedAt = new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(5884),
                             ForumBaseId = 1,
                             ForumUserId = 1,
                             Name = "Test forum topic 1",
@@ -343,7 +344,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = "14.03.2023",
+                            CreatedAt = new DateTime(2023, 3, 16, 12, 11, 52, 920, DateTimeKind.Local).AddTicks(5890),
                             ForumBaseId = 2,
                             ForumUserId = 2,
                             Name = "Test forum topic 2",
@@ -359,8 +360,9 @@ namespace Forum.Migrations.Forum
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("Date");
 
                     b.Property<int>("Karma")
                         .ValueGeneratedOnAdd()
@@ -382,8 +384,8 @@ namespace Forum.Migrations.Forum
                         .IsUnicode(true)
                         .HasColumnType("NVARCHAR");
 
-                    b.Property<string>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("Date");
 
                     b.HasKey("Id")
                         .HasName("PK_ForumUser");
@@ -394,7 +396,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = "14.03.2023",
+                            CreatedAt = new DateTime(2023, 3, 16, 12, 11, 52, 919, DateTimeKind.Local).AddTicks(5799),
                             Karma = 0,
                             Lastname = "Сергеевич",
                             Name = "Константин",
@@ -403,7 +405,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = "14.03.2023",
+                            CreatedAt = new DateTime(2023, 3, 16, 12, 11, 52, 919, DateTimeKind.Local).AddTicks(5810),
                             Karma = 0,
                             Lastname = "Григорьевич",
                             Name = "Александр",
@@ -440,13 +442,13 @@ namespace Forum.Migrations.Forum
                     b.HasData(
                         new
                         {
-                            Id = "df12f069-6683-4737-8f8c-da44ad12398f",
+                            Id = "d14862dd-dd5d-4fca-8b3d-1d87f8006dac",
                             Name = "USER",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "133a70b4-92b2-4672-a7ca-4b1219fbc35e",
+                            Id = "15935560-32c2-4ca7-bbd5-62b4fcb839b8",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

@@ -11,19 +11,19 @@ namespace Entities.Models.Forum
         [Required(ErrorMessage = "Forum subtitle is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the ForumSubTitle is 60 characters.")]
         public string ForumSubTitle { get; set; }
-        public string CreatedAt { get; set; }
-        public string UpdatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public int TotalPosts
         {
             get
             {
-                return ForumTopics.Sum(t => t.ForumPosts.Count);
+                return ForumTopics?.Sum(t => t.ForumPosts.Count) ?? 0;
             }
         }
         public virtual ForumCategory ForumCategory { get; set; }
         public int ForumCategoryId { get; set; }
         public virtual ForumUser ForumUser { get; set; }
         public int ForumUserId { get; set; }
-        public virtual ICollection<ForumTopic> ForumTopics { get; set; }
+        public virtual ICollection<ForumTopic>? ForumTopics { get; set; }
     }
 }

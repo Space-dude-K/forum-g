@@ -22,18 +22,18 @@ namespace Entities.Configuration.Forum
                 .IsRequired(true);
             builder
                 .Property(p => p.PostName)
-                .HasColumnType("TEXT")
+                .HasColumnType("NVARCHAR")
                 .HasMaxLength(256)
                 .IsRequired(false)
                 .IsUnicode(true);
             builder
                 .Property(p => p.CreatedAt)
-                .HasColumnType("TEXT")
+                .HasColumnType("Date")
                 .IsRequired(false);
             builder
                 .Property(p => p.UpdatedAt)
-                .HasColumnType("TEXT")
-            .IsRequired(false);
+                .HasColumnType("Date")
+                .IsRequired(false);
 
             builder
                 .HasKey(p => p.Id)
@@ -50,7 +50,7 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 1,
                     PostName = "Post name 1",
-                    CreatedAt = DateTime.Now.ToShortDateString(),
+                    CreatedAt = DateTime.Now,
                     ForumTopicId = 1,
                     ForumUserId = 1
                 },
@@ -58,7 +58,7 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 2,
                     PostName = "Post name 2",
-                    CreatedAt = DateTime.Now.ToShortDateString(),
+                    CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
                     ForumUserId = 2
                 }

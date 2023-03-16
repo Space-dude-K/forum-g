@@ -16,8 +16,8 @@ namespace Entities.Models.Forum
         public string Surname { get; set; }
         public string Lastname { get; set; }
         public int Karma { get; set; }
-        public string CreatedAt { get; set; }
-        public string UpdatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public virtual ForumAccount ForumAccount { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace Entities.Configuration.Forum
                 .IsRequired(true);
             builder
                 .Property(p => p.Ip)
-                .HasColumnType("TEXT")
+                .HasColumnType("NVARCHAR")
                 .IsRequired(false);
             builder
                 .HasKey(p => p.Id)

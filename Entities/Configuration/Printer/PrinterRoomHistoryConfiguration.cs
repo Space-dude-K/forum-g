@@ -24,11 +24,11 @@ namespace Entities.Configuration.Printer
                 .IsUnicode(true);
             builder
                 .Property(p => p.InstalledAt)
-                .HasColumnType("TEXT")
+                .HasColumnType("DATE")
                 .IsRequired(true);
             builder
                 .Property(p => p.DeletedAt)
-                .HasColumnType("TEXT")
+                .HasColumnType("DATE")
                 .IsRequired(true);
             builder
                 .Property(p => p.PrinterDeviceId)
@@ -45,16 +45,16 @@ namespace Entities.Configuration.Printer
                 {
                     Id = 1,
                     Reason = "Тех. неисправность",
-                    InstalledAt = DateTime.Now.ToShortDateString(),
-                    DeletedAt = DateTime.Now.ToShortDateString(),
+                    InstalledAt = DateTime.Now,
+                    DeletedAt = DateTime.Now,
                     PrinterDeviceId = 1
                 },
                 new PrinterRoomHistory()
                 {
                     Id = 2,
                     Reason = "Тех. неисправность",
-                    InstalledAt = DateTime.Now.ToShortDateString(),
-                    DeletedAt = DateTime.Now.ToShortDateString(),
+                    InstalledAt = DateTime.Now,
+                    DeletedAt = DateTime.Now,
                     PrinterDeviceId = 2
                 }
             );

@@ -22,17 +22,17 @@ namespace Entities.Configuration.Forum
                 .IsRequired(true);
             builder
                 .Property(p => p.Name)
-                .HasColumnType("TEXT")
+                .HasColumnType("NVARCHAR")
                 .HasMaxLength(256)
                 .IsRequired(false)
                 .IsUnicode(true);
             builder
                 .Property(p => p.CreatedAt)
-                .HasColumnType("TEXT")
+                .HasColumnType("Date")
                 .IsRequired(false);
             builder
                 .Property(p => p.UpdatedAt)
-                .HasColumnType("TEXT")
+                .HasColumnType("Date")
                 .IsRequired(false);
             builder
                 .Property(p => p.TopicViewCounter)
@@ -63,7 +63,7 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 1,
                     Name = "Test forum topic 1",
-                    CreatedAt = DateTime.Now.ToShortDateString(),
+                    CreatedAt = DateTime.Now,
                     ForumBaseId = 1,
                     ForumUserId = 1
                 },
@@ -71,7 +71,7 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 2,
                     Name = "Test forum topic 2",
-                    CreatedAt = DateTime.Now.ToShortDateString(),
+                    CreatedAt = DateTime.Now,
                     ForumBaseId = 2,
                     ForumUserId = 2
                 }

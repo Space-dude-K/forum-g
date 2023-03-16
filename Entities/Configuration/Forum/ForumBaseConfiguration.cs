@@ -18,23 +18,23 @@ namespace Entities.Configuration.Forum
                 .IsRequired(true);
             builder
                 .Property(p => p.ForumTitle)
-                .HasColumnType("TEXT")
+                .HasColumnType("NVARCHAR")
                 .HasMaxLength(256)
                 .IsRequired(true)
                 .IsUnicode(true);
             builder
                 .Property(p => p.ForumSubTitle)
-                .HasColumnType("TEXT")
+                .HasColumnType("NVARCHAR")
                 .HasMaxLength(256)
                 .IsRequired(false)
                 .IsUnicode(true);
             builder
                 .Property(p => p.CreatedAt)
-                .HasColumnType("TEXT")
+                .HasColumnType("Date")
                 .IsRequired(false);
             builder
                 .Property(p => p.UpdatedAt)
-                .HasColumnType("TEXT")
+                .HasColumnType("Date")
                 .IsRequired(false);
             builder
                 .Property(p => p.ForumUserId)
@@ -66,7 +66,7 @@ namespace Entities.Configuration.Forum
                     Id = 1,
                     ForumTitle = "Test forum title 1",
                     ForumSubTitle = "Test forum subtitle 1",
-                    CreatedAt = DateTime.Now.ToShortDateString(),
+                    CreatedAt = DateTime.Now,
                     ForumCategoryId = 1,
                     ForumUserId = 1
                 },
@@ -75,7 +75,7 @@ namespace Entities.Configuration.Forum
                     Id = 2,
                     ForumTitle = "Test forum title 2",
                     ForumSubTitle = "Test forum subtitle 2",
-                    CreatedAt = DateTime.Now.ToShortDateString(),
+                    CreatedAt = DateTime.Now,
                     ForumCategoryId = 2,
                     ForumUserId = 2
                 }

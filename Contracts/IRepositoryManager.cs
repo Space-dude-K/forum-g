@@ -1,4 +1,7 @@
-﻿namespace Contracts
+﻿using Contracts.Forum;
+using Contracts.Printer;
+
+namespace Contracts
 {
     public interface IRepositoryManager
     {
@@ -7,6 +10,7 @@
         IForumBaseRepository ForumBase { get; }
         IForumTopicRepository ForumTopic { get; }
         IForumPostRepository ForumPost { get; }
+        IPrinterDeviceRepository PrinterDevice { get; }
         void Save();
     }
 }

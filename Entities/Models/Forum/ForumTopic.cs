@@ -10,8 +10,8 @@ namespace Entities.Models.Forum
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string CreatedAt { get; set; }
-        public string UpdatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public int TotalPosts { get; set; }
         public int TopicViewCounter { get; set; }
         /// <summary>

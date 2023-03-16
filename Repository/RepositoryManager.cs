@@ -1,20 +1,29 @@
 ﻿using Contracts;
+using Contracts.Forum;
+using Contracts.Printer;
 using Entities;
+using Repository.Forum;
+using Repository.Printer;
 
 namespace Repository
 {
     public class RepositoryManager : IRepositoryManager
     {
         private ForumContext _forumContext;
+        private PrinterContext _printerContext;
+
         private IForumUserRepository _forumUserRepository;
         private IForumCategoryRepository _forumCategoryRepository;
         private IForumBaseRepository _forumBaseRepository;
         private IForumTopicRepository _forumTopicRepository;
         private IForumPostRepository _forumPostRepository;
 
-        public RepositoryManager(ForumContext forumContext)
+        private IPrinterDeviceRepository _printerDeviceRepository;
+
+        public RepositoryManager(ForumContext forumContext, PrinterContext printerContext)
         {
             _forumContext = forumContext;
+            _printerContext = printerContext;
         }
         public IForumUserRepository ForumUser
         {
@@ -65,7 +74,23 @@ namespace Repository
                 return _forumPostRepository;
             }
         }
+        public IPrinterDeviceRepository PrinterDevice
+        {
+            get
+            {
+                if (_printerDeviceRepository == null)
+                    _printerDeviceRepository = new PrinterDeviceRepository(_printerContext);
+                return _printerDeviceRepository;
+            }
+        }
 
-        public void Save() => _forumContext.SaveChanges();
+        public void Save()
+        {
+            if(_forumContext.ChangeTracker.HasChanges())
+                _forumContext.SaveChanges();
+
+            if (_printerContext.ChangeTracker.HasChanges())
+                _printerContext.SaveChanges();
+        }
     }
 }

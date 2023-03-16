@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum.Migrations.Printer
 {
     [DbContext(typeof(PrinterContext))]
-    [Migration("20230314164041_PrinterInit")]
+    [Migration("20230316091345_PrinterInit")]
     partial class PrinterInit
     {
         /// <inheritdoc />
@@ -200,13 +200,13 @@ namespace Forum.Migrations.Printer
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("DATE");
 
-                    b.Property<string>("InstalledAt")
+                    b.Property<DateTime?>("InstalledAt")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("DATE");
 
                     b.Property<int>("PrinterDeviceId")
                         .HasColumnType("INTEGER");
@@ -226,16 +226,16 @@ namespace Forum.Migrations.Printer
                         new
                         {
                             Id = 1,
-                            DeletedAt = "14.03.2023",
-                            InstalledAt = "14.03.2023",
+                            DeletedAt = new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2064),
+                            InstalledAt = new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2049),
                             PrinterDeviceId = 1,
                             Reason = "Тех. неисправность"
                         },
                         new
                         {
                             Id = 2,
-                            DeletedAt = "14.03.2023",
-                            InstalledAt = "14.03.2023",
+                            DeletedAt = new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2068),
+                            InstalledAt = new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2067),
                             PrinterDeviceId = 2,
                             Reason = "Тех. неисправность"
                         });
