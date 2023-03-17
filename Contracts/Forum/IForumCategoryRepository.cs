@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Contracts.Forum
 {
@@ -12,5 +13,6 @@ namespace Contracts.Forum
         IEnumerable<ForumCategory> GetAllCategories(bool trackChanges);
         ForumCategory GetCategory(int categoryId, bool trackChanges);
         void CreateCategory(ForumCategory category);
+        IEnumerable<ForumCategory> GetCategoriesByIds(IEnumerable<int> ids, bool trackChanges);
     }
 }

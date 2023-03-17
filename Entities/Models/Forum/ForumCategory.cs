@@ -15,7 +15,7 @@ namespace Entities.Models.Forum
         [Required(ErrorMessage = "Category title is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the category title is 60 characters.")]
         public string Name { get; set; }
-        public DateTime? CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
         public int TotalPosts
         {
@@ -24,14 +24,8 @@ namespace Entities.Models.Forum
                 return ForumBases.Sum(f => f.ForumTopics.Sum(t => t.ForumPosts.Count));
             }
         }
-        /// <summary>
-        /// Navigation property.
-        /// </summary>
         public virtual ForumUser ForumUser { get; set; }
         public int ForumUserId { get; set; }
-        /// <summary>
-        /// Navigation property.
-        /// </summary>
         public virtual ICollection<ForumBase> ForumBases { get; set; }
     }
 }

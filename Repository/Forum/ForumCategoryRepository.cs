@@ -2,6 +2,7 @@
 using Contracts.Forum;
 using Entities.Models.Forum;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Linq;
 
 namespace Repository.Forum
 {
@@ -13,6 +14,13 @@ namespace Repository.Forum
 
         public void CreateCategory(ForumCategory category)
         {
+            category.ForumUserId = 1;
+            
+            if(category.ForumBases.Any())
+            {
+                category.ForumBases.Select(f => f.ForumUserId = 1).ToList();
+            }
+
             Create(category);
         }
 
@@ -22,6 +30,12 @@ namespace Repository.Forum
             .OrderBy(c => c.Name)
              .ToList();
         }
+
+        public IEnumerable<ForumCategory> GetCategoriesByIds(IEnumerable<int> ids, bool trackChanges)
+        {
+            return FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
+        }
+
         public ForumCategory GetCategory(int categoryId, bool trackChanges)
         {
             return FindByCondition(c => c.Id.Equals(categoryId), trackChanges)

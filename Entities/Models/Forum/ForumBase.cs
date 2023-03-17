@@ -11,7 +11,7 @@ namespace Entities.Models.Forum
         [Required(ErrorMessage = "Forum subtitle is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the ForumSubTitle is 60 characters.")]
         public string ForumSubTitle { get; set; }
-        public DateTime? CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
         public int TotalPosts
         {

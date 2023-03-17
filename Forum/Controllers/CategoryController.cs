@@ -2,7 +2,7 @@
 using Contracts;
 using Entities.DTO.ForumDto;
 using Entities.Models.Forum;
-using Microsoft.AspNetCore.Http;
+using Forum.ModelBinders;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -46,23 +46,57 @@ namespace Forum.Controllers
             }
         }
         [HttpPost]
-        public IActionResult CreateCompany([FromBody] ForumCategoryForCreationDto category)
+        public IActionResult CreateCategory([FromBody] ForumCategoryForCreationDto category)
         {
             if (category == null)
             {
                 _logger.LogError("CompanyForCreationDto object sent from client is null.");
                 return BadRequest("CompanyForCreationDto object is null");
             }
+
             var categoryEntity = _mapper.Map<ForumCategory>(category);
-            categoryEntity.CreatedAt = DateTime.Now;
-            // TODO
-            categoryEntity.ForumUserId = 1;
+
             _repository.ForumCategory.CreateCategory(categoryEntity);
             _repository.Save();
 
-            var categpryToReturn = _mapper.Map<ForumCategoryDto>(categoryEntity);
+            var categoryToReturn = _mapper.Map<ForumCategoryDto>(categoryEntity);
 
-            return CreatedAtRoute("CategoryById", new { id = categpryToReturn.Id }, categpryToReturn);
+            return CreatedAtRoute("CategoryById", new { id = categoryToReturn.Id }, categoryToReturn);
+        }
+        [HttpGet("collection/({ids})", Name = "CategoryCollection")]
+        public IActionResult GetCategoryCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
+        {
+            if (ids == null)
+            {
+                _logger.LogError("Parameter ids is null");
+                return BadRequest("Parameter ids is null");
+            }
+            var categoryEntities = _repository.ForumCategory.GetCategoriesByIds(ids, trackChanges: false);
+            if (ids.Count() != categoryEntities.Count())
+            {
+                _logger.LogError("Some ids are not valid in a collection");
+                return NotFound();
+            }
+            var categoriesToReturn = _mapper.Map<IEnumerable<ForumCategoryDto>>(categoryEntities);
+            return Ok(categoriesToReturn);
+        }
+        [HttpPost("collection")]
+        public IActionResult CreateCategoryCollection([FromBody] IEnumerable<ForumCategoryForCreationDto> categoryCollection)
+        {
+            if (categoryCollection == null)
+            {
+                _logger.LogError("Company collection sent from client is null.");
+                return BadRequest("Company collection is null");
+            }
+            var categoryEntities = _mapper.Map<IEnumerable<ForumCategory>>(categoryCollection);
+            foreach (var category in categoryEntities)
+            {
+                _repository.ForumCategory.CreateCategory(category);
+            }
+            _repository.Save();
+            var categoryCollectionToReturn =  _mapper.Map<IEnumerable<ForumCategoryDto>>(categoryEntities);
+            var ids = string.Join(",", categoryCollectionToReturn.Select(c => c.Id));
+            return CreatedAtRoute("CategoryCollection", new { ids }, categoryCollectionToReturn);
         }
     }
 }
