@@ -23,8 +23,7 @@ namespace Forum.Controllers
             _logger = logger;
             _mapper = mapper;
         }
-        [HttpGet("{id}", Name = "GetForumForCategory")]
-
+        [HttpGet]
         public IActionResult GetForumsForCategory(int categoryId)
         {
             var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
@@ -39,6 +38,24 @@ namespace Forum.Controllers
             var forumsDto = _mapper.Map<IEnumerable<ForumBaseDto>>(forums);
 
             return Ok(forumsDto);
+        }
+        [HttpGet("{forumId}", Name = "GetForumForCategory")]
+        public IActionResult GetForumForCategory(int categoryId, int forumId)
+        {
+            var category =  _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            if (category == null)
+            {
+                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var forumDb =  _repository.ForumBase.GetForum(categoryId, forumId, trackChanges: false);
+            if (forumDb == null)
+            {
+                _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var forum = _mapper.Map<ForumBaseDto>(forumDb);
+            return Ok(forum);
         }
         [HttpPost]
         public IActionResult CreateForumForCategory(int categoryId, [FromBody] ForumBaseForCreationDto forum)
@@ -64,6 +81,25 @@ namespace Forum.Controllers
             var forumToReturn = _mapper.Map<ForumBaseDto>(forumEntity);
 
             return CreatedAtRoute("GetForumForCategory", new { categoryId, id = forumToReturn.Id }, forumToReturn);
+        }
+        [HttpDelete("{forumId}")]
+        public IActionResult DeleteForumForCategory(int categoryId, int forumId)
+        {
+            var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            if (category == null)
+            {
+                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var forumForCategory = _repository.ForumBase.GetForum(categoryId, forumId, trackChanges: false);
+            if (forumForCategory == null)
+            {
+                _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
+                return NotFound();
+            }
+            _repository.ForumBase.DeleteForum(forumForCategory);
+            _repository.Save();
+            return NoContent();
         }
 
     }

@@ -20,12 +20,20 @@ namespace Repository.Forum
             Create(forum);
         }
 
+        public void DeleteForum(ForumBase forum)
+        {
+            Delete(forum);
+        }
+
         public IEnumerable<ForumBase> GetAllForums(int? categoryId, bool trackChanges)
         {
-            return categoryId is null ? FindAll(trackChanges)
-            .OrderBy(c => c.ForumTitle)
-             .ToList() : FindByCondition(f => f.ForumCategoryId.Equals(categoryId), trackChanges)
+            return FindByCondition(f => f.ForumCategoryId.Equals(categoryId), trackChanges)
                 .OrderBy(c => c.ForumTitle).ToList();
+        }
+        public ForumBase GetForum(int categoryId, int forumId, bool trackChanges)
+        {
+            return FindByCondition(c => c.ForumCategoryId.Equals(categoryId) && c.Id.Equals(forumId), trackChanges)
+                .SingleOrDefault();
         }
     }
 }
