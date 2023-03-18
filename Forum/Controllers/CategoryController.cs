@@ -98,5 +98,18 @@ namespace Forum.Controllers
             var ids = string.Join(",", categoryCollectionToReturn.Select(c => c.Id));
             return CreatedAtRoute("CategoryCollection", new { ids }, categoryCollectionToReturn);
         }
+        [HttpDelete("{categoryId}")]
+        public IActionResult DeleteCategory(int categoryId)
+        {
+            var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            if (category == null)
+            {
+                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
+                return NotFound();
+            }
+            _repository.ForumCategory.DeleteCategory(category);
+            _repository.Save();
+            return NoContent();
+        }
     }
 }

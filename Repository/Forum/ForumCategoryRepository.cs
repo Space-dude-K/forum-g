@@ -23,7 +23,6 @@ namespace Repository.Forum
 
             Create(category);
         }
-
         public IEnumerable<ForumCategory> GetAllCategories(bool trackChanges)
         {
             return FindAll(trackChanges)
@@ -40,6 +39,10 @@ namespace Repository.Forum
         {
             return FindByCondition(c => c.Id.Equals(categoryId), trackChanges)
             .SingleOrDefault();
+        }
+        public void DeleteCategory(ForumCategory category)
+        {
+            Delete(category);
         }
     }
 }
