@@ -45,7 +45,7 @@ namespace Entities.Configuration.Forum
                 .WithOne(p => p.ForumCategory)
                 .HasForeignKey(p => p.ForumCategoryId)
                 .HasConstraintName("FK_ForumCategory_ForumBase_Id")
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             builder
                 .HasOne(p => p.ForumUser)
                 .WithMany()
