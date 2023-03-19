@@ -32,7 +32,10 @@ namespace Forum
             {
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
-            }).AddXmlDataContractSerializerFormatters();
+
+            })
+                .AddNewtonsoftJson()
+                .AddXmlDataContractSerializerFormatters();
 
             // To return 422 instead of 400, the first thing we have to do is to suppress
             // the BadRequest error when the ModelState is invalid

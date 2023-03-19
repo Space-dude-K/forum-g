@@ -16,6 +16,7 @@ namespace Forum
             CreateMap<ForumBaseForCreationDto, ForumBase>();
             CreateMap<ForumBaseForUpdateDto, ForumBase>();
             CreateMap<ForumCategoryForUpdateDto, ForumCategory>();
+            CreateMap<ForumBaseForUpdateDto, ForumBase>().ReverseMap();
         }
     }
 }

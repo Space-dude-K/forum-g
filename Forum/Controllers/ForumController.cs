@@ -5,6 +5,7 @@ using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.Update;
 using Entities.Models.Forum;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.Design;
@@ -127,5 +128,32 @@ namespace Forum.Controllers
             _repository.Save();
             return NoContent();
         }
+        [HttpPatch("{forumId}")]
+        public IActionResult PartiallyUpdateForumForCategory(int categoryId, int forumId, [FromBody] JsonPatchDocument<ForumBaseForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+            var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            if (category == null)
+            {
+                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var forumEntity = _repository.ForumBase.GetForum(categoryId, forumId, trackChanges: true);
+            if (forumEntity == null)
+            {
+                _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var employeeToPatch = _mapper.Map<ForumBaseForUpdateDto>(forumEntity);
+            patchDoc.ApplyTo(employeeToPatch);
+            _mapper.Map(employeeToPatch, forumEntity);
+            _repository.Save();
+            return NoContent();
+        }
+
     }
 }
