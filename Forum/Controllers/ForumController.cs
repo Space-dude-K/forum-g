@@ -68,6 +68,14 @@ namespace Forum.Controllers
                 _logger.LogError("EmployeeForCreationDto object sent from client is null.");
                 return BadRequest("EmployeeForCreationDto object is null");
             }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
+
             var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
             if (category == null)
             {
@@ -112,6 +120,11 @@ namespace Forum.Controllers
                 _logger.LogError("EmployeeForUpdateDto object sent from client is null.");
                 return BadRequest("EmployeeForUpdateDto object is null");
             }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForUpdateDto object");
+                return UnprocessableEntity(ModelState);
+            }
             var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
             if (category == null)
             {
@@ -148,9 +161,18 @@ namespace Forum.Controllers
                 _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
                 return NotFound();
             }
-            var employeeToPatch = _mapper.Map<ForumBaseForUpdateDto>(forumEntity);
-            patchDoc.ApplyTo(employeeToPatch);
-            _mapper.Map(employeeToPatch, forumEntity);
+            var forumToPatch = _mapper.Map<ForumBaseForUpdateDto>(forumEntity);
+            patchDoc.ApplyTo(forumToPatch, ModelState);
+
+            TryValidateModel(forumToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+
+            _mapper.Map(forumToPatch, forumEntity);
             _repository.Save();
             return NoContent();
         }
