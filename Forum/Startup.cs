@@ -1,4 +1,6 @@
 ﻿using Contracts;
+using Forum.ActionsFilters;
+using Forum.ActionsFilters.Forum;
 using Forum.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -43,6 +45,10 @@ namespace Forum
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+
+            services.AddScoped<ValidationFilterAttribute>();
+            services.AddScoped<ValidateCategoryExistsAttribute>();
+            services.AddScoped<ValidateForumForCategoryExistsAttribute>();
 
             services.AddControllers();
         }

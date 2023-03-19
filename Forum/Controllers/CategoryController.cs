@@ -4,6 +4,8 @@ using Entities.DTO.ForumDto;
 using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.Update;
 using Entities.Models.Forum;
+using Forum.ActionsFilters;
+using Forum.ActionsFilters.Forum;
 using Forum.ModelBinders;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -48,14 +50,9 @@ namespace Forum.Controllers
             }
         }
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCategory([FromBody] ForumCategoryForCreationDto category)
         {
-            if (category == null)
-            {
-                _logger.LogError("CompanyForCreationDto object sent from client is null.");
-                return BadRequest("CompanyForCreationDto object is null");
-            }
-
             var categoryEntity = _mapper.Map<ForumCategory>(category);
 
             _repository.ForumCategory.CreateCategory(categoryEntity);
@@ -101,35 +98,24 @@ namespace Forum.Controllers
             return CreatedAtRoute("CategoryCollection", new { ids }, categoryCollectionToReturn);
         }
         [HttpDelete("{categoryId}")]
+        [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
         public async Task<IActionResult> DeleteCategory(int categoryId)
         {
-            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
-            if (category == null)
-            {
-                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
-                return NotFound();
-            }
+            var category = HttpContext.Items["category"] as ForumCategory;
+
             _repository.ForumCategory.DeleteCategory(category);
             await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPut("{categoryId}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
         public async Task<IActionResult> UpdateCategory(int categoryId, [FromBody] ForumCategoryForUpdateDto category)
         {
-            if (category == null)
-            {
-                _logger.LogError("CompanyForUpdateDto object sent from client is null.");
-                return BadRequest("CompanyForUpdateDto object is null");
-            }
-
             // TODO User id for collection PUT
 
-            var categoryEntity = _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: true);
-            if (categoryEntity == null)
-            {
-                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
-                return NotFound();
-            }
+            var categoryEntity = HttpContext.Items["category"] as ForumCategory;
+
             _mapper.Map(category, categoryEntity);
             await _repository.SaveAsync();
             return NoContent();
