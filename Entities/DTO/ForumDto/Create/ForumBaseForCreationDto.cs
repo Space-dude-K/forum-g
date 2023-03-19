@@ -1,8 +1,8 @@
-﻿namespace Entities.DTO.ForumDto.Create
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Entities.DTO.ForumDto.Create
 {
-    public class ForumBaseForCreationDto
+    public class ForumBaseForCreationDto : ForumBaseForManipulationDto
     {
-        public string ForumTitle { get; set; }
-        public string ForumSubTitle { get; set; }
     }
 }
