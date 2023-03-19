@@ -1,6 +1,8 @@
-﻿namespace Entities.DTO.ForumDto
+﻿using Entities.DTO.ForumDto.Create;
+
+namespace Entities.DTO.ForumDto.Update
 {
-    public class ForumCategoryForCreationDto
+    public class ForumCategoryForUpdateDto
     {
         public string Name { get; set; }
         public IEnumerable<ForumBaseForCreationDto> ForumBases { get; set; }
