@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Forum.Migrations.Printer
 {
     /// <inheritdoc />
-    public partial class PrinterInit : Migration
+    public partial class InitPrinter : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,9 +48,9 @@ namespace Forum.Migrations.Printer
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TonerLevel = table.Column<int>(type: "INTEGER", nullable: false),
-                    DrumLevel = table.Column<int>(type: "INTEGER", nullable: false),
-                    TotalPagesPrinted = table.Column<int>(type: "INTEGER", nullable: false)
+                    TonerLevel = table.Column<int>(type: "INTEGER", maxLength: 60, nullable: false),
+                    DrumLevel = table.Column<int>(type: "INTEGER", maxLength: 60, nullable: false),
+                    TotalPagesPrinted = table.Column<int>(type: "INTEGER", maxLength: 60, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -163,8 +163,8 @@ namespace Forum.Migrations.Printer
                 columns: new[] { "Id", "DeletedAt", "InstalledAt", "PrinterDeviceId", "Reason" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2064), new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2049), 1, "Тех. неисправность" },
-                    { 2, new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2068), new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2067), 2, "Тех. неисправность" }
+                    { 1, new DateTime(2023, 3, 19, 13, 55, 48, 237, DateTimeKind.Local).AddTicks(6951), new DateTime(2023, 3, 19, 13, 55, 48, 237, DateTimeKind.Local).AddTicks(6941), 1, "Тех. неисправность" },
+                    { 2, new DateTime(2023, 3, 19, 13, 55, 48, 237, DateTimeKind.Local).AddTicks(6953), new DateTime(2023, 3, 19, 13, 55, 48, 237, DateTimeKind.Local).AddTicks(6953), 2, "Тех. неисправность" }
                 });
 
             migrationBuilder.InsertData(

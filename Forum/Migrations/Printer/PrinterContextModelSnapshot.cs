@@ -223,16 +223,16 @@ namespace Forum.Migrations.Printer
                         new
                         {
                             Id = 1,
-                            DeletedAt = new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2064),
-                            InstalledAt = new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2049),
+                            DeletedAt = new DateTime(2023, 3, 19, 13, 55, 48, 237, DateTimeKind.Local).AddTicks(6951),
+                            InstalledAt = new DateTime(2023, 3, 19, 13, 55, 48, 237, DateTimeKind.Local).AddTicks(6941),
                             PrinterDeviceId = 1,
                             Reason = "Тех. неисправность"
                         },
                         new
                         {
                             Id = 2,
-                            DeletedAt = new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2068),
-                            InstalledAt = new DateTime(2023, 3, 16, 12, 13, 45, 640, DateTimeKind.Local).AddTicks(2067),
+                            DeletedAt = new DateTime(2023, 3, 19, 13, 55, 48, 237, DateTimeKind.Local).AddTicks(6953),
+                            InstalledAt = new DateTime(2023, 3, 19, 13, 55, 48, 237, DateTimeKind.Local).AddTicks(6953),
                             PrinterDeviceId = 2,
                             Reason = "Тех. неисправность"
                         });
@@ -247,12 +247,15 @@ namespace Forum.Migrations.Printer
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("DrumLevel")
+                        .HasMaxLength(60)
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TonerLevel")
+                        .HasMaxLength(60)
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TotalPagesPrinted")
+                        .HasMaxLength(60)
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id")
