@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DTO.ForumDto;
+using Entities.DTO.ForumDto.Create;
+using Entities.DTO.ForumDto.Update;
 using Entities.Models.Forum;
 using Forum.ModelBinders;
 using Microsoft.AspNetCore.Mvc;
@@ -111,5 +113,27 @@ namespace Forum.Controllers
             _repository.Save();
             return NoContent();
         }
+        [HttpPut("{categoryId}")]
+        public IActionResult UpdateCategory(int categoryId, [FromBody] ForumCategoryForUpdateDto category)
+        {
+            if (category == null)
+            {
+                _logger.LogError("CompanyForUpdateDto object sent from client is null.");
+                return BadRequest("CompanyForUpdateDto object is null");
+            }
+
+            // TODO User id for collection PUT
+
+            var categoryEntity = _repository.ForumCategory.GetCategory(categoryId, trackChanges: true);
+            if (categoryEntity == null)
+            {
+                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
+                return NotFound();
+            }
+            _mapper.Map(category, categoryEntity);
+            _repository.Save();
+            return NoContent();
+        }
+
     }
 }

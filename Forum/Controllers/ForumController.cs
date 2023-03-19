@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DTO.ForumDto;
+using Entities.DTO.ForumDto.Create;
+using Entities.DTO.ForumDto.Update;
 using Entities.Models.Forum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -101,6 +103,29 @@ namespace Forum.Controllers
             _repository.Save();
             return NoContent();
         }
-
+        [HttpPut("{forumId}")]
+        public IActionResult UpdateForumForCategory(int categoryId, int forumId, [FromBody] ForumBaseForUpdateDto forum)
+        {
+            if (forum == null)
+            {
+                _logger.LogError("EmployeeForUpdateDto object sent from client is null.");
+                return BadRequest("EmployeeForUpdateDto object is null");
+            }
+            var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            if (category == null)
+            {
+                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
+                return NotFound();
+            }
+            var forumEntity = _repository.ForumBase.GetForum(categoryId, forumId, trackChanges: true);
+            if (forumEntity == null)
+            {
+                _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
+                return NotFound();
+            }
+            _mapper.Map(forum, forumEntity);
+            _repository.Save();
+            return NoContent();
+        }
     }
 }

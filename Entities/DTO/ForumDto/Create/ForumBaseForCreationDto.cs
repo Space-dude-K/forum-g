@@ -1,4 +1,4 @@
-﻿namespace Entities.DTO.ForumDto
+﻿namespace Entities.DTO.ForumDto.Create
 {
     public class ForumBaseForCreationDto
     {
