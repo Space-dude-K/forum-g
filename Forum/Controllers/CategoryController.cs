@@ -25,17 +25,17 @@ namespace Forum.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetForumCategories()
+        public async Task<IActionResult> GetForumCategories()
         {
-            var categories = _repository.ForumCategory.GetAllCategories(trackChanges: false);
+            var categories = await _repository.ForumCategory.GetAllCategoriesAsync(trackChanges: false);
             var categoriesDto = _mapper.Map<IEnumerable<ForumCategoryDto>>(categories);
 
             return Ok(categoriesDto);
         }
         [HttpGet("{id}", Name = "CategoryById")]
-        public IActionResult GetCategory(int id)
+        public async Task<IActionResult> GetCategory(int id)
         {
-            var category = _repository.ForumCategory.GetCategory(id, trackChanges: false);
+            var category = await _repository.ForumCategory.GetCategoryAsync(id, trackChanges: false);
             if (category == null)
             {
                 _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
@@ -48,7 +48,7 @@ namespace Forum.Controllers
             }
         }
         [HttpPost]
-        public IActionResult CreateCategory([FromBody] ForumCategoryForCreationDto category)
+        public async Task<IActionResult> CreateCategory([FromBody] ForumCategoryForCreationDto category)
         {
             if (category == null)
             {
@@ -59,21 +59,21 @@ namespace Forum.Controllers
             var categoryEntity = _mapper.Map<ForumCategory>(category);
 
             _repository.ForumCategory.CreateCategory(categoryEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var categoryToReturn = _mapper.Map<ForumCategoryDto>(categoryEntity);
 
             return CreatedAtRoute("CategoryById", new { id = categoryToReturn.Id }, categoryToReturn);
         }
         [HttpGet("collection/({ids})", Name = "CategoryCollection")]
-        public IActionResult GetCategoryCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
+        public async Task<IActionResult> GetCategoryCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
         {
             if (ids == null)
             {
                 _logger.LogError("Parameter ids is null");
                 return BadRequest("Parameter ids is null");
             }
-            var categoryEntities = _repository.ForumCategory.GetCategoriesByIds(ids, trackChanges: false);
+            var categoryEntities = await _repository.ForumCategory.GetCategoriesByIdsAsync(ids, trackChanges: false);
             if (ids.Count() != categoryEntities.Count())
             {
                 _logger.LogError("Some ids are not valid in a collection");
@@ -83,7 +83,7 @@ namespace Forum.Controllers
             return Ok(categoriesToReturn);
         }
         [HttpPost("collection")]
-        public IActionResult CreateCategoryCollection([FromBody] IEnumerable<ForumCategoryForCreationDto> categoryCollection)
+        public async Task<IActionResult> CreateCategoryCollection([FromBody] IEnumerable<ForumCategoryForCreationDto> categoryCollection)
         {
             if (categoryCollection == null)
             {
@@ -95,26 +95,26 @@ namespace Forum.Controllers
             {
                 _repository.ForumCategory.CreateCategory(category);
             }
-            _repository.Save();
+            await _repository.SaveAsync();
             var categoryCollectionToReturn =  _mapper.Map<IEnumerable<ForumCategoryDto>>(categoryEntities);
             var ids = string.Join(",", categoryCollectionToReturn.Select(c => c.Id));
             return CreatedAtRoute("CategoryCollection", new { ids }, categoryCollectionToReturn);
         }
         [HttpDelete("{categoryId}")]
-        public IActionResult DeleteCategory(int categoryId)
+        public async Task<IActionResult> DeleteCategory(int categoryId)
         {
-            var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
             {
                 _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
                 return NotFound();
             }
             _repository.ForumCategory.DeleteCategory(category);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPut("{categoryId}")]
-        public IActionResult UpdateCategory(int categoryId, [FromBody] ForumCategoryForUpdateDto category)
+        public async Task<IActionResult> UpdateCategory(int categoryId, [FromBody] ForumCategoryForUpdateDto category)
         {
             if (category == null)
             {
@@ -124,14 +124,14 @@ namespace Forum.Controllers
 
             // TODO User id for collection PUT
 
-            var categoryEntity = _repository.ForumCategory.GetCategory(categoryId, trackChanges: true);
+            var categoryEntity = _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: true);
             if (categoryEntity == null)
             {
                 _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
                 return NotFound();
             }
             _mapper.Map(category, categoryEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
 

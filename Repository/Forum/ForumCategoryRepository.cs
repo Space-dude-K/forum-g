@@ -3,6 +3,7 @@ using Contracts.Forum;
 using Entities.Models.Forum;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository.Forum
 {
@@ -23,26 +24,24 @@ namespace Repository.Forum
 
             Create(category);
         }
-        public IEnumerable<ForumCategory> GetAllCategories(bool trackChanges)
-        {
-            return FindAll(trackChanges)
-            .OrderBy(c => c.Name)
-             .ToList();
-        }
-
-        public IEnumerable<ForumCategory> GetCategoriesByIds(IEnumerable<int> ids, bool trackChanges)
-        {
-            return FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
-        }
-
-        public ForumCategory GetCategory(int categoryId, bool trackChanges)
-        {
-            return FindByCondition(c => c.Id.Equals(categoryId), trackChanges)
-            .SingleOrDefault();
-        }
         public void DeleteCategory(ForumCategory category)
         {
             Delete(category);
+        }
+        public async Task<IEnumerable<ForumCategory>> GetAllCategoriesAsync(bool trackChanges)
+        {
+            return await FindAll(trackChanges)
+            .OrderBy(c => c.Name)
+             .ToListAsync();
+        }
+        public async Task<ForumCategory> GetCategoryAsync(int categoryId, bool trackChanges)
+        {
+            return await FindByCondition(c => c.Id.Equals(categoryId), trackChanges)
+            .SingleOrDefaultAsync();
+        }
+        public async Task<IEnumerable<ForumCategory>> GetCategoriesByIdsAsync(IEnumerable<int> ids, bool trackChanges)
+        {
+            return await FindByCondition(x => ids.Contains(x.Id), trackChanges).ToListAsync();
         }
     }
 }
