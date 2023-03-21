@@ -4,6 +4,8 @@ using Entities.DTO.ForumDto;
 using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.Update;
 using Entities.Models.Forum;
+using Forum.ActionsFilters;
+using Forum.ActionsFilters.Forum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -61,14 +63,9 @@ namespace Forum.Controllers
             return Ok(forum);
         }
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateForumForCategory(int categoryId, [FromBody] ForumBaseForCreationDto forum)
         {
-            if (forum == null)
-            {
-                _logger.LogError("EmployeeForCreationDto object sent from client is null.");
-                return BadRequest("EmployeeForCreationDto object is null");
-            }
-
             if (!ModelState.IsValid)
             {
                 _logger.LogError("Invalid model state for the EmployeeForCreationDto object");
@@ -94,54 +91,28 @@ namespace Forum.Controllers
             return CreatedAtRoute("GetForumForCategory", new { categoryId, id = forumToReturn.Id }, forumToReturn);
         }
         [HttpDelete("{forumId}")]
+        [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]
         public async Task<IActionResult> DeleteForumForCategory(int categoryId, int forumId)
         {
-            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
-            if (category == null)
-            {
-                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
-                return NotFound();
-            }
-            var forumForCategory = await _repository.ForumBase.GetForumAsync(categoryId, forumId, trackChanges: false);
-            if (forumForCategory == null)
-            {
-                _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
-                return NotFound();
-            }
+            var forumForCategory = HttpContext.Items["forum"] as ForumBase;
+
             _repository.ForumBase.DeleteForum(forumForCategory);
             await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPut("{forumId}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]
         public async Task<IActionResult> UpdateForumForCategory(int categoryId, int forumId, [FromBody] ForumBaseForUpdateDto forum)
         {
-            if (forum == null)
-            {
-                _logger.LogError("EmployeeForUpdateDto object sent from client is null.");
-                return BadRequest("EmployeeForUpdateDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForUpdateDto object");
-                return UnprocessableEntity(ModelState);
-            }
-            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
-            if (category == null)
-            {
-                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
-                return NotFound();
-            }
-            var forumEntity = await _repository.ForumBase.GetForumAsync(categoryId, forumId, trackChanges: true);
-            if (forumEntity == null)
-            {
-                _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
-                return NotFound();
-            }
+            var forumEntity = HttpContext.Items["forum"] as ForumBase;
+
             _mapper.Map(forum, forumEntity);
             await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPatch("{forumId}")]
+        [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdateForumForCategory(int categoryId, int forumId, [FromBody] JsonPatchDocument<ForumBaseForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
@@ -149,18 +120,7 @@ namespace Forum.Controllers
                 _logger.LogError("patchDoc object sent from client is null.");
                 return BadRequest("patchDoc object is null");
             }
-            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
-            if (category == null)
-            {
-                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
-                return NotFound();
-            }
-            var forumEntity = await _repository.ForumBase.GetForumAsync(categoryId, forumId, trackChanges: true);
-            if (forumEntity == null)
-            {
-                _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
-                return NotFound();
-            }
+            var forumEntity = HttpContext.Items["forum"] as ForumBase;
             var forumToPatch = _mapper.Map<ForumBaseForUpdateDto>(forumEntity);
             patchDoc.ApplyTo(forumToPatch, ModelState);
 

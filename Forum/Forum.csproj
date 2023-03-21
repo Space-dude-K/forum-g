@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ActionsFilters\Forum\" />
     <Folder Include="ActionsFilters\Printer\" />
   </ItemGroup>
 
