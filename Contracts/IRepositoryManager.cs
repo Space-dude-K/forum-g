@@ -11,6 +11,6 @@ namespace Contracts
         IForumTopicRepository ForumTopic { get; }
         IForumPostRepository ForumPost { get; }
         IPrinterDeviceRepository PrinterDevice { get; }
-        void Save();
+        Task SaveAsync();
     }
 }

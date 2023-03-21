@@ -4,10 +4,10 @@ namespace Contracts.Forum
 {
     public interface IForumCategoryRepository
     {
-        IEnumerable<ForumCategory> GetAllCategories(bool trackChanges);
-        ForumCategory GetCategory(int categoryId, bool trackChanges);
+        Task<IEnumerable<ForumCategory>> GetAllCategoriesAsync(bool trackChanges);
+        Task<ForumCategory> GetCategoryAsync(int categoryId, bool trackChanges);
         void CreateCategory(ForumCategory category);
-        IEnumerable<ForumCategory> GetCategoriesByIds(IEnumerable<int> ids, bool trackChanges);
+        Task<IEnumerable<ForumCategory>> GetCategoriesByIdsAsync(IEnumerable<int> ids, bool trackChanges);
         void DeleteCategory(ForumCategory category);
     }
 }

@@ -84,13 +84,15 @@ namespace Repository
             }
         }
 
-        public void Save()
+        public Task SaveAsync()
         {
             if(_forumContext.ChangeTracker.HasChanges())
-                _forumContext.SaveChanges();
+                return _forumContext.SaveChangesAsync();
 
             if (_printerContext.ChangeTracker.HasChanges())
-                _printerContext.SaveChanges();
+                return _printerContext.SaveChangesAsync();
+
+            return Task.CompletedTask;
         }
     }
 }

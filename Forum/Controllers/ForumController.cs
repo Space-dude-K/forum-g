@@ -27,9 +27,9 @@ namespace Forum.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetForumsForCategory(int categoryId)
+        public async Task<IActionResult> GetForumsForCategory(int categoryId)
         {
-            var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
 
             if (category == null)
             {
@@ -37,21 +37,21 @@ namespace Forum.Controllers
                 return NotFound();
             }
 
-            var forums = _repository.ForumBase.GetAllForums(categoryId, trackChanges: false);
+            var forums = await _repository.ForumBase.GetAllForumsAsync(categoryId, trackChanges: false);
             var forumsDto = _mapper.Map<IEnumerable<ForumBaseDto>>(forums);
 
             return Ok(forumsDto);
         }
         [HttpGet("{forumId}", Name = "GetForumForCategory")]
-        public IActionResult GetForumForCategory(int categoryId, int forumId)
+        public async Task<IActionResult> GetForumForCategory(int categoryId, int forumId)
         {
-            var category =  _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            var category =  await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
             {
                 _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
                 return NotFound();
             }
-            var forumDb =  _repository.ForumBase.GetForum(categoryId, forumId, trackChanges: false);
+            var forumDb =  await _repository.ForumBase.GetForumAsync(categoryId, forumId, trackChanges: false);
             if (forumDb == null)
             {
                 _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
@@ -61,7 +61,7 @@ namespace Forum.Controllers
             return Ok(forum);
         }
         [HttpPost]
-        public IActionResult CreateForumForCategory(int categoryId, [FromBody] ForumBaseForCreationDto forum)
+        public async Task<IActionResult> CreateForumForCategory(int categoryId, [FromBody] ForumBaseForCreationDto forum)
         {
             if (forum == null)
             {
@@ -76,7 +76,7 @@ namespace Forum.Controllers
             }
 
 
-            var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            var category =  await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
             {
                 _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
@@ -87,33 +87,33 @@ namespace Forum.Controllers
             forumEntity.CreatedAt = DateTime.Now;
             forumEntity.ForumUserId = 1;
             _repository.ForumBase.CreateForumForCategory(categoryId, forumEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var forumToReturn = _mapper.Map<ForumBaseDto>(forumEntity);
 
             return CreatedAtRoute("GetForumForCategory", new { categoryId, id = forumToReturn.Id }, forumToReturn);
         }
         [HttpDelete("{forumId}")]
-        public IActionResult DeleteForumForCategory(int categoryId, int forumId)
+        public async Task<IActionResult> DeleteForumForCategory(int categoryId, int forumId)
         {
-            var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
             {
                 _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
                 return NotFound();
             }
-            var forumForCategory = _repository.ForumBase.GetForum(categoryId, forumId, trackChanges: false);
+            var forumForCategory = await _repository.ForumBase.GetForumAsync(categoryId, forumId, trackChanges: false);
             if (forumForCategory == null)
             {
                 _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
                 return NotFound();
             }
             _repository.ForumBase.DeleteForum(forumForCategory);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPut("{forumId}")]
-        public IActionResult UpdateForumForCategory(int categoryId, int forumId, [FromBody] ForumBaseForUpdateDto forum)
+        public async Task<IActionResult> UpdateForumForCategory(int categoryId, int forumId, [FromBody] ForumBaseForUpdateDto forum)
         {
             if (forum == null)
             {
@@ -125,37 +125,37 @@ namespace Forum.Controllers
                 _logger.LogError("Invalid model state for the EmployeeForUpdateDto object");
                 return UnprocessableEntity(ModelState);
             }
-            var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
             {
                 _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
                 return NotFound();
             }
-            var forumEntity = _repository.ForumBase.GetForum(categoryId, forumId, trackChanges: true);
+            var forumEntity = await _repository.ForumBase.GetForumAsync(categoryId, forumId, trackChanges: true);
             if (forumEntity == null)
             {
                 _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
                 return NotFound();
             }
             _mapper.Map(forum, forumEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPatch("{forumId}")]
-        public IActionResult PartiallyUpdateForumForCategory(int categoryId, int forumId, [FromBody] JsonPatchDocument<ForumBaseForUpdateDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateForumForCategory(int categoryId, int forumId, [FromBody] JsonPatchDocument<ForumBaseForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
             {
                 _logger.LogError("patchDoc object sent from client is null.");
                 return BadRequest("patchDoc object is null");
             }
-            var category = _repository.ForumCategory.GetCategory(categoryId, trackChanges: false);
+            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
             {
                 _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
                 return NotFound();
             }
-            var forumEntity = _repository.ForumBase.GetForum(categoryId, forumId, trackChanges: true);
+            var forumEntity = await _repository.ForumBase.GetForumAsync(categoryId, forumId, trackChanges: true);
             if (forumEntity == null)
             {
                 _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
@@ -173,7 +173,7 @@ namespace Forum.Controllers
             }
 
             _mapper.Map(forumToPatch, forumEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
 
