@@ -8,9 +8,8 @@ using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
 using Forum.ModelBinders;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace Forum.Controllers
+namespace Forum.Controllers.Forum
 {
     [Route("api/categories")]
     [ApiController]
@@ -93,7 +92,7 @@ namespace Forum.Controllers
                 _repository.ForumCategory.CreateCategory(category);
             }
             await _repository.SaveAsync();
-            var categoryCollectionToReturn =  _mapper.Map<IEnumerable<ForumCategoryDto>>(categoryEntities);
+            var categoryCollectionToReturn = _mapper.Map<IEnumerable<ForumCategoryDto>>(categoryEntities);
             var ids = string.Join(",", categoryCollectionToReturn.Select(c => c.Id));
             return CreatedAtRoute("CategoryCollection", new { ids }, categoryCollectionToReturn);
         }

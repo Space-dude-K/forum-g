@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.Design;
 
-namespace Forum.Controllers
+namespace Forum.Controllers.Forum
 {
     [Route("api/categories/{categoryId}/forums")]
     [ApiController]
@@ -39,7 +39,7 @@ namespace Forum.Controllers
                 return NotFound();
             }
 
-            var forums = await _repository.ForumBase.GetAllForumsAsync(categoryId, trackChanges: false);
+            var forums = await _repository.ForumBase.GetAllForumsFromCategoryAsync(categoryId, trackChanges: false);
             var forumsDto = _mapper.Map<IEnumerable<ForumBaseDto>>(forums);
 
             return Ok(forumsDto);
@@ -47,13 +47,13 @@ namespace Forum.Controllers
         [HttpGet("{forumId}", Name = "GetForumForCategory")]
         public async Task<IActionResult> GetForumForCategory(int categoryId, int forumId)
         {
-            var category =  await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
+            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
             {
                 _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
                 return NotFound();
             }
-            var forumDb =  await _repository.ForumBase.GetForumAsync(categoryId, forumId, trackChanges: false);
+            var forumDb = await _repository.ForumBase.GetForumFromCategoryAsync(categoryId, forumId, trackChanges: false);
             if (forumDb == null)
             {
                 _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
@@ -73,7 +73,7 @@ namespace Forum.Controllers
             }
 
 
-            var category =  await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
+            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
             {
                 _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
@@ -136,6 +136,5 @@ namespace Forum.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-
     }
 }

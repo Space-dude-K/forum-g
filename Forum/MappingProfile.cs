@@ -10,13 +10,22 @@ namespace Forum
     {
         public MappingProfile()
         {
-            CreateMap<ForumBase, ForumBaseDto>();
+            // Category
             CreateMap<ForumCategory, ForumCategoryDto>();
             CreateMap<ForumCategoryForCreationDto, ForumCategory>();
+            CreateMap<ForumCategoryForUpdateDto, ForumCategory>();
+
+            // Forum
+            CreateMap<ForumBase, ForumBaseDto>();
             CreateMap<ForumBaseForCreationDto, ForumBase>();
             CreateMap<ForumBaseForUpdateDto, ForumBase>();
-            CreateMap<ForumCategoryForUpdateDto, ForumCategory>();
             CreateMap<ForumBaseForUpdateDto, ForumBase>().ReverseMap();
+
+            // Topic
+            CreateMap<ForumTopic, ForumTopicDto>();
+            CreateMap<ForumTopicForCreationDto, ForumTopic>();
+            CreateMap<ForumTopicForUpdateDto, ForumTopic>();
+            CreateMap<ForumTopicForUpdateDto, ForumTopic>().ReverseMap();
         }
     }
 }
