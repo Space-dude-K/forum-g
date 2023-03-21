@@ -26,12 +26,12 @@ namespace Repository.Forum
             Delete(forum);
         }
 
-        public async Task<IEnumerable<ForumBase>> GetAllForumsAsync(int? categoryId, bool trackChanges)
+        public async Task<IEnumerable<ForumBase>> GetAllForumsFromCategoryAsync(int? categoryId, bool trackChanges)
         {
             return await FindByCondition(f => f.ForumCategoryId.Equals(categoryId), trackChanges)
                 .OrderBy(c => c.ForumTitle).ToListAsync();
         }
-        public async Task<ForumBase> GetForumAsync(int categoryId, int forumId, bool trackChanges)
+        public async Task<ForumBase> GetForumFromCategoryAsync(int categoryId, int forumId, bool trackChanges)
         {
             return await FindByCondition(c => c.ForumCategoryId.Equals(categoryId) && c.Id.Equals(forumId), trackChanges)
                 .SingleOrDefaultAsync();

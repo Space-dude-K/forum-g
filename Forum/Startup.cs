@@ -49,6 +49,7 @@ namespace Forum
             services.AddScoped<ValidationFilterAttribute>();
             services.AddScoped<ValidateCategoryExistsAttribute>();
             services.AddScoped<ValidateForumForCategoryExistsAttribute>();
+            services.AddScoped<ValidateTopicForForumExistsAttribute>();
 
             services.AddControllers();
         }

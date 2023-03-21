@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.ActionsFilters.Forum
 {
-    public class ValidateForumForCategoryExistsAttribute : IAsyncActionFilter
+    public class ValidateTopicForForumExistsAttribute : IAsyncActionFilter
     {
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
-        public ValidateForumForCategoryExistsAttribute(IRepositoryManager repository, ILoggerManager logger)
+        public ValidateTopicForForumExistsAttribute(IRepositoryManager repository, ILoggerManager logger)
         {
             _repository = repository;
             _logger = logger;
@@ -18,24 +18,28 @@ namespace Forum.ActionsFilters.Forum
             var method = context.HttpContext.Request.Method;
             var trackChanges = (method.Equals("PUT") || method.Equals("PATCH")) ? true : false;
             var categoryId = (int)context.ActionArguments["categoryId"];
-            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, false);
-            if (category == null)
-            {
-                _logger.LogInfo($"Category with id: {categoryId} doesn't exist in the database.");
-
-                context.Result = new NotFoundResult();
-                return;
-            }
             var forumId = (int)context.ActionArguments["forumId"];
-            var forum = await _repository.ForumBase.GetForumFromCategoryAsync(categoryId, forumId, trackChanges);
+            var forum = await _repository.ForumBase.GetForumFromCategoryAsync(categoryId, forumId, false);
+
             if (forum == null)
             {
-                _logger.LogInfo($"Forum with id: {forumId} doesn't exist in the database.");
+                _logger.LogInfo($"Forum with category id: {categoryId} and forum id: {forumId} doesn't exist in the database.");
+                context.Result = new NotFoundResult();
+
+                return;
+            }
+
+            var topicId = (int)context.ActionArguments["topicId"];
+            var topic = await _repository.ForumTopic.GetTopicAsync(forumId, topicId, trackChanges);
+
+            if (topic == null)
+            {
+                _logger.LogInfo($"Topic with id: {topicId} doesn't exist in the database.");
                 context.Result = new NotFoundResult();
             }
             else
             {
-                context.HttpContext.Items.Add("forum", forum);
+                context.HttpContext.Items.Add("topic", topic);
                 await next();
             }
         }
