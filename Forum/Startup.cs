@@ -50,6 +50,7 @@ namespace Forum
             services.AddScoped<ValidateCategoryExistsAttribute>();
             services.AddScoped<ValidateForumForCategoryExistsAttribute>();
             services.AddScoped<ValidateTopicForForumExistsAttribute>();
+            services.AddScoped<ValidatePostForTopicExistsAttribute>();
 
             services.AddControllers();
         }

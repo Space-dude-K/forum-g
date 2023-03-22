@@ -26,6 +26,12 @@ namespace Forum
             CreateMap<ForumTopicForCreationDto, ForumTopic>();
             CreateMap<ForumTopicForUpdateDto, ForumTopic>();
             CreateMap<ForumTopicForUpdateDto, ForumTopic>().ReverseMap();
+
+            // Post
+            CreateMap<ForumPost, ForumPostDto>();
+            CreateMap<ForumPostForCreationDto, ForumPost>();
+            CreateMap<ForumPostForUpdateDto, ForumPost>();
+            CreateMap<ForumPostForUpdateDto, ForumPost>().ReverseMap();
         }
     }
 }
