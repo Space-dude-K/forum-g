@@ -1,6 +1,7 @@
 ﻿using Entities.Models.Forum;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Web_api_tests.Tests.Forum.TestCases;
 using Xunit.Abstractions;
 
 namespace Web_api_tests.Tests.Forum
@@ -18,7 +19,7 @@ namespace Web_api_tests.Tests.Forum
         {
             Assert.True(DbContext.ForumCategories.Any());
         }
-        [Theory, ClassData(typeof(TestClassForCategoryData))]
+        [Theory, ClassData(typeof(TestClassForForumCategoryData))]
         public void TableShouldContainSeedData<T>(ForumCategory forumCategory)
         {
             var dbData = DbContext.ForumCategories
