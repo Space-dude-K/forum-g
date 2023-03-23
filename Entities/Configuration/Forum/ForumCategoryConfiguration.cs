@@ -58,14 +58,14 @@ namespace Entities.Configuration.Forum
                 new ForumCategory()
                 {
                     Id = 1,
-                    Name = "Test subtopic 1",
+                    Name = "Test category 1",
                     CreatedAt = DateTime.Now,
                     ForumUserId = 1
                 },
                 new ForumCategory()
                 {
                     Id = 2,
-                    Name = "Test subtopic 2",
+                    Name = "Test category 2",
                     CreatedAt = DateTime.Now,
                     ForumUserId = 2
                 }
