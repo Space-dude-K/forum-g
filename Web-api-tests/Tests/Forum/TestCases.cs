@@ -1,9 +1,18 @@
 ﻿using Entities.Models.Forum;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
+using Entities;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Web_api_tests.Extensions;
 
 namespace Web_api_tests.Tests.Forum
 {
     public static class TestCases
     {
+        public static IEnumerable<object[]> GetTestDataForForumCategory1(ForumContext forumContext)
+        {
+            return forumContext.GetService<IDesignTimeModel>().Model.GetPopulatedModelWithSeedDataFromConfigForTestCase<ForumCategory>();
+        }
         public static IEnumerable<object[]> GetTestDataForForumCategory()
         {
             return new List<object[]>  
