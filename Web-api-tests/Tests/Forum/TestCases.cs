@@ -28,5 +28,29 @@ namespace Web_api_tests.Tests.Forum
                 } 
             };
         }
+        /*public static IEnumerable<object[]> GetTestDataForForumBase()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    new ForumBase()
+                    {
+                        Id = 1,
+                        Name = "Test category 1",
+                        ForumUserId = 1
+                    }
+                },
+                new object[]
+                {
+                    new ForumBase()
+                    {
+                        Id = 2,
+                        Name = "Test category 2",
+                        ForumUserId = 2
+                    }
+                }
+            };
+        }*/
     }
 }
