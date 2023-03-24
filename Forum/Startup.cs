@@ -9,7 +9,7 @@ using NLog;
 
 namespace Forum
 {
-    internal class Startup
+    public class Startup
     {
         private readonly IConfiguration Configuration;
 
