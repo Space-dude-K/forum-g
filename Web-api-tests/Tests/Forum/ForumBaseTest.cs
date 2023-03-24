@@ -1,21 +1,16 @@
 ﻿using Entities.Models.Forum;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Web_api_tests.Tests.Forum.TestCases;
 using Xunit.Abstractions;
 
 namespace Web_api_tests.Tests.Forum
 {
-    public class ForumBaseTests : TestWithSqlite
+    public class ForumBaseTest : TestWithSqlite
     {
         private readonly ITestOutputHelper output;
 
-        public ForumBaseTests(ITestOutputHelper output)
+        public ForumBaseTest(ITestOutputHelper output)
         {
             this.output = output;
         }

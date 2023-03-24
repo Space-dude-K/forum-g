@@ -6,11 +6,11 @@ using Xunit.Abstractions;
 
 namespace Web_api_tests.Tests.Forum
 {
-    public class ForumCategoryTests : TestWithSqlite
+    public class ForumCategoryTest : TestWithSqlite
     {
         private readonly ITestOutputHelper output;
 
-        public ForumCategoryTests(ITestOutputHelper output)
+        public ForumCategoryTest(ITestOutputHelper output)
         {
             this.output = output;
         }
