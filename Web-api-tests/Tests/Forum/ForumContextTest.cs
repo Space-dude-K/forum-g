@@ -1,6 +1,6 @@
 ﻿namespace Web_api_tests.Tests.Forum
 {
-    public class ForumContextTests : TestWithSqlite
+    public class ForumContextTest : TestWithSqlite
     {
         [Fact]
         public async Task DatabaseIsAvailableAndCanBeConnectedTo()
