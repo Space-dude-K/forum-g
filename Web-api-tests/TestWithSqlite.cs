@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Web_api_tests
+namespace ForumTest
 {
     public abstract class TestWithSqlite : IDisposable
     {

@@ -11,7 +11,7 @@ using System.Configuration;
 using System.Diagnostics;
 using Xunit.Abstractions;
 
-namespace Web_api_tests
+namespace ForumTest
 {
     public class TestClientProvider : IDisposable
     {

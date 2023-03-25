@@ -1,4 +1,4 @@
-﻿namespace Web_api_tests.Tests.Forum
+﻿namespace ForumTest.Tests.Unit.Forum
 {
     public class ForumContextTest : TestWithSqlite
     {

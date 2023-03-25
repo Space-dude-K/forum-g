@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Web_api_tests.Helpers;
+using ForumTest.Helpers;
 
-namespace Web_api_tests.Extensions
+namespace ForumTest.Extensions
 {
     public static class TestExtensions
     {

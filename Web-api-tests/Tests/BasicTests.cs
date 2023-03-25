@@ -7,7 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Web_api_tests.Tests
+namespace ForumTest.Tests
 {
     public class BasicTests : IClassFixture<WebApplicationFactory<Program>>
     {

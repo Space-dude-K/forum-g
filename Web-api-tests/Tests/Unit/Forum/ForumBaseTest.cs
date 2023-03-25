@@ -1,10 +1,10 @@
 ﻿using Entities.Models.Forum;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Web_api_tests.Tests.Forum.TestCases;
 using Xunit.Abstractions;
+using ForumTest.Tests.Unit.Forum.TestCases;
 
-namespace Web_api_tests.Tests.Forum
+namespace ForumTest.Tests.Unit.Forum
 {
     public class ForumBaseTest : TestWithSqlite
     {

@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Web_api_tests.Tests.Forum
+namespace ForumTest.Tests.Unit.Forum
 {
     public class ForumConfigurationTests : TestWithSqlite
     {
-        
+
 
         /*[Fact]
         public void NameIsRequired()

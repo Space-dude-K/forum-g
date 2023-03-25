@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Web_api_tests.Helpers
+namespace ForumTest.Helpers
 {
     public static class TestHelper
     {
