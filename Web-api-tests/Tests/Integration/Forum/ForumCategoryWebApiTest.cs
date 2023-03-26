@@ -17,28 +17,25 @@ using Xunit.Abstractions;
 
 namespace ForumTest.Tests.Integration.Forum
 {
-    public class ForumCategoryWebApiTest : IClassFixture<TestWithEfInMemoryDb<ForumContext>>
+    public class ForumCategoryWebApiTest
     {
         private readonly ITestOutputHelper _output;
         private readonly TestWithEfInMemoryDb<ForumContext> _webApplicationFactory;
 
-        public ForumCategoryWebApiTest(ITestOutputHelper output, TestWithEfInMemoryDb<ForumContext> webApplicationFactory)
+        public ForumCategoryWebApiTest(ITestOutputHelper output)
         {
             _output = output;
-            _webApplicationFactory = webApplicationFactory;
         }
 
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.GetAllCategoriesData), MemberType = typeof(ForumCategoryCaseData))]
-        public async Task GetAll_ForumCategories_ReturnsCorrectContentType(string url, string contentType)
+        public async Task GetAll_ForumCategories_ReturnsCorrectContentType(string uri, string contentType)
         {
-            _output.WriteLine("Data -> " + url + " Type: " + contentType);
-
             // Arrange
-            var client = _webApplicationFactory.Client;
+            var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
 
             // Act
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
@@ -48,16 +45,17 @@ namespace ForumTest.Tests.Integration.Forum
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.GetAllCategoriesData), MemberType = typeof(ForumCategoryCaseData))]
-        public async Task GetAll_ForumCategories_ReturnsSeedData(string url, string contentType)
+        public async Task GetAll_ForumCategories_ReturnsSeedData(string uri, string contentType)
         {
-            _output.WriteLine("Data -> " + url + " Type: " + contentType);
+            _output.WriteLine("uri -> " + uri + " Type: " + contentType);
 
             // Arrange
-            var client = _webApplicationFactory.Client;
-            var seedData = _webApplicationFactory.Model.GetPopulatedModelWithSeedDataFromConfig<ForumCategory>();
+            var fac = new TestWithEfInMemoryDb<ForumContext>();
+            var client = fac.CreateClient();
+            var seedData = fac.Model.GetPopulatedModelWithSeedDataFromConfig<ForumCategory>();
 
             // Act
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
@@ -73,15 +71,15 @@ namespace ForumTest.Tests.Integration.Forum
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.GetSingleForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
-        public async Task GetSingle_ForumCategory_ReturnsCorrectContentType(string url, string contentType)
+        public async Task GetSingle_ForumCategory_ReturnsCorrectContentType(string uri, string contentType)
         {
-            _output.WriteLine("Data -> " + url);
+            _output.WriteLine("uri -> " + uri);
 
             // Arrange
-            var client = _webApplicationFactory.CreateClient();
+            var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
 
             // Act
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
@@ -91,16 +89,17 @@ namespace ForumTest.Tests.Integration.Forum
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.GetSingleForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
-        public async Task GetSingle_ForumCategory_ReturnsSeedData(string url, string contentType)
+        public async Task GetSingle_ForumCategory_ReturnsSeedData(string uri, string contentType)
         {
-            _output.WriteLine("Data -> " + url);
+            _output.WriteLine("uri -> " + uri);
 
             // Arrange
-            var client = _webApplicationFactory.CreateClient();
-            var seedData = _webApplicationFactory.Model.GetPopulatedModelWithSeedDataFromConfig<ForumCategory>();
+            var fac = new TestWithEfInMemoryDb<ForumContext>();
+            var client = fac.CreateClient();
+            var seedData = fac.Model.GetPopulatedModelWithSeedDataFromConfig<ForumCategory>();
 
             // Act
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
@@ -113,15 +112,15 @@ namespace ForumTest.Tests.Integration.Forum
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.GetCollectionForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
-        public async Task GetCollection_ForumCategory_ReturnsCorrectContentType(string url, string contentType)
+        public async Task GetCollection_ForumCategory_ReturnsCorrectContentType(string uri, string contentType, int collectionSize)
         {
-            _output.WriteLine("Data -> " + url);
+            _output.WriteLine("uri -> " + uri);
 
             // Arrange
-            var client = _webApplicationFactory.CreateClient();
+            var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
 
             // Act
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
@@ -131,16 +130,17 @@ namespace ForumTest.Tests.Integration.Forum
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.GetCollectionForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
-        public async Task GetCollection_ForumCategory_ReturnsSeedData(string url, int collectionSize)
+        public async Task GetCollection_ForumCategory_ReturnsSeedData(string uri, string contentType, int collectionSize)
         {
-            _output.WriteLine("Data -> " + url);
+            _output.WriteLine("uri -> " + uri);
 
             // Arrange
-            var client = _webApplicationFactory.CreateClient();
-            var seedData = _webApplicationFactory.Model.GetPopulatedModelWithSeedDataFromConfig<ForumCategory>();
+            var fac = new TestWithEfInMemoryDb<ForumContext>();
+            var client = fac.CreateClient();
+            var seedData = fac.Model.GetPopulatedModelWithSeedDataFromConfig<ForumCategory>();
 
             // Act
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
@@ -159,16 +159,16 @@ namespace ForumTest.Tests.Integration.Forum
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.PostSingleForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
-        public async Task PostSingle_ForumCategory_ReturnsCaseData(string url, string expectedCategoryName)
+        public async Task PostSingle_ForumCategory_ReturnsCaseData(string uri, string expectedCategoryName)
         {
-            _output.WriteLine("Data -> " + url);
+            _output.WriteLine("uri -> " + uri);
 
             // Arrange
-            var client = _webApplicationFactory.CreateClient();
+            var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
             var jsonContent = JsonConvert.SerializeObject(new { Name = expectedCategoryName });
 
             // Act
-            var response = await client.PostAsync(url, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
@@ -177,6 +177,34 @@ namespace ForumTest.Tests.Integration.Forum
             var responseContent = JsonConvert.DeserializeObject<ForumCategoryDto>(rawData);
 
             Assert.Equal(expectedCategoryName, responseContent.Name);
+        }
+        [Theory]
+        [MemberData(nameof(ForumCategoryCaseData.PostCollectionForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
+        public async Task PostCollection_ForumCategory_ReturnsCaseData(string uri, List<ForumCategoryForCreationDto> expectedCategoryNames)
+        {
+            _output.WriteLine("uri -> " + uri);
+
+            // Arrange
+            var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+            var jsonContent = JsonConvert.SerializeObject(expectedCategoryNames);
+
+            _output.WriteLine("Json -> " + jsonContent);
+
+            // Act
+            var response = await client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+            //_output.WriteLine("CS -> " + _webApplicationFactory.Context.Database.GetConnectionString());
+            // Assert
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+
+            var rawData = await response.Content.ReadAsStringAsync();
+            var responseContent = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData);
+
+            for(int i = 0; i < responseContent.Count(); i++)
+            {
+                Assert.Equal(expectedCategoryNames[i].Name, responseContent.ToArray()[i].Name);
+            }
+
+            Assert.Equal(expectedCategoryNames.Count(), responseContent.Count());
         }
     }
 }

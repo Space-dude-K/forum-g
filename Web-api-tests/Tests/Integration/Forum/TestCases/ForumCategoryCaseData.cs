@@ -18,15 +18,37 @@ namespace ForumTest.Tests.Integration.Forum.TestCases
         public static IEnumerable<object[]> GetCollectionForumCategoryData =>
             new List<object[]>
             {
-                new object[] { "/api/categories/collection/(1,2)", 2 },
-                new object[] { "/api/categories/collection/(2,3)", 2 },
-                new object[] { "/api/categories/collection/(3,4)", 2 }
+                new object[] { "/api/categories/collection/(1,2)", "application/json; charset=utf-8", 2 },
+                new object[] { "/api/categories/collection/(2,3)", "application/json; charset=utf-8", 2 },
+                new object[] { "/api/categories/collection/(3,4)", "application/json; charset=utf-8", 2 }
             };
         public static IEnumerable<object[]> PostSingleForumCategoryData =>
             new List<object[]>
             {
                 new object[] { "/api/categories", "Test category name 1" },
                 new object[] { "/api/categories", "Test category name 2" },
+            };
+        public static IEnumerable<object[]> PostCollectionForumCategoryData =>
+            new List<object[]>
+            {
+                new object[]
+                {
+                    "/api/categories/collection",
+                    new List<ForumCategoryForCreationDto>
+                    {
+                        new ForumCategoryForCreationDto() { Name = "Test category name 1 c" },
+                        new ForumCategoryForCreationDto() { Name = "Test category name 2 c" }
+                    },
+                },
+                new object[]
+                {
+                    "/api/categories/collection",
+                    new List<ForumCategoryForCreationDto>
+                    {
+                        new ForumCategoryForCreationDto() { Name = "Test category name 3 c" },
+                        new ForumCategoryForCreationDto() { Name = "Test category name 4 c" }
+                    }
+                }  
             };
     }
 }
