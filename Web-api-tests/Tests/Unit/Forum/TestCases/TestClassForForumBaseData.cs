@@ -2,17 +2,17 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Collections;
-using Web_api_tests.Extensions;
+using ForumTest.Extensions;
 
-namespace Web_api_tests.Tests.Forum.TestCases
+namespace ForumTest.Tests.Unit.Forum.TestCases
 {
-    public class TestClassForForumTopicData : TestWithSqlite, IEnumerable<object[]>
+    public class TestClassForForumBaseData : TestWithSqlite, IEnumerable<object[]>
     {
         private IEnumerable<object[]> data;
 
-        public TestClassForForumTopicData()
+        public TestClassForForumBaseData()
         {
-            data = DbContext.GetService<IDesignTimeModel>().Model.GetPopulatedModelWithSeedDataFromConfigForTestCase<ForumTopic>();
+            data = DbContext.GetService<IDesignTimeModel>().Model.GetPopulatedModelWithSeedDataFromConfigForTestCase<ForumBase>();
         }
         public IEnumerator<object[]> GetEnumerator()
         { return data.GetEnumerator(); }

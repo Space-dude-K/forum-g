@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Web_api_tests.Mocks
+namespace ForumTest.Mocks
 {
     internal class MockRepositoryWrapper
     {

@@ -1,18 +1,21 @@
 ﻿using Entities.Models.Forum;
 using FluentAssertions;
+using Forum;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Web_api_tests.Tests.Forum.TestCases;
+using System.Net;
 using Xunit.Abstractions;
+using ForumTest.Tests.Unit.Forum.TestCases;
 
-namespace Web_api_tests.Tests.Forum
+namespace ForumTest.Tests.Unit.Forum
 {
     public class ForumCategoryTest : TestWithSqlite
     {
-        private readonly ITestOutputHelper output;
+        private readonly ITestOutputHelper _output;
 
         public ForumCategoryTest(ITestOutputHelper output)
         {
-            this.output = output;
+            _output = output;
         }
         [Fact]
         public void TableShouldGetCreated()
@@ -32,6 +35,14 @@ namespace Web_api_tests.Tests.Forum
                 x.Id == forumCategory.Id
                 && x.Name == forumCategory.Name
                 && x.ForumUserId == forumCategory.ForumUserId);
+        }
+
+        [Fact]
+        public void InsertTest_ForumCategoriesData_ReturnsTestCaseData()
+        {
+
+
+            Assert.True(DbContext.ForumCategories.Any());
         }
     }
 }

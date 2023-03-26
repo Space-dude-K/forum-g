@@ -48,19 +48,6 @@ namespace Forum.Controllers.Forum
                 return Ok(categoryDto);
             }
         }
-        [HttpPost]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreateCategory([FromBody] ForumCategoryForCreationDto category)
-        {
-            var categoryEntity = _mapper.Map<ForumCategory>(category);
-
-            _repository.ForumCategory.CreateCategory(categoryEntity);
-            await _repository.SaveAsync();
-
-            var categoryToReturn = _mapper.Map<ForumCategoryDto>(categoryEntity);
-
-            return CreatedAtRoute("CategoryById", new { id = categoryToReturn.Id }, categoryToReturn);
-        }
         [HttpGet("collection/({ids})", Name = "CategoryCollection")]
         public async Task<IActionResult> GetCategoryCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
         {
@@ -77,6 +64,19 @@ namespace Forum.Controllers.Forum
             }
             var categoriesToReturn = _mapper.Map<IEnumerable<ForumCategoryDto>>(categoryEntities);
             return Ok(categoriesToReturn);
+        }
+        [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> CreateCategory([FromBody] ForumCategoryForCreationDto category)
+        {
+            var categoryEntity = _mapper.Map<ForumCategory>(category);
+
+            _repository.ForumCategory.CreateCategory(categoryEntity);
+            await _repository.SaveAsync();
+
+            var categoryToReturn = _mapper.Map<ForumCategoryDto>(categoryEntity);
+
+            return CreatedAtRoute("CategoryById", new { id = categoryToReturn.Id }, categoryToReturn);
         }
         [HttpPost("collection")]
         public async Task<IActionResult> CreateCategoryCollection([FromBody] IEnumerable<ForumCategoryForCreationDto> categoryCollection)
@@ -119,6 +119,5 @@ namespace Forum.Controllers.Forum
             await _repository.SaveAsync();
             return NoContent();
         }
-
     }
 }

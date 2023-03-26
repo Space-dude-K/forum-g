@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoggerService", "LoggerServ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{B666AFFA-0A00-48DE-9D22-03717B8A3673}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web-api-tests", "Web-api-tests\Web-api-tests.csproj", "{31832F40-07B8-458C-BC5B-1930900A5153}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumTest", "Web-api-tests\ForumTest.csproj", "{31832F40-07B8-458C-BC5B-1930900A5153}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
