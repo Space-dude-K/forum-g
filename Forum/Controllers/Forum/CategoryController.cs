@@ -96,16 +96,6 @@ namespace Forum.Controllers.Forum
             var ids = string.Join(",", categoryCollectionToReturn.Select(c => c.Id));
             return CreatedAtRoute("CategoryCollection", new { ids }, categoryCollectionToReturn);
         }
-        [HttpDelete("{categoryId}")]
-        [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
-        public async Task<IActionResult> DeleteCategory(int categoryId)
-        {
-            var category = HttpContext.Items["category"] as ForumCategory;
-
-            _repository.ForumCategory.DeleteCategory(category);
-            await _repository.SaveAsync();
-            return NoContent();
-        }
         [HttpPut("{categoryId}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
@@ -116,6 +106,16 @@ namespace Forum.Controllers.Forum
             var categoryEntity = HttpContext.Items["category"] as ForumCategory;
 
             _mapper.Map(category, categoryEntity);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+        [HttpDelete("{categoryId}")]
+        [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
+        public async Task<IActionResult> DeleteCategory(int categoryId)
+        {
+            var category = HttpContext.Items["category"] as ForumCategory;
+
+            _repository.ForumCategory.DeleteCategory(category);
             await _repository.SaveAsync();
             return NoContent();
         }

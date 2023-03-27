@@ -50,5 +50,11 @@ namespace ForumTest.Tests.Integration.Forum.TestCases
                     }
                 }  
             };
+        public static IEnumerable<object[]> DeleteSingleForumCategoryData =>
+            new List<object[]>
+            {
+                new object[] { "/api/categories/1" },
+                new object[] { "/api/categories/2" },
+            };
     }
 }
