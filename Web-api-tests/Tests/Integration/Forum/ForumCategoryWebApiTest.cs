@@ -2,14 +2,8 @@
 using Entities.DTO.ForumDto;
 using Entities.DTO.ForumDto.Create;
 using Entities.Models.Forum;
-using Forum;
 using ForumTest.Extensions;
 using ForumTest.Tests.Integration.Forum.TestCases;
-using ForumTest.Tests.Unit.Forum.TestCases;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
@@ -20,7 +14,6 @@ namespace ForumTest.Tests.Integration.Forum
     public class ForumCategoryWebApiTest
     {
         private readonly ITestOutputHelper _output;
-        private readonly TestWithEfInMemoryDb<ForumContext> _webApplicationFactory;
 
         public ForumCategoryWebApiTest(ITestOutputHelper output)
         {
@@ -205,6 +198,25 @@ namespace ForumTest.Tests.Integration.Forum
             }
 
             Assert.Equal(expectedCategoryNames.Count(), responseContent.Count());
+        }
+        [Theory]
+        [MemberData(nameof(ForumCategoryCaseData.DeleteSingleForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
+        public async Task DeleteSingle_ForumCategory_ReturnsNotFound(string uri)
+        {
+            // Arrange
+            var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+
+            // Act
+            var responseGetBeforeDel = await client.GetAsync(uri);
+            var responseDelete = await client.DeleteAsync(uri);
+            var responseGetAfterDel = await client.GetAsync(uri);
+
+            // Assert
+            responseGetBeforeDel.EnsureSuccessStatusCode(); // Status Code 200-299
+            responseDelete.EnsureSuccessStatusCode(); // Status Code 200-299
+
+            Assert.Equal(HttpStatusCode.OK, responseGetBeforeDel.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, responseGetAfterDel.StatusCode);
         }
     }
 }
