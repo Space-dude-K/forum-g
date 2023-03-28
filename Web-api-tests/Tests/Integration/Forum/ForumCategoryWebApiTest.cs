@@ -1,9 +1,12 @@
-﻿using Entities;
+﻿using Azure;
+using Entities;
 using Entities.DTO.ForumDto;
 using Entities.DTO.ForumDto.Create;
+using Entities.DTO.ForumDto.Update;
 using Entities.Models.Forum;
 using ForumTest.Extensions;
 using ForumTest.Tests.Integration.Forum.TestCases;
+using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
@@ -149,6 +152,64 @@ namespace ForumTest.Tests.Integration.Forum
             }
 
             Assert.Equal(collectionSize, categories.Count);
+        }
+        [Theory]
+        [MemberData(nameof(ForumCategoryCaseData.UpdateSingleForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
+        public async Task PutSingle_ForumCategory_ReturnsUpdatedCaseData(string uri, string expectedCategoryName)
+        {
+            _output.WriteLine("uri -> " + uri);
+
+            // Arrange
+            var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+            
+            // Act
+            var responseGetBeforeUp = await client.GetAsync(uri);
+            var rawDataBeforeUp = await responseGetBeforeUp.Content.ReadAsStringAsync();
+            var responseContentBeforeUp = JsonConvert.DeserializeObject<ForumCategoryDto>(rawDataBeforeUp);
+            responseContentBeforeUp.Name = responseContentBeforeUp.Name + " updated";
+            var jsonContentBeforeUp = JsonConvert.SerializeObject(responseContentBeforeUp);
+            var response = await client.PutAsync(uri, new StringContent(jsonContentBeforeUp, Encoding.UTF8, "application/json"));
+            var responseGetAfterUp = await client.GetAsync(uri);
+            var rawDataAfterUp = await responseGetAfterUp.Content.ReadAsStringAsync();
+            var responseContentAfterUp = JsonConvert.DeserializeObject<ForumCategoryDto>(rawDataAfterUp);
+
+            // Assert
+            responseGetBeforeUp.EnsureSuccessStatusCode(); // Status Code 200-299
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            responseGetAfterUp.EnsureSuccessStatusCode(); // Status Code 200-299
+
+            Assert.Equal(expectedCategoryName, responseContentAfterUp.Name);
+        }
+        [Theory]
+        [MemberData(nameof(ForumCategoryCaseData.UpdateSingleForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
+        public async Task PatchSingle_ForumCategory_ReturnsUpdatedCaseData(string uri, string expectedCategoryName)
+        {
+            _output.WriteLine("uri -> " + uri);
+
+            // Arrange
+            var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+
+            // Act
+            var responseGetBeforeUp = await client.GetAsync(uri);
+            var rawDataBeforeUp = await responseGetBeforeUp.Content.ReadAsStringAsync();
+            var responseContentBeforeUp = JsonConvert.DeserializeObject<ForumCategoryDto>(rawDataBeforeUp);
+            responseContentBeforeUp.Name += " updated";
+
+            var jsonPatchObject = new JsonPatchDocument<ForumCategoryForUpdateDto>();
+            jsonPatchObject.Replace(fc => fc.Name, responseContentBeforeUp.Name);
+
+            var jsonContentBeforeUp = JsonConvert.SerializeObject(jsonPatchObject);
+            var response = await client.PatchAsync(uri, new StringContent(jsonContentBeforeUp, Encoding.UTF8, "application/json"));
+            var responseGetAfterUp = await client.GetAsync(uri);
+            var rawDataAfterUp = await responseGetAfterUp.Content.ReadAsStringAsync();
+            var responseContentAfterUp = JsonConvert.DeserializeObject<ForumCategoryDto>(rawDataAfterUp);
+
+            // Assert
+            responseGetBeforeUp.EnsureSuccessStatusCode(); // Status Code 200-299
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            responseGetAfterUp.EnsureSuccessStatusCode(); // Status Code 200-299
+
+            Assert.Equal(expectedCategoryName, responseContentAfterUp.Name);
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.PostSingleForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]

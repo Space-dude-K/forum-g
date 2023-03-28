@@ -22,6 +22,12 @@ namespace ForumTest.Tests.Integration.Forum.TestCases
                 new object[] { "/api/categories/collection/(2,3)", "application/json; charset=utf-8", 2 },
                 new object[] { "/api/categories/collection/(3,4)", "application/json; charset=utf-8", 2 }
             };
+        public static IEnumerable<object[]> UpdateSingleForumCategoryData =>
+            new List<object[]>
+            {
+                new object[] { "/api/categories/1", "Test category 1 updated" },
+                new object[] { "/api/categories/2", "Test category 2 updated" },
+            };
         public static IEnumerable<object[]> PostSingleForumCategoryData =>
             new List<object[]>
             {

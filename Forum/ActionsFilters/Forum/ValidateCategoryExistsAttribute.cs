@@ -15,7 +15,7 @@ namespace Forum.ActionsFilters.Forum
         }
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var trackChanges = context.HttpContext.Request.Method.Equals("PUT");
+            var trackChanges = context.HttpContext.Request.Method.Equals("PUT") || context.HttpContext.Request.Method.Equals("PATCH");
             var id = (int)context.ActionArguments["categoryId"];
             var category = await _repository.ForumCategory.GetCategoryAsync(id, trackChanges);
             if (category == null)
