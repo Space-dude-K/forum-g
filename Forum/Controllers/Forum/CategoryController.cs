@@ -7,6 +7,7 @@ using Entities.Models.Forum;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
 using Forum.ModelBinders;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.Controllers.Forum
@@ -107,6 +108,36 @@ namespace Forum.Controllers.Forum
 
             _mapper.Map(category, categoryEntity);
             await _repository.SaveAsync();
+            return NoContent();
+        }
+        [HttpPatch("{categoryId}")]
+        [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
+        public async Task<IActionResult> PartiallyUpdateCategory(int categoryId, [FromBody] JsonPatchDocument<ForumCategoryForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+            var categoryEntity = HttpContext.Items["category"] as ForumCategory;
+
+            var categoryToPatch = _mapper.Map<ForumCategoryForUpdateDto>(categoryEntity);
+            patchDoc.ApplyTo(categoryToPatch, ModelState);
+
+            TryValidateModel(categoryToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+
+            _mapper.Map(categoryToPatch, categoryEntity);
+
+            _logger.LogInfo($"Part up {categoryToPatch.Name}");
+
+            await _repository.SaveAsync();
+
             return NoContent();
         }
         [HttpDelete("{categoryId}")]
