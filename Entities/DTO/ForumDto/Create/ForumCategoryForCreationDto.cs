@@ -1,8 +1,6 @@
 ﻿namespace Entities.DTO.ForumDto.Create
 {
-    public class ForumCategoryForCreationDto
+    public class ForumCategoryForCreationDto : ForumCategoryForManipulationDto
     {
-        public string Name { get; set; }
-        public IEnumerable<ForumBaseForCreationDto>? ForumBases { get; set; }
     }
 }

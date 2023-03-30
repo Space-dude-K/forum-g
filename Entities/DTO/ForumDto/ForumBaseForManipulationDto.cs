@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Entities.DTO.ForumDto.Create;
+using System.ComponentModel.DataAnnotations;
 
 namespace Entities.DTO.ForumDto
 {

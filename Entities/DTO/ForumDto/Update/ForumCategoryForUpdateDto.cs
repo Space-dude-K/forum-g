@@ -1,10 +1,6 @@
-﻿using Entities.DTO.ForumDto.Create;
-
-namespace Entities.DTO.ForumDto.Update
+﻿namespace Entities.DTO.ForumDto.Update
 {
-    public class ForumCategoryForUpdateDto
+    public class ForumCategoryForUpdateDto : ForumCategoryForManipulationDto
     {
-        public string Name { get; set; }
-        public IEnumerable<ForumBaseForCreationDto>? ForumBases { get; set; }
     }
 }

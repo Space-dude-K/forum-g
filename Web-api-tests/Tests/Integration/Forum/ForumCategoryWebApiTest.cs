@@ -1,5 +1,4 @@
-﻿using Azure;
-using Entities;
+﻿using Entities;
 using Entities.DTO.ForumDto;
 using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.Update;
@@ -231,6 +230,22 @@ namespace ForumTest.Tests.Integration.Forum
             var responseContent = JsonConvert.DeserializeObject<ForumCategoryDto>(rawData);
 
             Assert.Equal(expectedCategoryName, responseContent.Name);
+        }
+        [Theory]
+        [MemberData(nameof(ForumCategoryCaseData.PostSingleForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
+        public async Task PostSingle_ForumCategory_ReturnsUprocessableEntity(string uri, string expectedCategoryName)
+        {
+            _output.WriteLine("uri -> " + uri);
+
+            // Arrange
+            var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+            var jsonContent = JsonConvert.SerializeObject(new { });
+
+            // Act
+            var response = await client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+
+            // Assert
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.PostCollectionForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]

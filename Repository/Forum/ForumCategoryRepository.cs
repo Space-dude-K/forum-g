@@ -17,10 +17,10 @@ namespace Repository.Forum
         {
             category.ForumUserId = 1;
             
-            if(category.ForumBases.Any())
+            /*if(category.ForumBases.Any())
             {
                 category.ForumBases.Select(f => f.ForumUserId = 1).ToList();
-            }
+            }*/
 
             Create(category);
         }
