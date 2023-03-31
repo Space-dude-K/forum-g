@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using Azure.Core;
+using Entities;
 using Entities.DTO.ForumDto;
 using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.Update;
@@ -232,8 +233,8 @@ namespace ForumTest.Tests.Integration.Forum
             Assert.Equal(expectedCategoryName, responseContent.Name);
         }
         [Theory]
-        [MemberData(nameof(ForumCategoryCaseData.PostSingleForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
-        public async Task PostSingle_ForumCategory_ReturnsUprocessableEntity(string uri, string expectedCategoryName)
+        [MemberData(nameof(ForumCategoryCaseData.PostSingleForumCategoryDataErrors), MemberType = typeof(ForumCategoryCaseData))]
+        public async Task PostSingle_ForumCategory_ReturnsUprocessableEntity(string uri, string expectedError)
         {
             _output.WriteLine("uri -> " + uri);
 
@@ -244,8 +245,17 @@ namespace ForumTest.Tests.Integration.Forum
             // Act
             var response = await client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
+            string body = string.Empty;
+            using (var reader = new StreamReader(response.Content.ReadAsStream()))
+            {
+                body = await reader.ReadToEndAsync();
+            }
+
+            _output.WriteLine("Body -> " + body);
+
             // Assert
             Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            Assert.Equal(expectedError, body);
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.PostCollectionForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]

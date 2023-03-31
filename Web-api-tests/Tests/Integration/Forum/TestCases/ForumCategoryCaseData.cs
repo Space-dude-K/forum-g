@@ -34,6 +34,11 @@ namespace ForumTest.Tests.Integration.Forum.TestCases
                 new object[] { "/api/categories", "Test category name 1" },
                 new object[] { "/api/categories", "Test category name 2" },
             };
+        public static IEnumerable<object[]> PostSingleForumCategoryDataErrors =>
+            new List<object[]>
+            {
+                new object[] { "/api/categories", "{\"Name\":[\"Category title is a required field.\"]}" }
+            };
         public static IEnumerable<object[]> PostCollectionForumCategoryData =>
             new List<object[]>
             {
