@@ -258,6 +258,35 @@ namespace ForumTest.Tests.Integration.Forum
             Assert.Equal(expectedError, body);
         }
         [Theory]
+        [MemberData(nameof(ForumCategoryCaseData.PostCollectionForumCategoryDataErrors), MemberType = typeof(ForumCategoryCaseData))]
+        public async Task PostCollection_ForumCategory_ReturnsUprocessableEntity(string uri, 
+            List<ForumCategoryForCreationDto> expectedCategoryNames, string expectedError)
+        {
+            _output.WriteLine("uri -> " + uri);
+
+            // Arrange
+            var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+            var jsonContent = JsonConvert.SerializeObject(expectedCategoryNames);
+
+            _output.WriteLine("Json -> " + jsonContent);
+
+            // Act
+            var response = await client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+            //_output.WriteLine("CS -> " + _webApplicationFactory.Context.Database.GetConnectionString());
+            // Assert
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+
+            var rawData = await response.Content.ReadAsStringAsync();
+            var responseContent = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData);
+
+            for (int i = 0; i < responseContent.Count(); i++)
+            {
+                Assert.Equal(expectedCategoryNames[i].Name, responseContent.ToArray()[i].Name);
+            }
+
+            Assert.Equal(expectedCategoryNames.Count(), responseContent.Count());
+        }
+        [Theory]
         [MemberData(nameof(ForumCategoryCaseData.PostCollectionForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
         public async Task PostCollection_ForumCategory_ReturnsCaseData(string uri, List<ForumCategoryForCreationDto> expectedCategoryNames)
         {
