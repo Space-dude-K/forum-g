@@ -259,7 +259,7 @@ namespace ForumTest.Tests.Integration.Forum
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.PostCollectionForumCategoryDataErrors), MemberType = typeof(ForumCategoryCaseData))]
-        public async Task PostCollection_ForumCategory_ReturnsUprocessableEntity(string uri, 
+        public async Task PostCollection_ForumCategory_ReturnsUprocessableEntities(string uri, 
             List<ForumCategoryForCreationDto> expectedCategoryNames, string expectedError)
         {
             _output.WriteLine("uri -> " + uri);
@@ -267,24 +267,25 @@ namespace ForumTest.Tests.Integration.Forum
             // Arrange
             var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
             var jsonContent = JsonConvert.SerializeObject(expectedCategoryNames);
+            expectedError = "{" + string.Join(",", expectedCategoryNames.Select((e, i) => expectedError
+            .Insert(1, "[" + i.ToString() + "]."))) + "}";
 
             _output.WriteLine("Json -> " + jsonContent);
 
             // Act
             var response = await client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
-            //_output.WriteLine("CS -> " + _webApplicationFactory.Context.Database.GetConnectionString());
-            // Assert
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
 
-            var rawData = await response.Content.ReadAsStringAsync();
-            var responseContent = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData);
-
-            for (int i = 0; i < responseContent.Count(); i++)
+            string body = string.Empty;
+            using (var reader = new StreamReader(response.Content.ReadAsStream()))
             {
-                Assert.Equal(expectedCategoryNames[i].Name, responseContent.ToArray()[i].Name);
+                body = await reader.ReadToEndAsync();
             }
 
-            Assert.Equal(expectedCategoryNames.Count(), responseContent.Count());
+            _output.WriteLine("body -> " + body);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            Assert.Equal(expectedError, body);
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.PostCollectionForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]

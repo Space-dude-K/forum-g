@@ -47,20 +47,20 @@ namespace ForumTest.Tests.Integration.Forum.TestCases
                     "/api/categories/collection",
                     new List<ForumCategoryForCreationDto>
                     {
-                        new ForumCategoryForCreationDto() { Name = "Test category name 1 c" },
-                        new ForumCategoryForCreationDto() { Name = "Test category name 2 c" }
+                        new ForumCategoryForCreationDto() { },
+                        new ForumCategoryForCreationDto() { }
                     },
-                    "{\"Name\":[\"Category title is a required field.\"]}"
+                    "\"Name\":[\"Category title is a required field.\"]"
                 },
                 new object[]
                 {
                     "/api/categories/collection",
                     new List<ForumCategoryForCreationDto>
                     {
-                        new ForumCategoryForCreationDto() { Name = "Test category name 3 c" },
-                        new ForumCategoryForCreationDto() { Name = "Test category name 4 c" }
+                        new ForumCategoryForCreationDto() { },
+                        new ForumCategoryForCreationDto() { }
                     },
-                    "{\"Name\":[\"Category title is a required field.\"]}"
+                    "\"Name\":[\"Category title is a required field.\"]"
                 }
             };
         public static IEnumerable<object[]> PostCollectionForumCategoryData =>
