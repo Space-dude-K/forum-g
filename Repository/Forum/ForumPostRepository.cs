@@ -28,7 +28,8 @@ namespace Repository.Forum
         public async Task<PagedList<ForumPost>> GetAllPostsFromTopicAsync(
             int? forumTopicId, ForumPostParameters forumPostParameters, bool trackChanges)
         {
-            var posts = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId), trackChanges)
+            var posts = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId) && 
+            (f.Likes >= forumPostParameters.MinLikes && f.Likes <= forumPostParameters.MaxLikes), trackChanges)
                 .OrderBy(c => c.PostName)
                 .ToListAsync();
 

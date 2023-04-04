@@ -27,6 +27,10 @@ namespace Entities.Configuration.Forum
                 .IsRequired(false)
                 .IsUnicode(true);
             builder
+                .Property(p => p.Likes)
+                .HasColumnType("INTEGER")
+                .IsRequired(false);
+            builder
                 .Property(p => p.CreatedAt)
                 .HasColumnType("Date")
                 .IsRequired(false);
@@ -50,6 +54,7 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 1,
                     PostName = "Post name 1",
+                    Likes = 1,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 1,
                     ForumUserId = 1
@@ -74,6 +79,7 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 4,
                     PostName = "Post name 4",
+                    Likes = 34,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
                     ForumUserId = 2
@@ -82,6 +88,7 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 5,
                     PostName = "Post name 5",
+                    Likes = 65,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
                     ForumUserId = 2

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DTO.ForumDto
+namespace Entities.DTO.ForumDto.Manipulation
 {
     public abstract class ForumTopicForManipulationDto
     {
