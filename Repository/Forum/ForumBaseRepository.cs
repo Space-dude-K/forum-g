@@ -4,6 +4,7 @@ using Entities.Models.Forum;
 using Entities.RequestFeatures;
 using Entities.RequestFeatures.Forum;
 using Microsoft.EntityFrameworkCore;
+using Repository.Extensions;
 using System.ComponentModel.Design;
 
 namespace Repository.Forum
@@ -30,6 +31,7 @@ namespace Repository.Forum
             int? categoryId, ForumBaseParameters forumBaseParameters, bool trackChanges)
         {
             var forums = await FindByCondition(f => f.ForumCategoryId.Equals(categoryId), trackChanges)
+                .Search(forumBaseParameters.SearchTerm)
                 .OrderBy(c => c.ForumTitle)
                 .ToListAsync();
 
