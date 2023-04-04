@@ -57,10 +57,10 @@ namespace ForumTest.Tests.Integration.Forum.TestCases
                     "/api/categories/collection",
                     new List<ForumCategoryForCreationDto>
                     {
-                        new ForumCategoryForCreationDto() { },
-                        new ForumCategoryForCreationDto() { }
+                        new ForumCategoryForCreationDto() { Name = "Test name 11111111111111111111111111111111111" },
+                        new ForumCategoryForCreationDto() { Name = "Test name 22222222222222222222222222222222222"}
                     },
-                    "\"Name\":[\"Category title is a required field.\"]"
+                    "\"Name\":[\"Maximum length for the category name is 30 characters.\"]"
                 }
             };
         public static IEnumerable<object[]> PostCollectionForumCategoryData =>
