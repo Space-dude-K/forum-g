@@ -6,7 +6,6 @@ using Entities.DTO.ForumDto;
 using Entities.Models.Forum;
 using Forum.ActionsFilters.Forum;
 using Forum.ActionsFilters;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Entities.RequestFeatures.Forum;
