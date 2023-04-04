@@ -1,9 +1,10 @@
 ﻿using Contracts.Forum;
 using Entities;
 using Entities.Models.Forum;
+using Entities.RequestFeatures;
+using Entities.RequestFeatures.Forum;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.Design;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Repository.Forum
 {
@@ -25,11 +26,14 @@ namespace Repository.Forum
         {
             Delete(forum);
         }
-
-        public async Task<IEnumerable<ForumBase>> GetAllForumsFromCategoryAsync(int? categoryId, bool trackChanges)
+        public async Task<PagedList<ForumBase>> GetAllForumsFromCategoryAsync(
+            int? categoryId, ForumBaseParameters forumBaseParameters, bool trackChanges)
         {
-            return await FindByCondition(f => f.ForumCategoryId.Equals(categoryId), trackChanges)
-                .OrderBy(c => c.ForumTitle).ToListAsync();
+            var forums = await FindByCondition(f => f.ForumCategoryId.Equals(categoryId), trackChanges)
+                .OrderBy(c => c.ForumTitle)
+                .ToListAsync();
+
+            return PagedList<ForumBase>.ToPagedList(forums, forumBaseParameters.PageNumber, forumBaseParameters.PageSize);
         }
         public async Task<ForumBase> GetForumFromCategoryAsync(int categoryId, int forumId, bool trackChanges)
         {

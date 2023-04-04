@@ -82,6 +82,20 @@ namespace Entities.Configuration.Forum
                     Name = "Test category 4",
                     CreatedAt = DateTime.Now,
                     ForumUserId = 2
+                },
+                new ForumCategory()
+                {
+                    Id = 5,
+                    Name = "Test category 5",
+                    CreatedAt = DateTime.Now,
+                    ForumUserId = 2
+                },
+                new ForumCategory()
+                {
+                    Id = 6,
+                    Name = "Test category 6",
+                    CreatedAt = DateTime.Now,
+                    ForumUserId = 2
                 }
             );
             #endregion

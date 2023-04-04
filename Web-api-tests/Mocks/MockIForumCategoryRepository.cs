@@ -33,8 +33,8 @@ namespace ForumTest.Mocks
             };
 
             // Set up
-            mock.Setup(m => m.GetAllCategoriesAsync(false))
-                .Returns(() => categories);
+            /*mock.Setup(m => m.GetAllCategoriesAsync(false))
+                .Returns(() => categories);*/
 
 
             return mock;

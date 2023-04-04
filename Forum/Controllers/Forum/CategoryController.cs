@@ -4,11 +4,13 @@ using Entities.DTO.ForumDto;
 using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.Update;
 using Entities.Models.Forum;
+using Entities.RequestFeatures.Forum;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
 using Forum.ModelBinders;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Forum.Controllers.Forum
 {
@@ -27,10 +29,13 @@ namespace Forum.Controllers.Forum
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> GetForumCategories()
+        public async Task<IActionResult> GetForumCategories([FromQuery] ForumCategoryParameters forumCategoryParameters)
         {
-            var categories = await _repository.ForumCategory.GetAllCategoriesAsync(trackChanges: false);
-            var categoriesDto = _mapper.Map<IEnumerable<ForumCategoryDto>>(categories);
+            var categoriesFromDb = await _repository.ForumCategory.GetAllCategoriesAsync(forumCategoryParameters, trackChanges: false);
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(categoriesFromDb.MetaData));
+
+            var categoriesDto = _mapper.Map<IEnumerable<ForumCategoryDto>>(categoriesFromDb);
 
             return Ok(categoriesDto);
         }

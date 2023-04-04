@@ -4,11 +4,13 @@ using Entities.DTO.ForumDto;
 using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.Update;
 using Entities.Models.Forum;
+using Entities.RequestFeatures.Forum;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.Design;
 
@@ -29,7 +31,7 @@ namespace Forum.Controllers.Forum
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> GetForumsForCategory(int categoryId)
+        public async Task<IActionResult> GetForumsForCategory(int categoryId, [FromQuery] ForumBaseParameters forumBaseParameters)
         {
             var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
 
@@ -39,8 +41,12 @@ namespace Forum.Controllers.Forum
                 return NotFound();
             }
 
-            var forums = await _repository.ForumBase.GetAllForumsFromCategoryAsync(categoryId, trackChanges: false);
-            var forumsDto = _mapper.Map<IEnumerable<ForumBaseDto>>(forums);
+            var forumsFromDb = await _repository.ForumBase
+                .GetAllForumsFromCategoryAsync(categoryId, forumBaseParameters, trackChanges: false);
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(forumsFromDb.MetaData));
+
+            var forumsDto = _mapper.Map<IEnumerable<ForumBaseDto>>(forumsFromDb);
 
             return Ok(forumsDto);
         }
