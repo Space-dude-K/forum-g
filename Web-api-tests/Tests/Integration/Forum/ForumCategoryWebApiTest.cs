@@ -301,7 +301,7 @@ namespace ForumTest.Tests.Integration.Forum
 
             // Act
             var response = await client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
-            //_output.WriteLine("CS -> " + _webApplicationFactory.Context.Database.GetConnectionString());
+
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
 
