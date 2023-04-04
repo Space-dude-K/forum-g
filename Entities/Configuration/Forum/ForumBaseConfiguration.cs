@@ -78,6 +78,42 @@ namespace Entities.Configuration.Forum
                     CreatedAt = DateTime.Now,
                     ForumCategoryId = 2,
                     ForumUserId = 2
+                },
+                new ForumBase()
+                {
+                    Id = 3,
+                    ForumTitle = "Test forum title 3",
+                    ForumSubTitle = "Test forum subtitle 3",
+                    CreatedAt = DateTime.Now,
+                    ForumCategoryId = 2,
+                    ForumUserId = 2
+                },
+                new ForumBase()
+                {
+                    Id = 4,
+                    ForumTitle = "Test forum title 4",
+                    ForumSubTitle = "Test forum subtitle 4",
+                    CreatedAt = DateTime.Now,
+                    ForumCategoryId = 2,
+                    ForumUserId = 2
+                },
+                new ForumBase()
+                {
+                    Id = 5,
+                    ForumTitle = "Test forum title 5",
+                    ForumSubTitle = "Test forum subtitle 5",
+                    CreatedAt = DateTime.Now,
+                    ForumCategoryId = 2,
+                    ForumUserId = 2
+                },
+                new ForumBase()
+                {
+                    Id = 6,
+                    ForumTitle = "Test forum title 6",
+                    ForumSubTitle = "Test forum subtitle 6",
+                    CreatedAt = DateTime.Now,
+                    ForumCategoryId = 2,
+                    ForumUserId = 2
                 }
             );
             #endregion

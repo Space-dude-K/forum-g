@@ -74,6 +74,30 @@ namespace Entities.Configuration.Forum
                     CreatedAt = DateTime.Now,
                     ForumBaseId = 2,
                     ForumUserId = 2
+                },
+                new ForumTopic()
+                {
+                    Id = 3,
+                    Name = "Test forum topic 3",
+                    CreatedAt = DateTime.Now,
+                    ForumBaseId = 2,
+                    ForumUserId = 2
+                },
+                new ForumTopic()
+                {
+                    Id = 4,
+                    Name = "Test forum topic 4",
+                    CreatedAt = DateTime.Now,
+                    ForumBaseId = 2,
+                    ForumUserId = 2
+                },
+                new ForumTopic()
+                {
+                    Id = 5,
+                    Name = "Test forum topic 5",
+                    CreatedAt = DateTime.Now,
+                    ForumBaseId = 2,
+                    ForumUserId = 2
                 }
             );
             #endregion

@@ -2,6 +2,8 @@
 using Contracts.Forum;
 using Entities.Models.Forum;
 using Microsoft.EntityFrameworkCore;
+using Entities.RequestFeatures.Forum;
+using Entities.RequestFeatures;
 
 namespace Repository.Forum
 {
@@ -23,12 +25,28 @@ namespace Repository.Forum
             Delete(post);
         }
 
-        public async Task<IEnumerable<ForumPost>> GetAllPostsFromTopicAsync(int? forumTopicId, bool trackChanges)
+        public async Task<PagedList<ForumPost>> GetAllPostsFromTopicAsync(
+            int? forumTopicId, ForumPostParameters forumPostParameters, bool trackChanges)
         {
-            return await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId), trackChanges)
-                .OrderBy(c => c.PostName).ToListAsync();
-        }
+            var posts = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId), trackChanges)
+                .OrderBy(c => c.PostName)
+                .ToListAsync();
 
+            return PagedList<ForumPost>.ToPagedList(posts, forumPostParameters.PageNumber, forumPostParameters.PageSize);
+        }
+        public async Task<PagedList<ForumPost>> GetAllPostsFromCategoryAsyncForBiggerData(
+            int? forumTopicId, ForumPostParameters forumPostParameters, bool trackChanges)
+        {
+            var posts = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId), trackChanges)
+                .OrderBy(c => c.PostName)
+                .Skip((forumPostParameters.PageNumber - 1) * forumPostParameters.PageSize)
+                .Take(forumPostParameters.PageSize)
+                .ToListAsync();
+
+            var count = await FindByCondition(e => e.ForumTopicId.Equals(forumTopicId), trackChanges).CountAsync();
+
+            return new PagedList<ForumPost>(posts, forumPostParameters.PageNumber, forumPostParameters.PageSize, count);
+        }
         public async Task<ForumPost> GetPostAsync(int forumTopicId, int postId, bool trackChanges)
         {
             return await FindByCondition(c => c.ForumTopicId.Equals(forumTopicId) && c.Id.Equals(postId), trackChanges)

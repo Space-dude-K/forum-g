@@ -6,9 +6,10 @@ using Entities.DTO.ForumDto;
 using Entities.Models.Forum;
 using Forum.ActionsFilters.Forum;
 using Forum.ActionsFilters;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Entities.RequestFeatures.Forum;
+using Newtonsoft.Json;
 
 namespace Forum.Controllers.Forum
 {
@@ -27,7 +28,8 @@ namespace Forum.Controllers.Forum
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> GetTopicsForForum(int categoryId, int forumId)
+        public async Task<IActionResult> GetTopicsForForum(
+            int categoryId, int forumId, [FromQuery] ForumTopicParameters forumTopicParameters)
         {
             var forum = await _repository.ForumBase.GetForumFromCategoryAsync(categoryId, forumId, trackChanges: false);
 
@@ -37,8 +39,11 @@ namespace Forum.Controllers.Forum
                 return NotFound();
             }
 
-            var topics = await _repository.ForumTopic.GetAllTopicsFromForumAsync(forumId, trackChanges: false);
-            var topicsDto = _mapper.Map<IEnumerable<ForumTopicDto>>(topics);
+            var topicsFromDb = await _repository.ForumTopic.GetAllTopicsFromForumAsync(forumId, forumTopicParameters, trackChanges: false);
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(topicsFromDb.MetaData));
+
+            var topicsDto = _mapper.Map<IEnumerable<ForumTopicDto>>(topicsFromDb);
 
             return Ok(topicsDto);
         }
