@@ -4,6 +4,7 @@ using Entities.Models.Forum;
 using Microsoft.EntityFrameworkCore;
 using Entities.RequestFeatures.Forum;
 using Entities.RequestFeatures;
+using Repository.Extensions;
 
 namespace Repository.Forum
 {
@@ -28,8 +29,9 @@ namespace Repository.Forum
         public async Task<PagedList<ForumPost>> GetAllPostsFromTopicAsync(
             int? forumTopicId, ForumPostParameters forumPostParameters, bool trackChanges)
         {
-            var posts = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId) && 
-            (f.Likes >= forumPostParameters.MinLikes && f.Likes <= forumPostParameters.MaxLikes), trackChanges)
+            var posts = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId), trackChanges)
+                .FilterPosts(forumPostParameters.MinLikes, forumPostParameters.MaxLikes)
+                .Search(forumPostParameters.SearchTerm)
                 .OrderBy(c => c.PostName)
                 .ToListAsync();
 
