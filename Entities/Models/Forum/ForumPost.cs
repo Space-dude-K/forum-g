@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Models.Forum
 {
@@ -13,16 +8,11 @@ namespace Entities.Models.Forum
         [Required(ErrorMessage = "Post title is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the post title is 60 characters.")]
         public string PostName { get; set; }
+        public int? Likes { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        /// <summary>
-        /// Navigation property.
-        /// </summary>
         public virtual ForumTopic ForumTopic { get; set; }
         public int ForumTopicId { get; set; }
-        /// <summary>
-        /// Navigation property.
-        /// </summary>
         public virtual ForumUser ForumUser { get; set; }
         public int ForumUserId { get; set; }
     }

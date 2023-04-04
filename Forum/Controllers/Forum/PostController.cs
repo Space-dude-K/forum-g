@@ -31,6 +31,9 @@ namespace Forum.Controllers.Forum
         public async Task<IActionResult> GetPostsForTopic(
             int categoryId, int forumId, int topicId, [FromQuery] ForumPostParameters forumPostParameters)
         {
+            if (!forumPostParameters.ValidLikeRange)
+                return BadRequest("Max likes cant be less than min");
+
             var topic = await _repository.ForumTopic.GetTopicAsync(forumId, topicId, trackChanges: false);
 
             if (topic == null)

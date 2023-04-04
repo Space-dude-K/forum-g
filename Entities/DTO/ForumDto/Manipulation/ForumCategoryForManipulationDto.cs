@@ -1,7 +1,7 @@
 ﻿using Entities.DTO.ForumDto.Create;
 using System.ComponentModel.DataAnnotations;
 
-namespace Entities.DTO.ForumDto
+namespace Entities.DTO.ForumDto.Manipulation
 {
     public abstract class ForumCategoryForManipulationDto
     {
