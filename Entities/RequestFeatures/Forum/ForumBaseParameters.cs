@@ -2,5 +2,9 @@
 {
     public class ForumBaseParameters : RequestParameters
     {
+        public ForumBaseParameters()
+        {
+            OrderBy = "ForumTitle";
+        }
     }
 }
