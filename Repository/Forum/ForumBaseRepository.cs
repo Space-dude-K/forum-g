@@ -32,7 +32,7 @@ namespace Repository.Forum
         {
             var forums = await FindByCondition(f => f.ForumCategoryId.Equals(categoryId), trackChanges)
                 .Search(forumBaseParameters.SearchTerm)
-                .OrderBy(c => c.ForumTitle)
+                .Sort(forumBaseParameters.OrderBy)
                 .ToListAsync();
 
             return PagedList<ForumBase>.ToPagedList(forums, forumBaseParameters.PageNumber, forumBaseParameters.PageSize);

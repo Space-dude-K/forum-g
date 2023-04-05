@@ -35,7 +35,7 @@ namespace Repository.Forum
         {
             var categories = await FindAll(trackChanges)
                 .Search(forumCategoryParameters.SearchTerm)
-                .OrderBy(c => c.Name)
+                .Sort(forumCategoryParameters.OrderBy)
                 .ToListAsync();
 
             return PagedList<ForumCategory>.ToPagedList(categories, forumCategoryParameters.PageNumber, forumCategoryParameters.PageSize);

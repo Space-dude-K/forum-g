@@ -31,7 +31,7 @@ namespace Repository.Forum
         {
             var topics = await FindByCondition(f => f.ForumBaseId.Equals(forumBaseId), trackChanges)
                 .Search(forumTopicParameters.SearchTerm)
-                .OrderBy(c => c.Name)
+                .Sort(forumTopicParameters.OrderBy)
                 .ToListAsync();
 
             return PagedList<ForumTopic>.ToPagedList(topics, forumTopicParameters.PageNumber, forumTopicParameters.PageSize);
