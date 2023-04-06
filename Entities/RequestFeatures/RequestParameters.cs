@@ -16,7 +16,12 @@
                 _pageSize = (value > maxPageSize) ? maxPageSize : value;
             }
         }
+        // Used for searching
         public string SearchTerm { get; set; }
+        // Used for data sorting
         public string OrderBy { get; set; }
+        // Used for data shaping
+        public string Fields { get; set; }
+
     }
 }
