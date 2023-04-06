@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using Entities.DTO.ForumDto;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
 using Forum.Extensions;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
+using Repository.DataShaping;
 
 namespace Forum
 {
@@ -51,6 +53,11 @@ namespace Forum
             services.AddScoped<ValidateForumForCategoryExistsAttribute>();
             services.AddScoped<ValidateTopicForForumExistsAttribute>();
             services.AddScoped<ValidatePostForTopicExistsAttribute>();
+
+            services.AddScoped<IDataShaper<ForumCategoryDto>, DataShaper<ForumCategoryDto>>();
+            services.AddScoped<IDataShaper<ForumBaseDto>, DataShaper<ForumBaseDto>>();
+            services.AddScoped<IDataShaper<ForumTopicDto>, DataShaper<ForumTopicDto>>();
+            services.AddScoped<IDataShaper<ForumPostDto>, DataShaper<ForumPostDto>>();
 
             services.AddControllers();
         }

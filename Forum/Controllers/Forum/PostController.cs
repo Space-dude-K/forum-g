@@ -20,12 +20,14 @@ namespace Forum.Controllers.Forum
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<ForumPostDto> _dataShaper;
 
-        public PostController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public PostController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<ForumPostDto> dataShaper)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
         [HttpGet]
         public async Task<IActionResult> GetPostsForTopic(
@@ -49,10 +51,10 @@ namespace Forum.Controllers.Forum
 
             var postsDto = _mapper.Map<IEnumerable<ForumPostDto>>(postsFromDb);
 
-            return Ok(postsDto);
+            return Ok(_dataShaper.ShapeData(postsDto, forumPostParameters.Fields));
         }
         [HttpGet("{postId}", Name = "GetPostForTopic")]
-        public async Task<IActionResult> GetPostForTopic(int categoryId, int forumId, int topicId, int postId)
+        public async Task<IActionResult> GetPostForTopic(int categoryId, int forumId, int topicId, int postId, [FromQuery] ForumPostParameters forumPostParameters)
         {
             var topicDb = await _repository.ForumTopic.GetTopicAsync(forumId, topicId, trackChanges: false);
             if (topicDb == null)
@@ -71,7 +73,7 @@ namespace Forum.Controllers.Forum
 
             var postDto = _mapper.Map<ForumPostDto>(postDb);
 
-            return Ok(postDto);
+            return Ok(_dataShaper.ShapeData(postDto, forumPostParameters.Fields));
         }
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]

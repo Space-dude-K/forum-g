@@ -23,12 +23,14 @@ namespace Forum.Controllers.Forum
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<ForumBaseDto> _dataShaper;
 
-        public ForumController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public ForumController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<ForumBaseDto> dataShaper)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
         [HttpGet]
         public async Task<IActionResult> GetForumsForCategory(int categoryId, [FromQuery] ForumBaseParameters forumBaseParameters)
@@ -48,10 +50,10 @@ namespace Forum.Controllers.Forum
 
             var forumsDto = _mapper.Map<IEnumerable<ForumBaseDto>>(forumsFromDb);
 
-            return Ok(forumsDto);
+            return Ok(_dataShaper.ShapeData(forumsDto, forumBaseParameters.Fields));
         }
         [HttpGet("{forumId}", Name = "GetForumForCategory")]
-        public async Task<IActionResult> GetForumForCategory(int categoryId, int forumId)
+        public async Task<IActionResult> GetForumForCategory(int categoryId, int forumId, [FromQuery] ForumBaseParameters forumBaseParameters)
         {
             var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
@@ -66,7 +68,7 @@ namespace Forum.Controllers.Forum
                 return NotFound();
             }
             var forum = _mapper.Map<ForumBaseDto>(forumDb);
-            return Ok(forum);
+            return Ok(_dataShaper.ShapeData(forum, forumBaseParameters.Fields));
         }
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]

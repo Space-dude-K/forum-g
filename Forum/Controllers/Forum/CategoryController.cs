@@ -21,12 +21,15 @@ namespace Forum.Controllers.Forum
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<ForumCategoryDto> _dataShaper;
 
-        public CategoryController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        // TODO. Service layer for mappings and data shaping
+        public CategoryController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<ForumCategoryDto> dataShaper)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
         [HttpGet]
         public async Task<IActionResult> GetForumCategories([FromQuery] ForumCategoryParameters forumCategoryParameters)
@@ -37,10 +40,10 @@ namespace Forum.Controllers.Forum
 
             var categoriesDto = _mapper.Map<IEnumerable<ForumCategoryDto>>(categoriesFromDb);
 
-            return Ok(categoriesDto);
+            return Ok(_dataShaper.ShapeData(categoriesDto, forumCategoryParameters.Fields));
         }
         [HttpGet("{id}", Name = "CategoryById")]
-        public async Task<IActionResult> GetCategory(int id)
+        public async Task<IActionResult> GetCategory(int id, [FromQuery] ForumCategoryParameters forumCategoryParameters)
         {
             var category = await _repository.ForumCategory.GetCategoryAsync(id, trackChanges: false);
             if (category == null)
@@ -51,11 +54,12 @@ namespace Forum.Controllers.Forum
             else
             {
                 var categoryDto = _mapper.Map<ForumCategoryDto>(category);
-                return Ok(categoryDto);
+                return Ok(_dataShaper.ShapeData(categoryDto, forumCategoryParameters.Fields));
             }
         }
         [HttpGet("collection/({ids})", Name = "CategoryCollection")]
-        public async Task<IActionResult> GetCategoryCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
+        public async Task<IActionResult> GetCategoryCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids, 
+            [FromQuery] ForumCategoryParameters forumCategoryParameters)
         {
             if (ids == null)
             {
@@ -69,7 +73,7 @@ namespace Forum.Controllers.Forum
                 return NotFound();
             }
             var categoriesToReturn = _mapper.Map<IEnumerable<ForumCategoryDto>>(categoryEntities);
-            return Ok(categoriesToReturn);
+            return Ok(_dataShaper.ShapeData(categoriesToReturn, forumCategoryParameters.Fields));
         }
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
