@@ -70,17 +70,17 @@ namespace Forum.Utility.ForumLinks
 
             return links;
         }
-        private LinkCollectionWrapper<Entity> CreateLinksForForums(HttpContext httpContext, LinkCollectionWrapper<Entity> forumsWrapper, int forumCategoryId,
+        private LinkCollectionWrapper<Entity> CreateLinksForForums(HttpContext httpContext, LinkCollectionWrapper<Entity> forumsWrapper, int categoryId,
             IEnumerable<int>? collectionIds = null)
         {
             if (collectionIds == null)
             {
-                forumsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetForumsForCategory", values: new { forumCategoryId }), "self", "GET"));
+                forumsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetForumsForCategory", values: new { categoryId }), "self", "GET"));
             }
             else
             {
                 string ids = string.Join(",", collectionIds);
-                forumsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetForumCollection", values: new { forumCategoryId, ids }), "self", "GET"));
+                forumsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetForumCollection", values: new { categoryId, ids }), "self", "GET"));
             }
 
             return forumsWrapper;

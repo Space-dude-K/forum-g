@@ -11,5 +11,6 @@ namespace Contracts.Forum
         void CreateTopicForForum(int forumBaseId, ForumTopic topic);
         void DeleteTopic(ForumTopic topic);
         Task<ForumTopic> GetTopicAsync(int forumBaseId, int topicId, bool trackChanges);
+        Task<IEnumerable<ForumTopic>> GetTopicsFromForumByIdsAsync(int forumId, IEnumerable<int> ids, bool trackChanges);
     }
 }

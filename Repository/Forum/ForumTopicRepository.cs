@@ -42,5 +42,9 @@ namespace Repository.Forum
             return await FindByCondition(c => c.ForumBaseId.Equals(forumBaseId) && c.Id.Equals(topicId), trackChanges)
                 .SingleOrDefaultAsync();
         }
+        public async Task<IEnumerable<ForumTopic>> GetTopicsFromForumByIdsAsync(int forumId, IEnumerable<int> ids, bool trackChanges)
+        {
+            return await FindByCondition(t => t.ForumBaseId.Equals(forumId) && ids.Contains(t.Id), trackChanges).ToListAsync();
+        }
     }
 }
