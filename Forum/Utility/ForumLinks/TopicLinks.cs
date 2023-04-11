@@ -73,13 +73,22 @@ namespace Forum.Utility.ForumLinks
 
             return links;
         }
-        private LinkCollectionWrapper<Entity> CreateLinksForTopics(HttpContext httpContext, LinkCollectionWrapper<Entity> forumsWrapper, 
+        private LinkCollectionWrapper<Entity> CreateLinksForTopics(HttpContext httpContext, LinkCollectionWrapper<Entity> topicsWrapper, 
             int forumCategoryId, int forumBaseId,
             IEnumerable<int>? collectionIds = null)
         {
-            forumsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetTopicsForForum", values: new { forumCategoryId, forumBaseId }), "self", "GET"));
+            if (collectionIds == null)
+            {
+                topicsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetTopicsForForum", values: new { forumCategoryId, forumBaseId }), "self", "GET"));
+            }
+            else
+            {
+                string ids = string.Join(",", collectionIds);
+                topicsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetTopicCollection", 
+                    values: new { forumCategoryId, forumBaseId, ids }), "self", "GET"));
+            }
 
-            return forumsWrapper;
+            return topicsWrapper;
         }
     }
 }

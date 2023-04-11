@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Entities.RequestFeatures.Forum;
 using Newtonsoft.Json;
 using Forum.Utility.ForumLinks;
+using Forum.ModelBinders;
 
 namespace Forum.Controllers.Forum
 {
@@ -74,6 +75,30 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
+        [HttpGet("collection/({ids})", Name = "TopicCollection")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        public async Task<IActionResult> GetTopicCollection(int categoryId, int forumId, [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids,
+            [FromQuery] ForumTopicParameters forumTopicParameters)
+        {
+            if (ids == null)
+            {
+                _logger.LogError("Parameter ids is null");
+                return BadRequest("Parameter ids is null");
+            }
+
+            var topicEntities = await _repository.ForumTopic.GetTopicsFromForumByIdsAsync(forumId, ids, trackChanges: false);
+
+            if (ids.Count() != topicEntities.Count())
+            {
+                _logger.LogError("Some ids are not valid in a collection");
+                return NotFound();
+            }
+
+            var topicsToReturn = _mapper.Map<IEnumerable<ForumTopicDto>>(topicEntities);
+            var links = _topicLinks.TryGenerateLinks(topicsToReturn, categoryId, forumId, forumTopicParameters.Fields, HttpContext, ids);
+
+            return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
+        }
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateTopicForForum(int categoryId, int forumId, [FromBody] ForumTopicForCreationDto topic)
@@ -101,6 +126,29 @@ namespace Forum.Controllers.Forum
             var topicToReturn = _mapper.Map<ForumTopicDto>(topicEntity);
 
             return CreatedAtRoute("GetTopicForForum", new { categoryId, forumId, topicId = topicToReturn.Id }, topicToReturn);
+        }
+        [HttpPost("collection")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> CreateTopicCollectionForForum(int categoryId, int forumId, [FromBody] IEnumerable<ForumTopicForCreationDto> topicCollection)
+        {
+            if (topicCollection == null)
+            {
+                _logger.LogError("Topic collection sent from client is null.");
+                return BadRequest("Topic collection is null");
+            }
+
+            var topicEntities = _mapper.Map<IEnumerable<ForumTopic>>(topicCollection);
+
+            foreach (var topic in topicEntities)
+            {
+                _repository.ForumTopic.CreateTopicForForum(forumId, topic);
+            }
+
+            await _repository.SaveAsync();
+            var topicCollectionToReturn = _mapper.Map<IEnumerable<ForumTopicDto>>(topicEntities);
+            var ids = string.Join(",", topicCollectionToReturn.Select(c => c.Id));
+
+            return CreatedAtRoute("TopicCollection", new { categoryId, forumId, ids }, topicCollectionToReturn);
         }
         [HttpDelete("{topicId}")]
         [ServiceFilter(typeof(ValidateTopicForForumExistsAttribute))]

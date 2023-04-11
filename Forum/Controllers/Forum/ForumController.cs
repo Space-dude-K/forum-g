@@ -7,6 +7,7 @@ using Entities.Models.Forum;
 using Entities.RequestFeatures.Forum;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
+using Forum.ModelBinders;
 using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -73,6 +74,30 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
+        [HttpGet("collection/({ids})", Name = "ForumCollection")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        public async Task<IActionResult> GetForumCollection(int categoryId, [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids,
+            [FromQuery] ForumBaseParameters forumBaseParameters)
+        {
+            if (ids == null)
+            {
+                _logger.LogError("Parameter ids is null");
+                return BadRequest("Parameter ids is null");
+            }
+
+            var forumEntities = await _repository.ForumBase.GetForumsFromCategoryByIdsAsync(categoryId, ids, trackChanges: false);
+
+            if (ids.Count() != forumEntities.Count())
+            {
+                _logger.LogError("Some ids are not valid in a collection");
+                return NotFound();
+            }
+
+            var forumsToReturn = _mapper.Map<IEnumerable<ForumBaseDto>>(forumEntities);
+            var links = _forumBaseLinks.TryGenerateLinks(forumsToReturn, categoryId, forumBaseParameters.Fields, HttpContext, ids);
+
+            return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
+        }
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateForumForCategory(int categoryId, [FromBody] ForumBaseForCreationDto forum)
@@ -99,6 +124,29 @@ namespace Forum.Controllers.Forum
             var forumToReturn = _mapper.Map<ForumBaseDto>(forumEntity);
 
             return CreatedAtRoute("GetForumForCategory", new { categoryId, id = forumToReturn.Id }, forumToReturn);
+        }
+        [HttpPost("collection")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> CreateForumCollectionForCategory(int categoryId, [FromBody] IEnumerable<ForumBaseForCreationDto> forumCollection)
+        {
+            if (forumCollection == null)
+            {
+                _logger.LogError("Forum collection sent from client is null.");
+                return BadRequest("Forum collection is null");
+            }
+
+            var forumEntities = _mapper.Map<IEnumerable<ForumBase>>(forumCollection);
+
+            foreach (var forum in forumEntities)
+            {
+                _repository.ForumBase.CreateForumForCategory(categoryId, forum);
+            }
+
+            await _repository.SaveAsync();
+            var forumCollectionToReturn = _mapper.Map<IEnumerable<ForumBaseDto>>(forumEntities);
+            var ids = string.Join(",", forumCollectionToReturn.Select(c => c.Id));
+
+            return CreatedAtRoute("ForumCollection", new { categoryId, ids }, forumCollectionToReturn);
         }
         [HttpDelete("{forumId}")]
         [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]

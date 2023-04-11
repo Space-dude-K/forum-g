@@ -107,8 +107,8 @@ namespace Forum.Controllers.Forum
         {
             if (categoryCollection == null)
             {
-                _logger.LogError("Company collection sent from client is null.");
-                return BadRequest("Company collection is null");
+                _logger.LogError("Category collection sent from client is null.");
+                return BadRequest("Category collection is null");
             }
             var categoryEntities = _mapper.Map<IEnumerable<ForumCategory>>(categoryCollection);
             foreach (var category in categoryEntities)

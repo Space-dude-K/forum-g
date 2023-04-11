@@ -68,29 +68,38 @@ namespace Forum.Utility.ForumLinks
         {
             var links = new List<Link>
             {
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "GetPostForTopic", values: 
-                 new { categoryId, forumId, topicId, postId, fields }), "self", "GET"),
+                 new Link(_linkGenerator.GetUriByAction(httpContext, "GetPostForTopic", 
+                 values: new { categoryId, forumId, topicId, postId, fields }), "self", "GET"),
 
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "UpdateTopicForForum", values: 
-                 new { categoryId, forumId, topicId, postId }), "update_topic", "PUT"),
+                 new Link(_linkGenerator.GetUriByAction(httpContext, "UpdateTopicForForum", 
+                 values: new { categoryId, forumId, topicId, postId }), "update_topic", "PUT"),
 
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "PartiallyUpdatePostForTopic", values: 
-                 new { categoryId, forumId, topicId, postId }), "partially_update_topic", "PATCH"),
+                 new Link(_linkGenerator.GetUriByAction(httpContext, "PartiallyUpdatePostForTopic", 
+                 values: new { categoryId, forumId, topicId, postId }), "partially_update_topic", "PATCH"),
 
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "DeletePostForTopic", values: 
-                 new { categoryId, forumId, topicId, postId }), "delete_topic", "DELETE"),
+                 new Link(_linkGenerator.GetUriByAction(httpContext, "DeletePostForTopic", 
+                 values: new { categoryId, forumId, topicId, postId }), "delete_topic", "DELETE"),
              };
 
             return links;
         }
-        private LinkCollectionWrapper<Entity> CreateLinksForPosts(HttpContext httpContext, LinkCollectionWrapper<Entity> forumsWrapper,
+        private LinkCollectionWrapper<Entity> CreateLinksForPosts(HttpContext httpContext, LinkCollectionWrapper<Entity> topicsWrapper,
             int forumCategoryId, int forumBaseId, int forumTopicId,
             IEnumerable<int>? collectionIds = null)
         {
-            forumsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetPostsForTopic", values: 
-                new { forumCategoryId, forumBaseId, forumTopicId }), "self", "GET"));
+            if (collectionIds == null)
+            {
+                topicsWrapper.Links
+                    .Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetPostsForTopic", values: new { forumCategoryId, forumBaseId, forumTopicId }), "self", "GET"));
+            }
+            else
+            {
+                string ids = string.Join(",", collectionIds);
+                topicsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetPostCollection",
+                    values: new { forumCategoryId, forumBaseId, forumTopicId, ids }), "self", "GET"));
+            }
 
-            return forumsWrapper;
+            return topicsWrapper;
         }
     }
 }
