@@ -3,6 +3,8 @@ using Entities;
 using Entities.Models;
 using LoggerService;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 
@@ -58,6 +60,28 @@ namespace Forum.Extensions
         public static void ConfigureRepositoryManager(this IServiceCollection services)
         {
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+        }
+        public static void AddCustomMediaTypes(this IServiceCollection services)
+        {
+            services.Configure<MvcOptions>(config =>
+            {
+                var newtonsoftJsonOutputFormatter = config.OutputFormatters
+                .OfType<NewtonsoftJsonOutputFormatter>()?.FirstOrDefault();
+                if (newtonsoftJsonOutputFormatter != null)
+                {
+                    newtonsoftJsonOutputFormatter
+                    .SupportedMediaTypes
+                    .Add("application/sd.k.hateoas+json");
+                }
+                var xmlOutputFormatter = config.OutputFormatters
+               .OfType<XmlDataContractSerializerOutputFormatter>()?.FirstOrDefault();
+                if (xmlOutputFormatter != null)
+                {
+                    xmlOutputFormatter
+                    .SupportedMediaTypes
+                    .Add("application/sd.k.hateoas+xml");
+                }
+            });
         }
     }
 }

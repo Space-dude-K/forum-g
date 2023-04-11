@@ -3,6 +3,7 @@ using Entities.DTO.ForumDto;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
 using Forum.Extensions;
+using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -54,10 +55,17 @@ namespace Forum
             services.AddScoped<ValidateTopicForForumExistsAttribute>();
             services.AddScoped<ValidatePostForTopicExistsAttribute>();
 
+            services.AddScoped<ValidateMediaTypeAttribute>();
+
             services.AddScoped<IDataShaper<ForumCategoryDto>, DataShaper<ForumCategoryDto>>();
             services.AddScoped<IDataShaper<ForumBaseDto>, DataShaper<ForumBaseDto>>();
             services.AddScoped<IDataShaper<ForumTopicDto>, DataShaper<ForumTopicDto>>();
             services.AddScoped<IDataShaper<ForumPostDto>, DataShaper<ForumPostDto>>();
+
+            services.AddCustomMediaTypes();
+
+            // HATEOAS
+            services.AddScoped<CategoryLinks>();
 
             services.AddControllers();
         }

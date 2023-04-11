@@ -8,9 +8,11 @@ using Entities.RequestFeatures.Forum;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
 using Forum.ModelBinders;
+using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.ComponentModel.Design;
 
 namespace Forum.Controllers.Forum
 {
@@ -21,17 +23,18 @@ namespace Forum.Controllers.Forum
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
-        private readonly IDataShaper<ForumCategoryDto> _dataShaper;
+        private readonly CategoryLinks _categoryLinks;
 
         // TODO. Service layer for mappings and data shaping
-        public CategoryController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<ForumCategoryDto> dataShaper)
+        public CategoryController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, CategoryLinks categoryLinks)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
-            _dataShaper = dataShaper;
+            _categoryLinks = categoryLinks;
         }
         [HttpGet]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetForumCategories([FromQuery] ForumCategoryParameters forumCategoryParameters)
         {
             var categoriesFromDb = await _repository.ForumCategory.GetAllCategoriesAsync(forumCategoryParameters, trackChanges: false);
@@ -39,25 +42,30 @@ namespace Forum.Controllers.Forum
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(categoriesFromDb.MetaData));
 
             var categoriesDto = _mapper.Map<IEnumerable<ForumCategoryDto>>(categoriesFromDb);
+            var links = _categoryLinks.TryGenerateLinks(categoriesDto, forumCategoryParameters.Fields, HttpContext);
 
-            return Ok(_dataShaper.ShapeData(categoriesDto, forumCategoryParameters.Fields));
+            return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
-        [HttpGet("{id}", Name = "CategoryById")]
-        public async Task<IActionResult> GetCategory(int id, [FromQuery] ForumCategoryParameters forumCategoryParameters)
+        [HttpGet("{categoryId}", Name = "GetCategoryById")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        public async Task<IActionResult> GetCategory(int categoryId, [FromQuery] ForumCategoryParameters forumCategoryParameters)
         {
-            var category = await _repository.ForumCategory.GetCategoryAsync(id, trackChanges: false);
+            var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
             {
-                _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
+                _logger.LogInfo($"Category with id: {categoryId} doesn't exist in the database.");
                 return NotFound();
             }
             else
             {
                 var categoryDto = _mapper.Map<ForumCategoryDto>(category);
-                return Ok(_dataShaper.ShapeData(categoryDto, forumCategoryParameters.Fields));
+                var links = _categoryLinks.TryGenerateLinks(new List<ForumCategoryDto>() { categoryDto }, forumCategoryParameters.Fields, HttpContext);
+
+                return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
             }
         }
         [HttpGet("collection/({ids})", Name = "CategoryCollection")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetCategoryCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids, 
             [FromQuery] ForumCategoryParameters forumCategoryParameters)
         {
@@ -72,8 +80,11 @@ namespace Forum.Controllers.Forum
                 _logger.LogError("Some ids are not valid in a collection");
                 return NotFound();
             }
+
             var categoriesToReturn = _mapper.Map<IEnumerable<ForumCategoryDto>>(categoryEntities);
-            return Ok(_dataShaper.ShapeData(categoriesToReturn, forumCategoryParameters.Fields));
+            var links = _categoryLinks.TryGenerateLinks(categoriesToReturn, forumCategoryParameters.Fields, HttpContext);
+
+            return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
@@ -86,7 +97,7 @@ namespace Forum.Controllers.Forum
 
             var categoryToReturn = _mapper.Map<ForumCategoryDto>(categoryEntity);
 
-            return CreatedAtRoute("CategoryById", new { id = categoryToReturn.Id }, categoryToReturn);
+            return CreatedAtRoute("GetCategoryById", new { id = categoryToReturn.Id }, categoryToReturn);
         }
         [HttpPost("collection")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
