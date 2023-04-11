@@ -2,8 +2,6 @@
 using Entities.DTO.ForumDto;
 using Entities.LinksModels;
 using Entities.Models;
-using Forum.ModelBinders;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
 namespace Forum.Utility.ForumLinks
@@ -18,12 +16,13 @@ namespace Forum.Utility.ForumLinks
             _linkGenerator = linkGenerator;
             _dataShaper = dataShaper;
         }
-        public LinkResponse TryGenerateLinks(IEnumerable<ForumCategoryDto> categoriesDto, string fields, HttpContext httpContext, IEnumerable<int>? ids = null)
+        public LinkResponse TryGenerateLinks(IEnumerable<ForumCategoryDto> categoriesDto, string fields, HttpContext httpContext, 
+            IEnumerable<int>? collectionIds = null)
         {
             var shapedEmployees = ShapeData(categoriesDto, fields);
 
             if (ShouldGenerateLinks(httpContext))
-                return ReturnLinkdedCategories(categoriesDto, fields, httpContext, shapedEmployees, ids);
+                return ReturnLinkdedCategories(categoriesDto, fields, httpContext, shapedEmployees, collectionIds);
 
             return ReturnShapedCategories(shapedEmployees);
         }
@@ -44,7 +43,7 @@ namespace Forum.Utility.ForumLinks
             return new LinkResponse { ShapedEntities = shapedCategories };
         }
         private LinkResponse ReturnLinkdedCategories(IEnumerable<ForumCategoryDto> categoriesDto, string fields, HttpContext httpContext, List<Entity> shapedCategories, 
-            IEnumerable<int>? ids = null)
+            IEnumerable<int>? collectionIds = null)
         {
             var categoriesDtoList = categoriesDto.ToList();
 
@@ -55,7 +54,7 @@ namespace Forum.Utility.ForumLinks
             }
 
             var categoryCollection = new LinkCollectionWrapper<Entity>(shapedCategories);
-            var linkedCategories = CreateLinksForCategories(httpContext, categoryCollection, ids);
+            var linkedCategories = CreateLinksForCategories(httpContext, categoryCollection, collectionIds);
 
             return new LinkResponse { HasLinks = true, LinkedEntities = linkedCategories };
         }
@@ -72,15 +71,15 @@ namespace Forum.Utility.ForumLinks
             return links;
         }
         private LinkCollectionWrapper<Entity> CreateLinksForCategories(HttpContext httpContext, LinkCollectionWrapper<Entity> categoriesWrapper,
-            IEnumerable<int>? idsRaw = null)
+            IEnumerable<int>? collectionIds = null)
         {
-            if(idsRaw == null)
+            if(collectionIds == null)
             {
                 categoriesWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetForumCategories", values: new { }), "self", "GET"));
             }
             else
             {
-                string ids = string.Join(",", idsRaw);
+                string ids = string.Join(",", collectionIds);
                 categoriesWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetCategoryCollection", values: new { ids }), "self", "GET"));
             }
 

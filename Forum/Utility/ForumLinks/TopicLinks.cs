@@ -6,28 +6,28 @@ using Microsoft.Net.Http.Headers;
 
 namespace Forum.Utility.ForumLinks
 {
-    public class ForumBaseLinks
+    public class TopicLinks
     {
         private readonly LinkGenerator _linkGenerator;
-        private readonly IDataShaper<ForumBaseDto> _dataShaper;
-        public ForumBaseLinks(LinkGenerator linkGenerator, IDataShaper<ForumBaseDto> dataShaper)
+        private readonly IDataShaper<ForumTopicDto> _dataShaper;
+        public TopicLinks(LinkGenerator linkGenerator, IDataShaper<ForumTopicDto> dataShaper)
         {
             _linkGenerator = linkGenerator;
             _dataShaper = dataShaper;
         }
-        public LinkResponse TryGenerateLinks(IEnumerable<ForumBaseDto> forumsDto, int forumCategoryId, string fields, HttpContext httpContext, 
+        public LinkResponse TryGenerateLinks(IEnumerable<ForumTopicDto> topicsDto, int forumCategoryId, int forumBaseId, string fields, HttpContext httpContext,
             IEnumerable<int>? collectionIds = null)
         {
-            var shapedEmployees = ShapeData(forumsDto, fields);
+            var shapedEmployees = ShapeData(topicsDto, fields);
 
             if (ShouldGenerateLinks(httpContext))
-                return ReturnLinkdedCategories(forumsDto, forumCategoryId, fields, httpContext, shapedEmployees, collectionIds);
+                return ReturnLinkdedCategories(topicsDto, forumCategoryId, forumBaseId, fields, httpContext, shapedEmployees, collectionIds);
 
             return ReturnShapedCategories(shapedEmployees);
         }
-        private List<Entity> ShapeData(IEnumerable<ForumBaseDto> forumsDto, string fields)
+        private List<Entity> ShapeData(IEnumerable<ForumTopicDto> topicsDto, string fields)
         {
-            return _dataShaper.ShapeData(forumsDto, fields)
+            return _dataShaper.ShapeData(topicsDto, fields)
              .Select(e => e.Entity)
              .ToList();
         }
@@ -41,24 +41,27 @@ namespace Forum.Utility.ForumLinks
         {
             return new LinkResponse { ShapedEntities = shapedCategories };
         }
-        private LinkResponse ReturnLinkdedCategories(IEnumerable<ForumBaseDto> forumsDto, int forumCategoryId, string fields, HttpContext httpContext, 
-            List<Entity> shapedForums,
+        private LinkResponse ReturnLinkdedCategories(IEnumerable<ForumTopicDto> topicsDto, 
+            int forumCategoryId, int forumBaseId, 
+            string fields, HttpContext httpContext,
+            List<Entity> shapedTopics,
             IEnumerable<int>? collectionIds = null)
         {
-            var forumsDtoList = forumsDto.ToList();
+            var topicsDtoList = topicsDto.ToList();
 
-            for (var index = 0; index < forumsDtoList.Count(); index++)
+            for (var index = 0; index < topicsDtoList.Count(); index++)
             {
-                var forumLinks = CreateLinksForForum(httpContext, forumCategoryId, forumsDtoList[index].Id, fields);
-                shapedForums[index].Add("Links", forumLinks);
+                var topicLinks = CreateLinksForForum(httpContext, forumCategoryId, forumBaseId, topicsDtoList[index].Id, fields);
+                shapedTopics[index].Add("Links", topicLinks);
             }
 
-            var forumCollection = new LinkCollectionWrapper<Entity>(shapedForums);
-            var linkedForums = CreateLinksForForums(httpContext, forumCollection, forumCategoryId, collectionIds);
+            var topicCollection = new LinkCollectionWrapper<Entity>(shapedTopics);
+            var linkedTopics = CreateLinksForForums(httpContext, topicCollection, forumCategoryId, collectionIds);
 
-            return new LinkResponse { HasLinks = true, LinkedEntities = linkedForums };
+            return new LinkResponse { HasLinks = true, LinkedEntities = linkedTopics };
         }
-        private List<Link> CreateLinksForForum(HttpContext httpContext, int categoryId, int forumId, string fields = "")
+        private List<Link> CreateLinksForForum(HttpContext httpContext, 
+            int categoryId, int forumBaseId, int topicId, string fields = "")
         {
             var links = new List<Link>
             {

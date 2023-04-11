@@ -66,6 +66,7 @@ namespace Forum
 
             // HATEOAS
             services.AddScoped<CategoryLinks>();
+            services.AddScoped<ForumBaseLinks>();
 
             services.AddControllers();
         }
