@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities.DTO.ForumDto;
+using Entities.Models.Forum;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
 using Forum.Extensions;
@@ -66,6 +67,9 @@ namespace Forum
 
             // HATEOAS
             services.AddScoped<CategoryLinks>();
+            services.AddScoped<ForumBaseLinks>();
+            services.AddScoped<TopicLinks>();
+            services.AddScoped<PostLinks>();
 
             services.AddControllers();
         }

@@ -7,12 +7,10 @@ using Entities.Models.Forum;
 using Entities.RequestFeatures.Forum;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
-using Microsoft.AspNetCore.Http;
+using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.ComponentModel.Design;
 
 namespace Forum.Controllers.Forum
 {
@@ -23,23 +21,24 @@ namespace Forum.Controllers.Forum
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
-        private readonly IDataShaper<ForumBaseDto> _dataShaper;
+        private readonly ForumBaseLinks _forumBaseLinks;
 
-        public ForumController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<ForumBaseDto> dataShaper)
+        public ForumController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, ForumBaseLinks forumBaseLinks)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
-            _dataShaper = dataShaper;
+            _forumBaseLinks = forumBaseLinks;
         }
         [HttpGet]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetForumsForCategory(int categoryId, [FromQuery] ForumBaseParameters forumBaseParameters)
         {
             var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
 
             if (category == null)
             {
-                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
+                _logger.LogInfo($"Category with id: {categoryId} doesn't exist in the database.");
                 return NotFound();
             }
 
@@ -49,26 +48,30 @@ namespace Forum.Controllers.Forum
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(forumsFromDb.MetaData));
 
             var forumsDto = _mapper.Map<IEnumerable<ForumBaseDto>>(forumsFromDb);
+            var links = _forumBaseLinks.TryGenerateLinks(forumsDto, categoryId, forumBaseParameters.Fields, HttpContext);
 
-            return Ok(_dataShaper.ShapeData(forumsDto, forumBaseParameters.Fields));
+            return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
         [HttpGet("{forumId}", Name = "GetForumForCategory")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetForumForCategory(int categoryId, int forumId, [FromQuery] ForumBaseParameters forumBaseParameters)
         {
             var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
             {
-                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
+                _logger.LogInfo($"Category with id: {categoryId} doesn't exist in the database.");
                 return NotFound();
             }
             var forumDb = await _repository.ForumBase.GetForumFromCategoryAsync(categoryId, forumId, trackChanges: false);
             if (forumDb == null)
             {
-                _logger.LogInfo($"Employee with id: {forumId} doesn't exist in the database.");
+                _logger.LogInfo($"Forum with id: {forumId} doesn't exist in the database.");
                 return NotFound();
             }
-            var forum = _mapper.Map<ForumBaseDto>(forumDb);
-            return Ok(_dataShaper.ShapeData(forum, forumBaseParameters.Fields));
+            var forumDto = _mapper.Map<ForumBaseDto>(forumDb);
+            var links = _forumBaseLinks.TryGenerateLinks(new List<ForumBaseDto>() { forumDto }, categoryId, forumBaseParameters.Fields, HttpContext);
+
+            return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
@@ -76,15 +79,14 @@ namespace Forum.Controllers.Forum
         {
             if (!ModelState.IsValid)
             {
-                _logger.LogError("Invalid model state for the EmployeeForCreationDto object");
+                _logger.LogError("Invalid model state for the ForumBaseDtoForCreation object");
                 return UnprocessableEntity(ModelState);
             }
-
 
             var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
             {
-                _logger.LogInfo($"Company with id: {categoryId} doesn't exist in the database.");
+                _logger.LogInfo($"Category with id: {categoryId} doesn't exist in the database.");
                 return NotFound();
             }
 
