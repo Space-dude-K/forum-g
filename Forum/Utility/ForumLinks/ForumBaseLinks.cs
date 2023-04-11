@@ -73,7 +73,15 @@ namespace Forum.Utility.ForumLinks
         private LinkCollectionWrapper<Entity> CreateLinksForForums(HttpContext httpContext, LinkCollectionWrapper<Entity> forumsWrapper, int forumCategoryId,
             IEnumerable<int>? collectionIds = null)
         {
-            forumsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetForumsForCategory", values: new { forumCategoryId }), "self", "GET"));
+            if (collectionIds == null)
+            {
+                forumsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetForumsForCategory", values: new { forumCategoryId }), "self", "GET"));
+            }
+            else
+            {
+                string ids = string.Join(",", collectionIds);
+                forumsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetForumCollection", values: new { forumCategoryId, ids }), "self", "GET"));
+            }
 
             return forumsWrapper;
         }
