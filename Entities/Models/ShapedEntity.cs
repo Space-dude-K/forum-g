@@ -2,11 +2,11 @@
 {
     public class ShapedEntity
     {
-        /*public ShapedEntity()
+        public ShapedEntity()
         {
             Entity = new Entity();
         }
-        public Guid Id { get; set; }
-        public Entity Entity { get; set; }*/
+        public int Id { get; set; }
+        public Entity Entity { get; set; }
     }
 }
