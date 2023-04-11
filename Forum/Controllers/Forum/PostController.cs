@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Entities.RequestFeatures.Forum;
 using Newtonsoft.Json;
+using Forum.Utility.ForumLinks;
 
 namespace Forum.Controllers.Forum
 {
@@ -20,16 +21,17 @@ namespace Forum.Controllers.Forum
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
-        private readonly IDataShaper<ForumPostDto> _dataShaper;
+        private readonly PostLinks _postLinks;
 
-        public PostController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<ForumPostDto> dataShaper)
+        public PostController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, PostLinks postLinks)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
-            _dataShaper = dataShaper;
+            _postLinks = postLinks;
         }
         [HttpGet]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetPostsForTopic(
             int categoryId, int forumId, int topicId, [FromQuery] ForumPostParameters forumPostParameters)
         {
@@ -50,10 +52,12 @@ namespace Forum.Controllers.Forum
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(postsFromDb.MetaData));
 
             var postsDto = _mapper.Map<IEnumerable<ForumPostDto>>(postsFromDb);
+            var links = _postLinks.TryGenerateLinks(postsDto, categoryId, forumId, topicId, forumPostParameters.Fields, HttpContext);
 
-            return Ok(_dataShaper.ShapeData(postsDto, forumPostParameters.Fields));
+            return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
         [HttpGet("{postId}", Name = "GetPostForTopic")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetPostForTopic(int categoryId, int forumId, int topicId, int postId, [FromQuery] ForumPostParameters forumPostParameters)
         {
             var topicDb = await _repository.ForumTopic.GetTopicAsync(forumId, topicId, trackChanges: false);
@@ -72,8 +76,9 @@ namespace Forum.Controllers.Forum
             }
 
             var postDto = _mapper.Map<ForumPostDto>(postDb);
+            var links = _postLinks.TryGenerateLinks(new List<ForumPostDto>() { postDto }, categoryId, forumId, topicId, forumPostParameters.Fields, HttpContext);
 
-            return Ok(_dataShaper.ShapeData(postDto, forumPostParameters.Fields));
+            return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]

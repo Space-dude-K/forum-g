@@ -37,9 +37,9 @@ namespace Forum.Utility.ForumLinks
 
             return mediaType.SubTypeWithoutSuffix.EndsWith("hateoas", StringComparison.InvariantCultureIgnoreCase);
         }
-        private LinkResponse ReturnShapedTopics(List<Entity> shapedCategories)
+        private LinkResponse ReturnShapedTopics(List<Entity> shapedTopics)
         {
-            return new LinkResponse { ShapedEntities = shapedCategories };
+            return new LinkResponse { ShapedEntities = shapedTopics };
         }
         private LinkResponse ReturnLinkdedTopics(IEnumerable<ForumTopicDto> topicsDto, 
             int forumCategoryId, int forumBaseId, 

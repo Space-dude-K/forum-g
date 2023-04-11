@@ -69,6 +69,7 @@ namespace Forum
             services.AddScoped<CategoryLinks>();
             services.AddScoped<ForumBaseLinks>();
             services.AddScoped<TopicLinks>();
+            services.AddScoped<PostLinks>();
 
             services.AddControllers();
         }
