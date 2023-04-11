@@ -74,7 +74,9 @@ namespace Forum.Controllers.Forum
                 _logger.LogError("Parameter ids is null");
                 return BadRequest("Parameter ids is null");
             }
+
             var categoryEntities = await _repository.ForumCategory.GetCategoriesByIdsAsync(ids, trackChanges: false);
+
             if (ids.Count() != categoryEntities.Count())
             {
                 _logger.LogError("Some ids are not valid in a collection");
@@ -82,7 +84,7 @@ namespace Forum.Controllers.Forum
             }
 
             var categoriesToReturn = _mapper.Map<IEnumerable<ForumCategoryDto>>(categoryEntities);
-            var links = _categoryLinks.TryGenerateLinks(categoriesToReturn, forumCategoryParameters.Fields, HttpContext);
+            var links = _categoryLinks.TryGenerateLinks(categoriesToReturn, forumCategoryParameters.Fields, HttpContext, ids);
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
