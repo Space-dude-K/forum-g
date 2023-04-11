@@ -21,9 +21,9 @@ namespace Forum.Utility.ForumLinks
             var shapedEmployees = ShapeData(forumsDto, fields);
 
             if (ShouldGenerateLinks(httpContext))
-                return ReturnLinkdedCategories(forumsDto, forumCategoryId, fields, httpContext, shapedEmployees, collectionIds);
+                return ReturnLinkdedForums(forumsDto, forumCategoryId, fields, httpContext, shapedEmployees, collectionIds);
 
-            return ReturnShapedCategories(shapedEmployees);
+            return ReturnShapedForums(shapedEmployees);
         }
         private List<Entity> ShapeData(IEnumerable<ForumBaseDto> forumsDto, string fields)
         {
@@ -37,11 +37,11 @@ namespace Forum.Utility.ForumLinks
 
             return mediaType.SubTypeWithoutSuffix.EndsWith("hateoas", StringComparison.InvariantCultureIgnoreCase);
         }
-        private LinkResponse ReturnShapedCategories(List<Entity> shapedCategories)
+        private LinkResponse ReturnShapedForums(List<Entity> shapedCategories)
         {
             return new LinkResponse { ShapedEntities = shapedCategories };
         }
-        private LinkResponse ReturnLinkdedCategories(IEnumerable<ForumBaseDto> forumsDto, int forumCategoryId, string fields, HttpContext httpContext, 
+        private LinkResponse ReturnLinkdedForums(IEnumerable<ForumBaseDto> forumsDto, int forumCategoryId, string fields, HttpContext httpContext, 
             List<Entity> shapedForums,
             IEnumerable<int>? collectionIds = null)
         {

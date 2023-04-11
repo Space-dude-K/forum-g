@@ -21,9 +21,9 @@ namespace Forum.Utility.ForumLinks
             var shapedEmployees = ShapeData(topicsDto, fields);
 
             if (ShouldGenerateLinks(httpContext))
-                return ReturnLinkdedCategories(topicsDto, forumCategoryId, forumBaseId, fields, httpContext, shapedEmployees, collectionIds);
+                return ReturnLinkdedTopics(topicsDto, forumCategoryId, forumBaseId, fields, httpContext, shapedEmployees, collectionIds);
 
-            return ReturnShapedCategories(shapedEmployees);
+            return ReturnShapedTopics(shapedEmployees);
         }
         private List<Entity> ShapeData(IEnumerable<ForumTopicDto> topicsDto, string fields)
         {
@@ -37,11 +37,11 @@ namespace Forum.Utility.ForumLinks
 
             return mediaType.SubTypeWithoutSuffix.EndsWith("hateoas", StringComparison.InvariantCultureIgnoreCase);
         }
-        private LinkResponse ReturnShapedCategories(List<Entity> shapedCategories)
+        private LinkResponse ReturnShapedTopics(List<Entity> shapedCategories)
         {
             return new LinkResponse { ShapedEntities = shapedCategories };
         }
-        private LinkResponse ReturnLinkdedCategories(IEnumerable<ForumTopicDto> topicsDto, 
+        private LinkResponse ReturnLinkdedTopics(IEnumerable<ForumTopicDto> topicsDto, 
             int forumCategoryId, int forumBaseId, 
             string fields, HttpContext httpContext,
             List<Entity> shapedTopics,
@@ -51,32 +51,33 @@ namespace Forum.Utility.ForumLinks
 
             for (var index = 0; index < topicsDtoList.Count(); index++)
             {
-                var topicLinks = CreateLinksForForum(httpContext, forumCategoryId, forumBaseId, topicsDtoList[index].Id, fields);
+                var topicLinks = CreateLinksForTopic(httpContext, forumCategoryId, forumBaseId, topicsDtoList[index].Id, fields);
                 shapedTopics[index].Add("Links", topicLinks);
             }
 
             var topicCollection = new LinkCollectionWrapper<Entity>(shapedTopics);
-            var linkedTopics = CreateLinksForForums(httpContext, topicCollection, forumCategoryId, collectionIds);
+            var linkedTopics = CreateLinksForTopics(httpContext, topicCollection, forumCategoryId, forumBaseId, collectionIds);
 
             return new LinkResponse { HasLinks = true, LinkedEntities = linkedTopics };
         }
-        private List<Link> CreateLinksForForum(HttpContext httpContext, 
-            int categoryId, int forumBaseId, int topicId, string fields = "")
+        private List<Link> CreateLinksForTopic(HttpContext httpContext, 
+            int categoryId, int forumId, int topicId, string fields = "")
         {
             var links = new List<Link>
             {
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "GetForumForCategory", values: new { categoryId, forumId, fields }), "self", "GET"),
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "UpdateForumForCategory", values: new { categoryId, forumId }), "update_forum", "PUT"),
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "PartiallyUpdateForumForCategory", values: new { categoryId, forumId }), "partially_update_forum", "PATCH"),
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "DeleteForumForCategory", values: new { categoryId, forumId }), "delete_forum", "DELETE"),
+                 new Link(_linkGenerator.GetUriByAction(httpContext, "GetTopicForForum", values: new { categoryId, forumId, topicId, fields }), "self", "GET"),
+                 new Link(_linkGenerator.GetUriByAction(httpContext, "UpdateTopicForForum", values: new { categoryId, forumId, topicId }), "update_topic", "PUT"),
+                 new Link(_linkGenerator.GetUriByAction(httpContext, "PartiallyUpdateTopicForForum", values: new { categoryId, forumId, topicId }), "partially_update_topic", "PATCH"),
+                 new Link(_linkGenerator.GetUriByAction(httpContext, "DeleteTopicForForum", values: new { categoryId, forumId, topicId }), "delete_topic", "DELETE"),
              };
 
             return links;
         }
-        private LinkCollectionWrapper<Entity> CreateLinksForForums(HttpContext httpContext, LinkCollectionWrapper<Entity> forumsWrapper, int forumCategoryId,
+        private LinkCollectionWrapper<Entity> CreateLinksForTopics(HttpContext httpContext, LinkCollectionWrapper<Entity> forumsWrapper, 
+            int forumCategoryId, int forumBaseId,
             IEnumerable<int>? collectionIds = null)
         {
-            forumsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetForumsForCategory", values: new { forumCategoryId }), "self", "GET"));
+            forumsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetTopicsForForum", values: new { forumCategoryId, forumBaseId }), "self", "GET"));
 
             return forumsWrapper;
         }
