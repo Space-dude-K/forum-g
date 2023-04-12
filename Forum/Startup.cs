@@ -71,6 +71,9 @@ namespace Forum
             services.AddScoped<TopicLinks>();
             services.AddScoped<PostLinks>();
 
+            // Versioning service
+            services.ConfigureVersioning();
+
             services.AddControllers();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)

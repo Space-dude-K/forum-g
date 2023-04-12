@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace Forum.Extensions
 {
@@ -79,6 +80,16 @@ namespace Forum.Extensions
                     xmlOutputFormatter.SupportedMediaTypes.Add("application/sd.k.hateoas+xml");
                     xmlOutputFormatter.SupportedMediaTypes.Add("application/sd.k.apiroot+xml");
                 }
+            });
+        }
+        public static void ConfigureVersioning(this IServiceCollection services)
+        {
+            services.AddApiVersioning(opt =>
+            {
+                opt.ReportApiVersions = true;
+                opt.AssumeDefaultVersionWhenUnspecified = true;
+                opt.DefaultApiVersion = new ApiVersion(1, 0);
+                opt.ApiVersionReader = new HeaderApiVersionReader("api-version");
             });
         }
     }
