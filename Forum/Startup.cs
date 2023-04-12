@@ -38,7 +38,10 @@ namespace Forum
             {
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
-
+                config.CacheProfiles.Add("60SecondsDuration", new CacheProfile
+                {
+                    Duration = 60
+                });
             })
                 .AddNewtonsoftJson()
                 .AddXmlDataContractSerializerFormatters();
@@ -74,6 +77,11 @@ namespace Forum
             // Versioning service
             services.ConfigureVersioning();
 
+            // Caching
+            services.ConfigureResponseCaching();
+            services.ConfigureHttpCacheHeaders();
+            services.AddHttpContextAccessor();
+
             services.AddControllers();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)
@@ -103,6 +111,10 @@ namespace Forum
             {
                 ForwardedHeaders = ForwardedHeaders.All
             });
+
+            app.UseResponseCaching();
+            app.UseHttpCacheHeaders();
+
             app.UseRouting();
 
             app.UseAuthentication();

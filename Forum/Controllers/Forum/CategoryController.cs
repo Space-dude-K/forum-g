@@ -41,7 +41,7 @@ namespace Forum.Controllers.Forum
         [HttpGet(Name = "GetCategories")]
         [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        public async Task<IActionResult> GetForumCategories([FromQuery] ForumCategoryParameters forumCategoryParameters)
+        public async Task<IActionResult> GetCategories([FromQuery] ForumCategoryParameters forumCategoryParameters)
         {
             var categoriesFromDb = await _repository.ForumCategory.GetAllCategoriesAsync(forumCategoryParameters, trackChanges: false);
 
@@ -94,7 +94,7 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
-        [HttpPost(Name = "CreateCategory")]
+        [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCategory([FromBody] ForumCategoryForCreationDto category)
         {
@@ -105,7 +105,7 @@ namespace Forum.Controllers.Forum
 
             var categoryToReturn = _mapper.Map<ForumCategoryDto>(categoryEntity);
 
-            return CreatedAtRoute("GetCategoryById", new { id = categoryToReturn.Id }, categoryToReturn);
+            return CreatedAtRoute("GetCategoryById", new { categoryId = categoryToReturn.Id }, categoryToReturn);
         }
         [HttpPost("collection")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
