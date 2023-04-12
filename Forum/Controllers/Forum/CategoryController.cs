@@ -12,7 +12,6 @@ using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.ComponentModel.Design;
 
 namespace Forum.Controllers.Forum
 {
@@ -33,7 +32,14 @@ namespace Forum.Controllers.Forum
             _mapper = mapper;
             _categoryLinks = categoryLinks;
         }
+        [HttpOptions]
+        public IActionResult GetCategoriesOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+            return Ok();
+        }
         [HttpGet]
+        [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetForumCategories([FromQuery] ForumCategoryParameters forumCategoryParameters)
         {

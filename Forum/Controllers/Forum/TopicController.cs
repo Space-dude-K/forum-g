@@ -31,7 +31,14 @@ namespace Forum.Controllers.Forum
             _mapper = mapper;
             _topicLinks = topicLinks;
         }
+        [HttpOptions]
+        public IActionResult GetTopicsOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+            return Ok();
+        }
         [HttpGet]
+        [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetTopicsForForum(
             int categoryId, int forumId, [FromQuery] ForumTopicParameters forumTopicParameters)
