@@ -9,6 +9,7 @@ using ForumTest.Tests.Integration.Forum.TestCases;
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using Xunit.Abstractions;
 
@@ -29,6 +30,7 @@ namespace ForumTest.Tests.Integration.Forum
         {
             // Arrange
             var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             // Act
             var response = await client.GetAsync(uri);
@@ -48,6 +50,7 @@ namespace ForumTest.Tests.Integration.Forum
             // Arrange
             var fac = new TestWithEfInMemoryDb<ForumContext>();
             var client = fac.CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var seedData = fac.Model.GetPopulatedModelWithSeedDataFromConfig<ForumCategory>();
 
             // Act
@@ -73,6 +76,7 @@ namespace ForumTest.Tests.Integration.Forum
 
             // Arrange
             var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             // Act
             var response = await client.GetAsync(uri);
@@ -92,19 +96,20 @@ namespace ForumTest.Tests.Integration.Forum
             // Arrange
             var fac = new TestWithEfInMemoryDb<ForumContext>();
             var client = fac.CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var seedData = fac.Model.GetPopulatedModelWithSeedDataFromConfig<ForumCategory>();
 
             // Act
             var response = await client.GetAsync(uri);
-
+            
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
 
             var rawData = await response.Content.ReadAsStringAsync();
-            var responseContent = JsonConvert.DeserializeObject<ForumCategoryDto>(rawData);
+            var responseContent = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData);
 
-            Assert.Equal(seedData.Single(fc => fc.Id.Equals(responseContent.Id)).Id, responseContent.Id);
-            Assert.Equal(seedData.Single(fc => fc.Id.Equals(responseContent.Id)).Name, responseContent.Name);
+            Assert.Equal(seedData.Single(fc => fc.Id.Equals(responseContent.First().Id)).Id, responseContent.First().Id);
+            Assert.Equal(seedData.Single(fc => fc.Id.Equals(responseContent.First().Id)).Name, responseContent.First().Name);
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.GetCollectionForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
@@ -114,6 +119,7 @@ namespace ForumTest.Tests.Integration.Forum
 
             // Arrange
             var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             // Act
             var response = await client.GetAsync(uri);
@@ -133,6 +139,7 @@ namespace ForumTest.Tests.Integration.Forum
             // Arrange
             var fac = new TestWithEfInMemoryDb<ForumContext>();
             var client = fac.CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var seedData = fac.Model.GetPopulatedModelWithSeedDataFromConfig<ForumCategory>();
 
             // Act
@@ -161,24 +168,25 @@ namespace ForumTest.Tests.Integration.Forum
 
             // Arrange
             var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
-            
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
             // Act
             var responseGetBeforeUp = await client.GetAsync(uri);
             var rawDataBeforeUp = await responseGetBeforeUp.Content.ReadAsStringAsync();
-            var responseContentBeforeUp = JsonConvert.DeserializeObject<ForumCategoryDto>(rawDataBeforeUp);
-            responseContentBeforeUp.Name = responseContentBeforeUp.Name + " updated";
-            var jsonContentBeforeUp = JsonConvert.SerializeObject(responseContentBeforeUp);
+            var responseContentBeforeUp = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawDataBeforeUp);
+            responseContentBeforeUp.First().Name = responseContentBeforeUp.First().Name + " updated";
+            var jsonContentBeforeUp = JsonConvert.SerializeObject(responseContentBeforeUp.First());
             var response = await client.PutAsync(uri, new StringContent(jsonContentBeforeUp, Encoding.UTF8, "application/json"));
             var responseGetAfterUp = await client.GetAsync(uri);
             var rawDataAfterUp = await responseGetAfterUp.Content.ReadAsStringAsync();
-            var responseContentAfterUp = JsonConvert.DeserializeObject<ForumCategoryDto>(rawDataAfterUp);
+            var responseContentAfterUp = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawDataAfterUp);
 
             // Assert
             responseGetBeforeUp.EnsureSuccessStatusCode(); // Status Code 200-299
             response.EnsureSuccessStatusCode(); // Status Code 200-299
             responseGetAfterUp.EnsureSuccessStatusCode(); // Status Code 200-299
 
-            Assert.Equal(expectedCategoryName, responseContentAfterUp.Name);
+            Assert.Equal(expectedCategoryName, responseContentAfterUp.First().Name);
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.UpdateSingleForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
@@ -188,28 +196,29 @@ namespace ForumTest.Tests.Integration.Forum
 
             // Arrange
             var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             // Act
             var responseGetBeforeUp = await client.GetAsync(uri);
             var rawDataBeforeUp = await responseGetBeforeUp.Content.ReadAsStringAsync();
-            var responseContentBeforeUp = JsonConvert.DeserializeObject<ForumCategoryDto>(rawDataBeforeUp);
-            responseContentBeforeUp.Name += " updated";
+            var responseContentBeforeUp = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawDataBeforeUp);
+            responseContentBeforeUp.First().Name += " updated";
 
             var jsonPatchObject = new JsonPatchDocument<ForumCategoryForUpdateDto>();
-            jsonPatchObject.Replace(fc => fc.Name, responseContentBeforeUp.Name);
+            jsonPatchObject.Replace(fc => fc.Name, responseContentBeforeUp.First().Name);
 
             var jsonContentBeforeUp = JsonConvert.SerializeObject(jsonPatchObject);
             var response = await client.PatchAsync(uri, new StringContent(jsonContentBeforeUp, Encoding.UTF8, "application/json"));
             var responseGetAfterUp = await client.GetAsync(uri);
             var rawDataAfterUp = await responseGetAfterUp.Content.ReadAsStringAsync();
-            var responseContentAfterUp = JsonConvert.DeserializeObject<ForumCategoryDto>(rawDataAfterUp);
+            var responseContentAfterUp = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawDataAfterUp);
 
             // Assert
             responseGetBeforeUp.EnsureSuccessStatusCode(); // Status Code 200-299
             response.EnsureSuccessStatusCode(); // Status Code 200-299
             responseGetAfterUp.EnsureSuccessStatusCode(); // Status Code 200-299
 
-            Assert.Equal(expectedCategoryName, responseContentAfterUp.Name);
+            Assert.Equal(expectedCategoryName, responseContentAfterUp.First().Name);
         }
         [Theory]
         [MemberData(nameof(ForumCategoryCaseData.PostSingleForumCategoryData), MemberType = typeof(ForumCategoryCaseData))]
@@ -219,8 +228,9 @@ namespace ForumTest.Tests.Integration.Forum
 
             // Arrange
             var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var jsonContent = JsonConvert.SerializeObject(new { Name = expectedCategoryName });
-
+            _output.WriteLine("jsonContent -> " + jsonContent);
             // Act
             var response = await client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
@@ -321,6 +331,7 @@ namespace ForumTest.Tests.Integration.Forum
         {
             // Arrange
             var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             // Act
             var responseGetBeforeDel = await client.GetAsync(uri);
