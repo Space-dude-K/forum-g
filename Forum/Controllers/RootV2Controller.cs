@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.Controllers
 {
-    [ApiVersion("1.0")]
+    [ApiVersion("2.0", Deprecated = true)]
     [Route("api")]
     [ApiController]
-    public class RootController : ControllerBase
+    public class RootV2Controller : ControllerBase
     {
         private readonly LinkGenerator _linkGenerator;
-        public RootController(LinkGenerator linkGenerator)
+        public RootV2Controller(LinkGenerator linkGenerator)
         {
             _linkGenerator = linkGenerator;
         }
@@ -29,13 +29,13 @@ namespace Forum.Controllers
                     new Link
                     {
                         Href = _linkGenerator.GetUriByName(HttpContext, "GetCategories", new {}),
-                        Rel = "categories",
+                        Rel = "categories_V2",
                         Method = "GET"
                     },
                     new Link
                     {
                         Href = _linkGenerator.GetUriByName(HttpContext, "CreateCategory", new {}),
-                        Rel = "create_category",
+                        Rel = "create_category_V2",
                         Method = "POST"
                     }
                 };
