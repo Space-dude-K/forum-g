@@ -38,7 +38,7 @@ namespace Forum.Controllers.Forum
             Response.Headers.Add("Allow", "GET, OPTIONS, POST");
             return Ok();
         }
-        [HttpGet]
+        [HttpGet(Name = "GetCategories")]
         [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetForumCategories([FromQuery] ForumCategoryParameters forumCategoryParameters)
@@ -94,7 +94,7 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
-        [HttpPost]
+        [HttpPost(Name = "CreateCategory")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCategory([FromBody] ForumCategoryForCreationDto category)
         {
@@ -126,7 +126,7 @@ namespace Forum.Controllers.Forum
             var ids = string.Join(",", categoryCollectionToReturn.Select(c => c.Id));
             return CreatedAtRoute("CategoryCollection", new { ids }, categoryCollectionToReturn);
         }
-        [HttpPut("{categoryId}")]
+        [HttpPut("{categoryId}", Name = "UpdateCategory")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
         public async Task<IActionResult> UpdateCategory(int categoryId, [FromBody] ForumCategoryForUpdateDto category)
@@ -139,7 +139,7 @@ namespace Forum.Controllers.Forum
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpPatch("{categoryId}")]
+        [HttpPatch("{categoryId}", Name = "PartiallyUpdateCategory")]
         [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdateCategory(int categoryId, [FromBody] JsonPatchDocument<ForumCategoryForUpdateDto> patchDoc)
         {
@@ -169,7 +169,7 @@ namespace Forum.Controllers.Forum
 
             return NoContent();
         }
-        [HttpDelete("{categoryId}")]
+        [HttpDelete("{categoryId}", Name = "DeleteCategory")]
         [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
         public async Task<IActionResult> DeleteCategory(int categoryId)
         {
