@@ -69,17 +69,15 @@ namespace Forum.Extensions
                 .OfType<NewtonsoftJsonOutputFormatter>()?.FirstOrDefault();
                 if (newtonsoftJsonOutputFormatter != null)
                 {
-                    newtonsoftJsonOutputFormatter
-                    .SupportedMediaTypes
-                    .Add("application/sd.k.hateoas+json");
+                    newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add("application/sd.k.hateoas+json");
+                    newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add("application/sd.k.apiroot+json");
                 }
                 var xmlOutputFormatter = config.OutputFormatters
                .OfType<XmlDataContractSerializerOutputFormatter>()?.FirstOrDefault();
                 if (xmlOutputFormatter != null)
                 {
-                    xmlOutputFormatter
-                    .SupportedMediaTypes
-                    .Add("application/sd.k.hateoas+xml");
+                    xmlOutputFormatter.SupportedMediaTypes.Add("application/sd.k.hateoas+xml");
+                    xmlOutputFormatter.SupportedMediaTypes.Add("application/sd.k.apiroot+xml");
                 }
             });
         }
