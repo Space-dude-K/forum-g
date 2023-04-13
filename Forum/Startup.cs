@@ -4,6 +4,7 @@ using Entities.DTO.ForumDto;
 using Entities.Models.Forum;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
+using Forum.ActionsFilters.User;
 using Forum.Extensions;
 using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -30,9 +31,6 @@ namespace Forum
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(Configuration);
 
-            services.AddAuthentication();
-            services.ConfigureIdentity();
-
             services.AddAutoMapper(typeof(Startup));
             services.ConfigureRepositoryManager();
             services.AddControllers(config =>
@@ -53,6 +51,8 @@ namespace Forum
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+
+            services.AddScoped<ValidateRoleExistsAttribute>();
 
             services.AddScoped<ValidationFilterAttribute>();
             services.AddScoped<ValidateCategoryExistsAttribute>();
@@ -83,7 +83,6 @@ namespace Forum
             services.ConfigureHttpCacheHeaders();
             services.AddHttpContextAccessor();
 
-            
             // Memory cache for memory cache library
             services.AddMemoryCache();
 
@@ -91,6 +90,10 @@ namespace Forum
             services.ConfigureRateLimitingOptions();
             services.AddHttpContextAccessor();
             services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+
+            // Authentication and autorization
+            services.AddAuthentication();
+            services.ConfigureIdentity();
 
             services.AddControllers();
         }
@@ -114,7 +117,8 @@ namespace Forum
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");
 
-            
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             // will forward proxy headers to the current request. This will help us during application deployment
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -128,9 +132,6 @@ namespace Forum
             app.UseIpRateLimiting();
 
             app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

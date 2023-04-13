@@ -44,22 +44,6 @@ namespace Forum.Extensions
             b => b.MigrationsAssembly("Forum")
             ));
         }
-        public static void ConfigureIdentity(this IServiceCollection services)
-        {
-            var builder = services.AddIdentityCore<ApplicationUser>(o =>
-            {
-                o.Password.RequireDigit = true;
-                o.Password.RequireLowercase = false;
-                o.Password.RequireUppercase = false;
-                o.Password.RequireNonAlphanumeric = false;
-                o.Password.RequiredLength = 10;
-                o.User.RequireUniqueEmail = true;
-            });
-
-            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-            builder.AddEntityFrameworkStores<ForumContext>()
-            .AddDefaultTokenProviders();
-        }
         public static void ConfigureRepositoryManager(this IServiceCollection services)
         {
             services.AddScoped<IRepositoryManager, RepositoryManager>();
@@ -120,8 +104,8 @@ namespace Forum.Extensions
                     Endpoint = "*",
                     Limit= 100,
                     Period = "5m"
-                    }
-                };
+                }
+            };
 
             services.Configure<IpRateLimitOptions>(opt =>
             {
@@ -130,6 +114,23 @@ namespace Forum.Extensions
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        }
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            var builder = services.AddIdentityCore<User>(o =>
+            {
+                o.Password.RequireDigit = true;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 10;
+                o.User.RequireUniqueEmail = true;
+            });
+
+            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
+            builder.AddRoles<IdentityRole>();
+            builder.AddEntityFrameworkStores<ForumContext>()
+            .AddDefaultTokenProviders();
         }
     }
 }
