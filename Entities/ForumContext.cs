@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Entities
 {
-    public class ForumContext : IdentityDbContext<ApplicationUser>
+    public class ForumContext : IdentityDbContext<User>
     {
         public ForumContext(DbContextOptions<ForumContext> options) : base(options)
         {
