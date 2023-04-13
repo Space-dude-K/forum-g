@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using AspNetCoreRateLimit;
+using Contracts;
 using Entities.DTO.ForumDto;
 using Entities.Models.Forum;
 using Forum.ActionsFilters;
@@ -82,6 +83,15 @@ namespace Forum
             services.ConfigureHttpCacheHeaders();
             services.AddHttpContextAccessor();
 
+            
+            // Memory cache for memory cache library
+            services.AddMemoryCache();
+
+            // Rate limiting, throttling
+            services.ConfigureRateLimitingOptions();
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+
             services.AddControllers();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)
@@ -114,6 +124,8 @@ namespace Forum
 
             app.UseResponseCaching();
             app.UseHttpCacheHeaders();
+
+            app.UseIpRateLimiting();
 
             app.UseRouting();
 
