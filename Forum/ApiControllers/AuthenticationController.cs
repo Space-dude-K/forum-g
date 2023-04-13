@@ -17,15 +17,19 @@ namespace Forum.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IAuthenticationManager _authenticationManager;
 
-        public AuthenticationController(ILoggerManager logger, IMapper mapper, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public AuthenticationController(ILoggerManager logger, IMapper mapper, 
+            UserManager<User> userManager, RoleManager<IdentityRole> roleManager, 
+            IAuthenticationManager authenticationManager)
         {
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
             _roleManager = roleManager;
+            _authenticationManager = authenticationManager;
         }
-        [HttpPost]
+        [HttpPost()]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateRoleExistsAttribute))]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
@@ -46,6 +50,18 @@ namespace Forum.Controllers
             await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
 
             return StatusCode(201);
+        }
+        [HttpPost("login")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
+        {
+            if (!await _authenticationManager.ValidateUser(user))
+            {
+                _logger.LogWarn($"{nameof(Authenticate)}: Authentication failed. Wrong user name or password.");
+                return Unauthorized();
+            }
+
+            return Ok(new { Token = await _authenticationManager.CreateToken() });
         }
     }
 }

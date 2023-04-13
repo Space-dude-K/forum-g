@@ -5,6 +5,7 @@ using Entities.DTO.ForumDto.Update;
 using Entities.DTO.UserDto;
 using Entities.Models;
 using Entities.Models.Forum;
+using Forum.ViewModels;
 
 namespace Forum
 {
@@ -38,6 +39,9 @@ namespace Forum
             CreateMap<ForumPostForCreationDto, ForumPost>();
             CreateMap<ForumPostForUpdateDto, ForumPost>();
             CreateMap<ForumPostForUpdateDto, ForumPost>().ReverseMap();
+
+            // Views
+            CreateMap<RegisterViewModel, UserForRegistrationDto>();
         }
     }
 }

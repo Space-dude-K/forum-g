@@ -1,11 +1,13 @@
 ﻿using AspNetCoreRateLimit;
 using Contracts;
+using Contracts.Forum;
 using Entities.DTO.ForumDto;
 using Entities.Models.Forum;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
 using Forum.ActionsFilters.User;
 using Forum.Extensions;
+using Forum.Services;
 using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -67,6 +69,9 @@ namespace Forum
             services.AddScoped<IDataShaper<ForumTopicDto>, DataShaper<ForumTopicDto>>();
             services.AddScoped<IDataShaper<ForumPostDto>, DataShaper<ForumPostDto>>();
 
+            services.AddHttpClient<IAuthenticationService, AuthenticationService>(c =>
+                c.BaseAddress = new Uri("https://localhost:7296/"));
+
             services.AddCustomMediaTypes();
 
             // HATEOAS
@@ -94,8 +99,10 @@ namespace Forum
             // Authentication and autorization
             services.AddAuthentication();
             services.ConfigureIdentity();
+            services.ConfigureJWT(Configuration);
+            services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 
-            services.AddControllers();
+            services.AddControllersWithViews();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)
         {
@@ -108,17 +115,19 @@ namespace Forum
                 // will add middleware for using HSTS, which adds the 
                 // Strict - Transport - Security header
                 app.UseHsts();
+                app.UseExceptionHandler("/Home/Error");
             }
 
             app.ConfigureExceptionHandler(logger);
             app.UseHttpsRedirection();
             // enables using static files for the request. If we don’t set a path to the static files directory, it will use a wwwroot
             // folder in our project by default.
+            //app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseCors("CorsPolicy");
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseHttpsRedirection();
+
+            app.UseCors("CorsPolicy");
 
             // will forward proxy headers to the current request. This will help us during application deployment
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -133,9 +142,15 @@ namespace Forum
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
