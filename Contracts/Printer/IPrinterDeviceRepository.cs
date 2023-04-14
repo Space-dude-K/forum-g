@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Contracts.Printer
+namespace Interfaces.Printer
 {
     public interface IPrinterDeviceRepository
     {

@@ -1,7 +1,7 @@
 ﻿using Entities.Models;
 using System.Dynamic;
 
-namespace Contracts
+namespace Interfaces
 {
     public interface IDataShaper<T>
     {

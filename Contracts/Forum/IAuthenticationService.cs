@@ -1,6 +1,6 @@
 ﻿using Forum.ViewModels;
 
-namespace Contracts.Forum
+namespace Interfaces.Forum
 {
     public interface IAuthenticationService
     {

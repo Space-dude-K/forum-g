@@ -1,7 +1,8 @@
 {
   "version": "1.0",
   "defaultProvider": "cdnjs",
-  "libraries": [
+  "libraries":
+  [
     {
       "library": "bootstrap@5.2.3",
       "destination": "wwwroot/lib/bootstrap/"
@@ -18,6 +19,11 @@
       "provider": "unpkg",
       "library": "jquery-validation@1.19.5",
       "destination": "wwwroot/lib/jquery-validation/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "bootstrap-multiselect@1.1.2",
+      "destination": "wwwroot/lib/bootstrap-multiselect/"
     }
   ]
 }

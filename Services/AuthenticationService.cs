@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using Contracts;
-using Contracts.Forum;
+using Interfaces;
+using Interfaces.Forum;
 using Entities.DTO.UserDto;
 using Forum.ViewModels;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace Forum.Services
+namespace Services
 {
     public class AuthenticationService : IAuthenticationService
     {

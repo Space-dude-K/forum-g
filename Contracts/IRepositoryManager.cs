@@ -1,11 +1,12 @@
-﻿using Contracts.Forum;
-using Contracts.Printer;
+﻿using Interfaces.Forum;
+using Interfaces.Printer;
+using Interfaces.User;
 
-namespace Contracts
+namespace Interfaces
 {
     public interface IRepositoryManager
     {
-        IForumUserRepository ForumUser { get; }
+        IRoleRepository UserRole { get; }
         IForumCategoryRepository ForumCategory { get; }
         IForumBaseRepository ForumBase { get; }
         IForumTopicRepository ForumTopic { get; }

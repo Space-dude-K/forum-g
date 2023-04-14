@@ -1,46 +1,80 @@
-﻿using AutoMapper;
-using Contracts;
-using Entities.DTO.UserDto;
-using Entities.Models;
+﻿using Interfaces;
 using Forum.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Interfaces.Forum;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Interfaces.User;
+using Azure;
+using Entities.DTO.ForumDto;
 using Newtonsoft.Json;
-using System.Text;
-using System;
-using Contracts.Forum;
+using Microsoft.AspNetCore.Identity;
 
 namespace Forum.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly HttpClient _client;
         private readonly ILoggerManager _logger;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IUserService _userService;
 
-        public AccountController(ILoggerManager logger, IAuthenticationService authenticationService)
+        public AccountController(ILoggerManager logger, IAuthenticationService authenticationService, IUserService userService)
         {
             _logger = logger;
             _authenticationService = authenticationService;
+            _userService = userService;
         }
 
-        public IActionResult Register()
+        public async Task<IActionResult> RegisterAsync()
         {
-            return View();
+            /*var model = new RegisterViewModel()
+            {
+                Roles = new List<SelectListItem>() 
+                {
+                    new SelectListItem
+                    {
+                        Text = "Motherboards",
+                        Value = "MB"
+                    },
+                    new SelectListItem
+                    {
+                        Text = "Motherboards 1",
+                        Value = "MB 1"
+                    }
+                }
+            };*/
+            var response = await _userService.GetUserRoles();
+            var rawData = await response.Content.ReadAsStringAsync();
+            var responseContent = JsonConvert.DeserializeObject<IEnumerable<IdentityRole>>(rawData)
+                .Select(r => r.Name).ToList();
+            var model = new RegisterViewModel()
+            {
+                Roles = responseContent
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var res = await _authenticationService.Register(model);
+                var response = await _userService.GetUserRoles();
+                var rawData = await response.Content.ReadAsStringAsync();
+                var responseContent = JsonConvert.DeserializeObject<IEnumerable<IdentityRole>>(rawData)
+                    .Select(r => r.Name).ToList();
+                model = new RegisterViewModel()
+                {
+                    Roles = responseContent
+                };
+
+
+                /*var res = await _authenticationService.Register(model);
 
                 if (!res)
                 {
                     ModelState.AddModelError("Error", "Unable register new user");
-                }
+                }*/
 
                 /*var jsonContentBeforeUp = JsonConvert.SerializeObject(responseContentBeforeUp.First());
                 var response = await client.PutAsync(uri, new StringContent(jsonContentBeforeUp, Encoding.UTF8, "application/json"));*/
@@ -67,6 +101,19 @@ namespace Forum.Controllers
 
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");*/
 
+            }
+            else
+            {
+                //RedirectToAction("Register");
+                /*model = new RegisterViewModel()
+                {
+                    Roles = new List<string>()
+                {
+                    "1",
+                    "2",
+                    "3"
+                }
+                };*/
             }
 
             return View(model);
