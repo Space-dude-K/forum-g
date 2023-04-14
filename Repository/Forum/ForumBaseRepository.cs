@@ -1,4 +1,4 @@
-﻿using Contracts.Forum;
+﻿using Interfaces.Forum;
 using Entities;
 using Entities.Models.Forum;
 using Entities.RequestFeatures;

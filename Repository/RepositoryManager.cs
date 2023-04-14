@@ -1,9 +1,11 @@
-﻿using Contracts;
-using Contracts.Forum;
-using Contracts.Printer;
+﻿using Interfaces;
+using Interfaces.Forum;
+using Interfaces.Printer;
 using Entities;
 using Repository.Forum;
 using Repository.Printer;
+using Interfaces.User;
+using Repository.User;
 
 namespace Repository
 {
@@ -12,7 +14,8 @@ namespace Repository
         private ForumContext _forumContext;
         private PrinterContext _printerContext;
 
-        private IForumUserRepository _forumUserRepository;
+        private IRoleRepository _roleRepository;
+
         private IForumCategoryRepository _forumCategoryRepository;
         private IForumBaseRepository _forumBaseRepository;
         private IForumTopicRepository _forumTopicRepository;
@@ -25,13 +28,13 @@ namespace Repository
             _forumContext = forumContext;
             _printerContext = printerContext;
         }
-        public IForumUserRepository ForumUser
+        public IRoleRepository UserRole
         {
             get
             {
-                if (_forumUserRepository == null)
-                    _forumUserRepository = new ForumUserRepository(_forumContext);
-                return _forumUserRepository;
+                if (_roleRepository == null)
+                    _roleRepository = new RoleRepository(_forumContext);
+                return _roleRepository;
             }
         }
 

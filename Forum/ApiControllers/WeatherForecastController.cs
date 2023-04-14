@@ -1,4 +1,4 @@
-using Contracts;
+using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.Controllers

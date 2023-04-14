@@ -1,5 +1,5 @@
-﻿using Contracts;
-using Contracts.Forum;
+﻿using Interfaces;
+using Interfaces.Forum;
 using Moq;
 using System;
 using System.Collections.Generic;

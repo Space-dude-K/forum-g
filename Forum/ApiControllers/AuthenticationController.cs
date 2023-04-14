@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Contracts;
+using Interfaces;
 using Entities.DTO.UserDto;
 using Entities.Models;
 using Forum.ActionsFilters;

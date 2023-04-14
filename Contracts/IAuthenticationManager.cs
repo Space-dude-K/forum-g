@@ -1,6 +1,6 @@
 ﻿using Entities.DTO.UserDto;
 
-namespace Contracts
+namespace Interfaces
 {
     public interface IAuthenticationManager
     {

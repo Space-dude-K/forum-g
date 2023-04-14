@@ -1,5 +1,5 @@
 ﻿using Entities;
-using Contracts.Forum;
+using Interfaces.Forum;
 using Entities.Models.Forum;
 using Microsoft.EntityFrameworkCore;
 using Entities.RequestFeatures.Forum;

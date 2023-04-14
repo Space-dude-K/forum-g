@@ -1,30 +1,33 @@
 ﻿using AspNetCoreRateLimit;
-using Contracts;
-using Contracts.Forum;
+using Interfaces;
+using Interfaces.Forum;
 using Entities.DTO.ForumDto;
 using Entities.Models.Forum;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
 using Forum.ActionsFilters.User;
 using Forum.Extensions;
-using Forum.Services;
 using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 using Repository.DataShaping;
+using Services;
+using Interfaces.User;
 
 namespace Forum
 {
     public class Startup
     {
         private readonly IConfiguration Configuration;
+        private readonly string appUrl;
 
         public Startup(IConfiguration configuration)
         {
             LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
+            appUrl = configuration["ASPNETCORE_URLS"].Split(";").First();
         }
         public void ConfigureServices(IServiceCollection services)
         {
@@ -69,8 +72,12 @@ namespace Forum
             services.AddScoped<IDataShaper<ForumTopicDto>, DataShaper<ForumTopicDto>>();
             services.AddScoped<IDataShaper<ForumPostDto>, DataShaper<ForumPostDto>>();
 
+            System.Diagnostics.Debug.WriteLine("TEST: " + appUrl);
+
             services.AddHttpClient<IAuthenticationService, AuthenticationService>(c =>
-                c.BaseAddress = new Uri("https://localhost:7296/"));
+                c.BaseAddress = new Uri(appUrl));
+            services.AddHttpClient<IUserService, UserService>(c =>
+                c.BaseAddress = new Uri(appUrl));
 
             services.AddCustomMediaTypes();
 

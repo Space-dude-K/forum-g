@@ -2,7 +2,7 @@
 using Entities.RequestFeatures;
 using Entities.RequestFeatures.Forum;
 
-namespace Contracts.Forum
+namespace Interfaces.Forum
 {
     public interface IForumTopicRepository
     {

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Contracts;
+using Interfaces;
 using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.Update;
 using Entities.DTO.ForumDto;
