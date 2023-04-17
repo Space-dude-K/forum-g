@@ -9,6 +9,6 @@ namespace Interfaces.User
 {
     public interface IUserService
     {
-        Task<HttpResponseMessage> GetUserRoles();
+        Task<List<string>> GetUserRoles();
     }
 }

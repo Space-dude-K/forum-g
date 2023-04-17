@@ -3,6 +3,7 @@ using Entities.DTO.UserDto;
 using Forum.ViewModels;
 using Interfaces;
 using Interfaces.User;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,10 +28,16 @@ namespace Services
             _mapper = mapper;
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
-        public async Task<HttpResponseMessage> GetUserRoles()
+        public async Task<List<string>> GetUserRoles()
         {
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            return await _client.GetAsync(basePath);
+
+            var response = await _client.GetAsync(basePath);
+            var rawData = await response.Content.ReadAsStringAsync();
+            var responseContent = JsonConvert.DeserializeObject<IEnumerable<IdentityRole>>(rawData)
+                .Select(r => r.Name).ToList();
+
+            return responseContent;
         }
     }
 }
