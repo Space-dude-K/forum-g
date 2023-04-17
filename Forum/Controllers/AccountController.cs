@@ -26,32 +26,16 @@ namespace Forum.Controllers
 
         public async Task<IActionResult> RegisterAsync()
         {
-            /*var model = new RegisterViewModel()
-            {
-                Roles = new List<SelectListItem>() 
-                {
-                    new SelectListItem
-                    {
-                        Text = "Motherboards",
-                        Value = "MB"
-                    },
-                    new SelectListItem
-                    {
-                        Text = "Motherboards 1",
-                        Value = "MB 1"
-                    }
-                }
-            };*/
-            var response = await _userService.GetUserRoles();
+            /*var response = await _userService.GetUserRoles();
             var rawData = await response.Content.ReadAsStringAsync();
             var responseContent = JsonConvert.DeserializeObject<IEnumerable<IdentityRole>>(rawData)
                 .Select(r => r.Name).ToList();
             var model = new RegisterViewModel()
             {
                 Roles = responseContent
-            };
+            };*/
 
-            return View(model);
+            return View();
         }
 
         [HttpPost]
@@ -59,13 +43,10 @@ namespace Forum.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var response = await _userService.GetUserRoles();
-                var rawData = await response.Content.ReadAsStringAsync();
-                var responseContent = JsonConvert.DeserializeObject<IEnumerable<IdentityRole>>(rawData)
-                    .Select(r => r.Name).ToList();
+
                 model = new RegisterViewModel()
                 {
-                    Roles = responseContent
+                    Roles = await _userService.GetUserRoles()
                 };
 
 
