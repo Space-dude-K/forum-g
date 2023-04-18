@@ -26,16 +26,20 @@ namespace Forum.Controllers
 
         public async Task<IActionResult> RegisterAsync()
         {
-            /*var response = await _userService.GetUserRoles();
-            var rawData = await response.Content.ReadAsStringAsync();
-            var responseContent = JsonConvert.DeserializeObject<IEnumerable<IdentityRole>>(rawData)
-                .Select(r => r.Name).ToList();
+            var dbRoles = await _userService.GetUserRoles();
+
+            if (dbRoles == null || dbRoles.Count == 0)
+            {
+                _logger.LogError($"Db roles is empty");
+                return NotFound();
+            }
+
             var model = new RegisterViewModel()
             {
-                Roles = responseContent
-            };*/
+                Roles = dbRoles
+            };
 
-            return View();
+            return View(model);
         }
 
         [HttpPost]
@@ -43,10 +47,17 @@ namespace Forum.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var dbRoles = await _userService.GetUserRoles();
+
+                if (dbRoles == null || dbRoles.Count == 0)
+                {
+                    _logger.LogError($"Db roles is empty");
+                    return NotFound();
+                }
 
                 model = new RegisterViewModel()
                 {
-                    Roles = await _userService.GetUserRoles()
+                    Roles = dbRoles
                 };
 
 
