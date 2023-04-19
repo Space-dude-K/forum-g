@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Entities.Models;
 
 namespace Repository.Extensions
 {
@@ -49,6 +50,15 @@ namespace Repository.Extensions
 
             return categories.Where(e => e.Name.ToLower().Contains(lowerCaseTerm));
         }
+        public static IQueryable<AppUser> Search(this IQueryable<AppUser> users, string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+                return users;
+
+            var lowerCaseTerm = searchTerm.Trim().ToLower();
+
+            return users.Where(e => e.UserName.ToLower().Contains(lowerCaseTerm));
+        }
         public static IQueryable<ForumCategory> Sort(this IQueryable<ForumCategory> categories, string orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
@@ -61,41 +71,53 @@ namespace Repository.Extensions
 
             return categories.OrderBy(orderQuery); 
         }
-        public static IQueryable<ForumBase> Sort(this IQueryable<ForumBase> categories, string orderByQueryString)
+        public static IQueryable<ForumBase> Sort(this IQueryable<ForumBase> forums, string orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
-                return categories.OrderBy(e => e.ForumTitle);
+                return forums.OrderBy(e => e.ForumTitle);
 
             var orderQuery = OrderQueryBuilder.CreateOrderQuery<ForumBase>(orderByQueryString);
 
             if (string.IsNullOrWhiteSpace(orderQuery))
-                return categories.OrderBy(e => e.ForumTitle);
+                return forums.OrderBy(e => e.ForumTitle);
 
-            return categories.OrderBy(orderQuery);
+            return forums.OrderBy(orderQuery);
         }
-        public static IQueryable<ForumTopic> Sort(this IQueryable<ForumTopic> categories, string orderByQueryString)
+        public static IQueryable<ForumTopic> Sort(this IQueryable<ForumTopic> topics, string orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
-                return categories.OrderBy(e => e.Name);
+                return topics.OrderBy(e => e.Name);
 
             var orderQuery = OrderQueryBuilder.CreateOrderQuery<ForumTopic>(orderByQueryString);
 
             if (string.IsNullOrWhiteSpace(orderQuery))
-                return categories.OrderBy(e => e.Name);
+                return topics.OrderBy(e => e.Name);
 
-            return categories.OrderBy(orderQuery);
+            return topics.OrderBy(orderQuery);
         }
-        public static IQueryable<ForumPost> Sort(this IQueryable<ForumPost> categories, string orderByQueryString)
+        public static IQueryable<ForumPost> Sort(this IQueryable<ForumPost> posts, string orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
-                return categories.OrderBy(e => e.PostName);
+                return posts.OrderBy(e => e.PostName);
 
             var orderQuery = OrderQueryBuilder.CreateOrderQuery<ForumPost>(orderByQueryString);
 
             if (string.IsNullOrWhiteSpace(orderQuery))
-                return categories.OrderBy(e => e.PostName);
+                return posts.OrderBy(e => e.PostName);
 
-            return categories.OrderBy(orderQuery);
+            return posts.OrderBy(orderQuery);
+        }
+        public static IQueryable<AppUser> Sort(this IQueryable<AppUser> users, string orderByQueryString)
+        {
+            if (string.IsNullOrWhiteSpace(orderByQueryString))
+                return users.OrderBy(e => e.UserName);
+
+            var orderQuery = OrderQueryBuilder.CreateOrderQuery<AppUser>(orderByQueryString);
+
+            if (string.IsNullOrWhiteSpace(orderQuery))
+                return users.OrderBy(e => e.UserName);
+
+            return users.OrderBy(orderQuery);
         }
         // TODO. Generic way?
         public static IQueryable<T> SortGeneric<T>(this IQueryable<T> categories, string propertyName, string orderByQueryString)

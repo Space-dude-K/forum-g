@@ -3,6 +3,7 @@ using Entities.DTO.ForumDto;
 using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.Update;
 using Entities.DTO.UserDto;
+using Entities.DTO.UserDto.Create;
 using Entities.Models;
 using Entities.Models.Forum;
 using Forum.ViewModels;
@@ -14,7 +15,8 @@ namespace Forum
         public MappingProfile()
         {
             // User
-            CreateMap<UserForRegistrationDto, User>();
+            CreateMap<AppUser, UserDto>();
+            CreateMap<UserForCreationDto, AppUser>();
 
             // Category
             CreateMap<ForumCategory, ForumCategoryDto>();
@@ -41,7 +43,7 @@ namespace Forum
             CreateMap<ForumPostForUpdateDto, ForumPost>().ReverseMap();
 
             // Views
-            CreateMap<RegisterViewModel, UserForRegistrationDto>();
+            CreateMap<RegisterViewModel, UserDto>();
         }
     }
 }

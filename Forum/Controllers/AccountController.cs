@@ -8,6 +8,7 @@ using Azure;
 using Entities.DTO.ForumDto;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
+using Entities.ViewModels;
 
 namespace Forum.Controllers
 {
@@ -38,6 +39,11 @@ namespace Forum.Controllers
             {
                 Roles = dbRoles
             };
+
+            /*var tableModel = new RegisterTableViewModel()
+            {
+                RegisterViewModels = 
+            };*/
 
             return View(model);
         }

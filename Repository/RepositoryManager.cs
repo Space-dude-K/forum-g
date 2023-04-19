@@ -14,7 +14,7 @@ namespace Repository
         private ForumContext _forumContext;
         private PrinterContext _printerContext;
 
-        private IRoleRepository _roleRepository;
+        private UserDataRepository _userDataRepository;
 
         private IForumCategoryRepository _forumCategoryRepository;
         private IForumBaseRepository _forumBaseRepository;
@@ -28,13 +28,14 @@ namespace Repository
             _forumContext = forumContext;
             _printerContext = printerContext;
         }
-        public IRoleRepository UserRole
+        public IUserDataRepository Users
         {
             get
             {
-                if (_roleRepository == null)
-                    _roleRepository = new RoleRepository(_forumContext);
-                return _roleRepository;
+                if (_userDataRepository == null)
+                    _userDataRepository = new UserDataRepository(_forumContext);
+
+                return _userDataRepository;
             }
         }
 

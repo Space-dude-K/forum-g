@@ -5,6 +5,7 @@ using Entities.DTO.UserDto;
 using Forum.ViewModels;
 using Newtonsoft.Json;
 using System.Text;
+using Entities.ViewModels;
 
 namespace Services
 {
@@ -24,7 +25,7 @@ namespace Services
         }
         public async Task<bool> Register(RegisterViewModel model)
         {
-            var userDto = _mapper.Map<UserForRegistrationDto>(model);
+            var userDto = _mapper.Map<UserDto>(model);
             var userJson = JsonConvert.SerializeObject(userDto);
             var postContent = new StringContent(userJson, Encoding.UTF8, "application/json");
             var result = await _client.PostAsync("api/authentication", postContent);

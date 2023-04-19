@@ -15,6 +15,9 @@ using NLog;
 using Repository.DataShaping;
 using Services;
 using Interfaces.User;
+using Entities.Models;
+using Forum.Utility.UserLinks;
+using Entities.DTO.UserDto;
 
 namespace Forum
 {
@@ -72,6 +75,8 @@ namespace Forum
             services.AddScoped<IDataShaper<ForumTopicDto>, DataShaper<ForumTopicDto>>();
             services.AddScoped<IDataShaper<ForumPostDto>, DataShaper<ForumPostDto>>();
 
+            services.AddScoped<IDataShaper<UserDto>, DataShaper<UserDto>>();
+
             System.Diagnostics.Debug.WriteLine("TEST: " + appUrl);
 
             services.AddHttpClient<IAuthenticationService, AuthenticationService>(c =>
@@ -86,6 +91,8 @@ namespace Forum
             services.AddScoped<ForumBaseLinks>();
             services.AddScoped<TopicLinks>();
             services.AddScoped<PostLinks>();
+
+            services.AddScoped<UserDataLinks>();
 
             // Versioning service
             services.ConfigureVersioning();

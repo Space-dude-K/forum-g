@@ -1,12 +1,6 @@
 ﻿using Interfaces;
 using Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository.DataShaping
 {
@@ -72,7 +66,15 @@ namespace Repository.DataShaping
             }
 
             var objectProperty = entity.GetType().GetProperty("Id");
-            shapedObject.Id = (int)objectProperty.GetValue(entity);
+
+            if(objectProperty.GetType() == typeof(int))
+            {
+                shapedObject.Id = (int)objectProperty.GetValue(entity);
+            }
+            else
+            {
+                shapedObject.Id = (Guid)objectProperty.GetValue(entity);
+            }
 
             return shapedObject;
         }

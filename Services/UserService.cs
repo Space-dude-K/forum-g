@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Entities.DTO.UserDto;
+using Entities.ViewModels;
 using Forum.ViewModels;
 using Interfaces;
 using Interfaces.User;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -39,5 +41,15 @@ namespace Services
 
             return responseContent;
         }
+        /*public async Task<RegisterTableViewModel> GetUsersData()
+        {
+
+            var model = new RegisterTableViewModel()
+            { 
+                RegisterViewModels = 
+                };
+
+            return result.IsSuccessStatusCode;
+        }*/
     }
 }

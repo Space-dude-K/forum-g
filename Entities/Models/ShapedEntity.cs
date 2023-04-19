@@ -6,7 +6,7 @@
         {
             Entity = new Entity();
         }
-        public int Id { get; set; }
+        public object Id { get; set; }
         public Entity Entity { get; set; }
     }
 }

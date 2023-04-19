@@ -19,7 +19,7 @@ namespace Forum.ActionsFilters.User
         {
             var action = context.RouteData.Values["action"];
             var controller = context.RouteData.Values["controller"];
-            var userDto = (UserForRegistrationDto)context.ActionArguments.SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
+            var userDto = (UserDto)context.ActionArguments.SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
 
             if(userDto.Roles.Count > 0)
             {

@@ -11,10 +11,10 @@ namespace Forum
 {
     public class AuthenticationManager : IAuthenticationManager
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _configuration;
-        private User _user;
-        public AuthenticationManager(UserManager<User> userManager, IConfiguration configuration)
+        private AppUser _user;
+        public AuthenticationManager(UserManager<AppUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _configuration = configuration;

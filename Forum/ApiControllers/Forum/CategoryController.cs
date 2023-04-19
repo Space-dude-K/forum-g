@@ -39,7 +39,7 @@ namespace Forum.Controllers.Forum
             Response.Headers.Add("Allow", "GET, OPTIONS, POST");
             return Ok();
         }
-        [HttpGet(Name = "GetCategories"), Authorize]
+        [HttpGet(Name = "GetCategories")]
         [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetCategories([FromQuery] ForumCategoryParameters forumCategoryParameters)
