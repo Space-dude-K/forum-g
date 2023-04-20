@@ -4,7 +4,7 @@ using Interfaces.User;
 using Microsoft.EntityFrameworkCore;
 using Entities.RequestFeatures.User;
 using Repository.Extensions;
-using Entities.Models.Forum;
+using Microsoft.AspNetCore.Identity;
 
 namespace Repository.User
 {

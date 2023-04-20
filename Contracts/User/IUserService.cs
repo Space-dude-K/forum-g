@@ -1,4 +1,5 @@
-﻿using Forum.ViewModels;
+﻿using Entities.ViewModels;
+using Forum.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Interfaces.User
     public interface IUserService
     {
         Task<List<string>> GetUserRoles();
+        Task<RegisterTableViewModel> GetUsersData();
     }
 }

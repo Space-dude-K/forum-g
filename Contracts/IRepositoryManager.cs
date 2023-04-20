@@ -6,6 +6,7 @@ namespace Interfaces
 {
     public interface IRepositoryManager
     {
+        IRoleRepository Roles { get; }
         IUserDataRepository Users { get; }
         IForumCategoryRepository ForumCategory { get; }
         IForumBaseRepository ForumBase { get; }

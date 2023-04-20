@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Entities.DTO.UserDto;
+using Entities.DTO.UserDto.Create;
 
 namespace Forum.ActionsFilters.User
 {
@@ -19,7 +20,7 @@ namespace Forum.ActionsFilters.User
         {
             var action = context.RouteData.Values["action"];
             var controller = context.RouteData.Values["controller"];
-            var userDto = (UserDto)context.ActionArguments.SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
+            var userDto = (UserForCreationDto)context.ActionArguments.SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
 
             if(userDto.Roles.Count > 0)
             {

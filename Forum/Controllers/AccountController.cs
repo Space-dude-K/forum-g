@@ -9,6 +9,7 @@ using Entities.DTO.ForumDto;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
 using Entities.ViewModels;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Forum.Controllers
 {
@@ -35,15 +36,12 @@ namespace Forum.Controllers
                 return NotFound();
             }
 
+            var registerTableViewModel = await _userService.GetUsersData();
             var model = new RegisterViewModel()
             {
-                Roles = dbRoles
+                Roles = dbRoles,
+                RegisterTableViewModel = registerTableViewModel
             };
-
-            /*var tableModel = new RegisterTableViewModel()
-            {
-                RegisterViewModels = 
-            };*/
 
             return View(model);
         }
@@ -51,68 +49,40 @@ namespace Forum.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (!ModelState.IsValid)
+            // TODO. Email uniqueness check
+            if (ModelState.IsValid)
             {
-                var dbRoles = await _userService.GetUserRoles();
+                var result = await _authenticationService.Register(model);
 
-                if (dbRoles == null || dbRoles.Count == 0)
+                if(result.IsSuccessStatusCode)
                 {
-                    _logger.LogError($"Db roles is empty");
-                    return NotFound();
+                    TempData["Success"] = "User registered successfully!";
                 }
-
-                model = new RegisterViewModel()
+                else
                 {
-                    Roles = dbRoles
-                };
-
-
-                /*var res = await _authenticationService.Register(model);
-
-                if (!res)
-                {
-                    ModelState.AddModelError("Error", "Unable register new user");
-                }*/
-
-                /*var jsonContentBeforeUp = JsonConvert.SerializeObject(responseContentBeforeUp.First());
-                var response = await client.PutAsync(uri, new StringContent(jsonContentBeforeUp, Encoding.UTF8, "application/json"));*/
-
-                /*var user = new IdentityUser
-                {
-                    UserName = model.Email,
-                    Email = model.Email,
-                };
-
-                var result = await _userManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-
-                    return RedirectToAction("index", "Home");
+                    var errorsRaw = await result.Content.ReadAsStringAsync();
+                    //var errors = JsonConvert.DeserializeObject(errorsRaw);
+                    ModelState.AddModelError(string.Empty, errorsRaw);
                 }
-
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
-
-                ModelState.AddModelError(string.Empty, "Invalid Login Attempt");*/
-
             }
             else
             {
-                //RedirectToAction("Register");
-                /*model = new RegisterViewModel()
-                {
-                    Roles = new List<string>()
-                {
-                    "1",
-                    "2",
-                    "3"
-                }
-                };*/
+                ModelState.AddModelError(string.Empty, "Invalid registration attempt");
             }
+
+            var dbRoles = await _userService.GetUserRoles();
+
+            if (dbRoles == null || dbRoles.Count == 0)
+            {
+                _logger.LogError($"Db roles is empty");
+                return NotFound();
+            }
+            var registerTableViewModel = await _userService.GetUsersData();
+            model = new RegisterViewModel()
+            {
+                Roles = dbRoles,
+                RegisterTableViewModel = registerTableViewModel
+            };
 
             return View(model);
         }

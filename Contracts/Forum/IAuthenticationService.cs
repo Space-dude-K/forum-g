@@ -4,6 +4,6 @@ namespace Interfaces.Forum
 {
     public interface IAuthenticationService
     {
-        Task<bool> Register(RegisterViewModel model);
+        Task<HttpResponseMessage> Register(RegisterViewModel model);
     }
 }

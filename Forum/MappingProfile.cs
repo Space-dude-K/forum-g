@@ -43,7 +43,7 @@ namespace Forum
             CreateMap<ForumPostForUpdateDto, ForumPost>().ReverseMap();
 
             // Views
-            CreateMap<RegisterViewModel, UserDto>();
+            CreateMap<RegisterViewModel, UserForCreationDto>();
         }
     }
 }

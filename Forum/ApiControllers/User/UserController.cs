@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 
 namespace Forum.ApiControllers.User
 {
-    [Route("api/users")]
+    [Route("api")]
     public class UserController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
@@ -37,42 +37,35 @@ namespace Forum.ApiControllers.User
             Response.Headers.Add("Allow", "GET, OPTIONS, POST");
             return Ok();
         }
-        /*[HttpGet(Name = "GetUserRoles")]
+        [HttpGet("roles", Name = "GetUserRoles")]
         [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<List<IdentityRole>> GetUserRoles()
         {
-            var rolesFromDb = await _repository.UserRole.GetAllRolesAsync(trackChanges: false);
+            var rolesFromDb = await _repository.Roles.GetAllRolesAsync(trackChanges: false);
 
             return rolesFromDb;
-        }*/
-        [HttpGet(Name = "GetUsers")]
+        }
+        [HttpGet("users", Name = "GetUsers")]
         [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParameters)
         {
             var usersFromDb = await _repository.Users.GetAllUsersAsync(userParameters, trackChanges: false);
-
-            //Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(rolesFromDb.MetaData));
-
-            //var categoriesDto = _mapper.Map<IEnumerable<ForumCategoryDto>>(categoriesFromDb);
-            //var links = _categoryLinks.TryGenerateLinks(categoriesDto, forumCategoryParameters.Fields, HttpContext);
-
-            //return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
-
             var usersDto = _mapper.Map<IEnumerable<UserDto>>(usersFromDb);
             var links = _userDataLinks.TryGenerateLinks(usersDto, userParameters.Fields, HttpContext);
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
-        [HttpGet("{userId}", Name = "GetUserById")]
+        [HttpGet("users/{userId}", Name = "GetUserById")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        public async Task<List<AppUser>> GetUser(string userId, [FromQuery] UserParameters userParameters)
+        public async Task<IActionResult> GetUser(string userId, [FromQuery] UserParameters userParameters)
         {
-            var userFromDb = await _repository.Users.GetUserAsync(userId, userParameters, trackChanges: false);
+            var usersFromDb = await _repository.Users.GetUserAsync(userId, userParameters, trackChanges: false);
+            var usersDto = _mapper.Map<IEnumerable<UserDto>>(usersFromDb);
+            var links = _userDataLinks.TryGenerateLinks(usersDto, userParameters.Fields, HttpContext);
 
-            return userFromDb;
+            return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
     }
-
 }
