@@ -6,6 +6,7 @@ using Forum.ActionsFilters;
 using Forum.ActionsFilters.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Entities.DTO.UserDto.Create;
 
 namespace Forum.Controllers
 {
@@ -15,12 +16,12 @@ namespace Forum.Controllers
     {
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IAuthenticationManager _authenticationManager;
 
         public AuthenticationController(ILoggerManager logger, IMapper mapper, 
-            UserManager<User> userManager, RoleManager<IdentityRole> roleManager, 
+            UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, 
             IAuthenticationManager authenticationManager)
         {
             _logger = logger;
@@ -32,9 +33,9 @@ namespace Forum.Controllers
         [HttpPost()]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateRoleExistsAttribute))]
-        public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
+        public async Task<IActionResult> RegisterUser([FromBody] UserForCreationDto userForRegistration)
         {
-            var user = _mapper.Map<User>(userForRegistration);
+            var user = _mapper.Map<AppUser>(userForRegistration);
             var result = await _userManager.CreateAsync(user, userForRegistration.Password);
 
             if (!result.Succeeded)

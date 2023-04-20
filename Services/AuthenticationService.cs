@@ -5,6 +5,10 @@ using Entities.DTO.UserDto;
 using Forum.ViewModels;
 using Newtonsoft.Json;
 using System.Text;
+using Entities.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Entities.Models;
+using Entities.DTO.UserDto.Create;
 
 namespace Services
 {
@@ -22,14 +26,14 @@ namespace Services
             _mapper = mapper;
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
-        public async Task<bool> Register(RegisterViewModel model)
+        public async Task<HttpResponseMessage> Register(RegisterViewModel model)
         {
-            var userDto = _mapper.Map<UserForRegistrationDto>(model);
+            var userDto = _mapper.Map<UserForCreationDto>(model);
             var userJson = JsonConvert.SerializeObject(userDto);
             var postContent = new StringContent(userJson, Encoding.UTF8, "application/json");
             var result = await _client.PostAsync("api/authentication", postContent);
 
-            return result.IsSuccessStatusCode;
+            return result;
         }
     }
 }

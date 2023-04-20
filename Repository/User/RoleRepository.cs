@@ -1,7 +1,7 @@
-﻿using Interfaces.User;
-using Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Entities;
+using Interfaces.User;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository.User
 {

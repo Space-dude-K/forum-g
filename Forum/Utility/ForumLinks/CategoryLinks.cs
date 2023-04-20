@@ -19,12 +19,12 @@ namespace Forum.Utility.ForumLinks
         public LinkResponse TryGenerateLinks(IEnumerable<ForumCategoryDto> categoriesDto, string fields, HttpContext httpContext, 
             IEnumerable<int>? collectionIds = null)
         {
-            var shapedEmployees = ShapeData(categoriesDto, fields);
+            var shapedCategories = ShapeData(categoriesDto, fields);
 
             if (ShouldGenerateLinks(httpContext))
-                return ReturnLinkdedCategories(categoriesDto, fields, httpContext, shapedEmployees, collectionIds);
+                return ReturnLinkdedCategories(categoriesDto, fields, httpContext, shapedCategories, collectionIds);
 
-            return ReturnShapedCategories(shapedEmployees);
+            return ReturnShapedCategories(shapedCategories);
         }
         private List<Entity> ShapeData(IEnumerable<ForumCategoryDto> categoriesDto, string fields)
         {

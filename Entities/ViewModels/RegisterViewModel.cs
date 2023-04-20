@@ -1,6 +1,5 @@
 ﻿using Entities.ModelAttributes;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Entities.ViewModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace Forum.ViewModels
@@ -26,8 +25,8 @@ namespace Forum.ViewModels
         [Display(Name = "Confirm Password")]
         [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Password and confirmation password not match.")]
         public string ConfirmPassword { get; set; }
-        public List<string> Roles { get; set; }
         [EnsureMinimumElements(min: 1, ErrorMessage = "Select at least one item")]
-        public List<string>? SelectedRoles { get; set; }
+        public List<string>? Roles { get; set; }
+        public RegisterTableViewModel? RegisterTableViewModel { get; set; }
     }
 }

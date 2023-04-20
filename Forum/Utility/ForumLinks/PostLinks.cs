@@ -20,12 +20,12 @@ namespace Forum.Utility.ForumLinks
             string fields, HttpContext httpContext,
             IEnumerable<int>? collectionIds = null)
         {
-            var shapedEmployees = ShapeData(postsDto, fields);
+            var shapedPosts = ShapeData(postsDto, fields);
 
             if (ShouldGenerateLinks(httpContext))
-                return ReturnLinkdedPosts(postsDto, forumCategoryId, forumBaseId, forumTopicId, fields, httpContext, shapedEmployees, collectionIds);
+                return ReturnLinkdedPosts(postsDto, forumCategoryId, forumBaseId, forumTopicId, fields, httpContext, shapedPosts, collectionIds);
 
-            return ReturnShapedPosts(shapedEmployees);
+            return ReturnShapedPosts(shapedPosts);
         }
         private List<Entity> ShapeData(IEnumerable<ForumPostDto> postsDto, string fields)
         {
