@@ -107,9 +107,12 @@ namespace Forum
             services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
 
             // Authentication and autorization
-            services.AddAuthentication();
+            //services.AddAuthentication().AddCookie(Microsoft.AspNetCore.Identity.Application)
+            //services.ConfigureIdentityCookieAndJWT(Configuration);
+
             services.ConfigureIdentity();
-            services.ConfigureJWT(Configuration);
+            services.ConfigureCookie();
+            //services.ConfigureJWT(Configuration);
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 
             services.AddControllersWithViews();
