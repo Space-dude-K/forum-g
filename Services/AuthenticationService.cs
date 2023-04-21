@@ -5,26 +5,41 @@ using Entities.DTO.UserDto;
 using Forum.ViewModels;
 using Newtonsoft.Json;
 using System.Text;
-using Entities.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Entities.Models;
 using Entities.DTO.UserDto.Create;
+using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Services
 {
     public class AuthenticationService : IAuthenticationService
     {
         private readonly HttpClient _client;
-        public const string basePath = "api/authentication";
 
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public AuthenticationService(HttpClient client, ILoggerManager logger, IMapper mapper)
+        private AppUser _user;
+
+        public AuthenticationService(HttpClient client, ILoggerManager logger,IMapper mapper)
         {
             _logger = logger;
             _mapper = mapper;
             _client = client ?? throw new ArgumentNullException(nameof(client));
+        }
+        public async Task<HttpResponseMessage> Login(LoginViewModel model)
+        {
+            var loginDto = _mapper.Map<UserForAuthenticationDto>(model);
+            var loginJson = JsonConvert.SerializeObject(loginDto);
+            var postContent = new StringContent(loginJson, Encoding.UTF8, "application/json");
+            var result = await _client.PostAsync("api/authentication/login", postContent);
+
+            return result;
         }
         public async Task<HttpResponseMessage> Register(RegisterViewModel model)
         {

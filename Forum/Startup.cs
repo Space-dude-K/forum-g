@@ -2,20 +2,17 @@
 using Interfaces;
 using Interfaces.Forum;
 using Entities.DTO.ForumDto;
-using Entities.Models.Forum;
 using Forum.ActionsFilters;
 using Forum.ActionsFilters.Forum;
 using Forum.ActionsFilters.User;
 using Forum.Extensions;
 using Forum.Utility.ForumLinks;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 using Repository.DataShaping;
 using Services;
 using Interfaces.User;
-using Entities.Models;
 using Forum.Utility.UserLinks;
 using Entities.DTO.UserDto;
 
@@ -30,7 +27,8 @@ namespace Forum
         {
             LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
-            appUrl = configuration["ASPNETCORE_URLS"].Split(";").First();
+
+            appUrl = configuration?["ASPNETCORE_URLS"]?.Split(";").First() ?? string.Empty;
         }
         public void ConfigureServices(IServiceCollection services)
         {
@@ -77,8 +75,6 @@ namespace Forum
 
             services.AddScoped<IDataShaper<UserDto>, DataShaper<UserDto>>();
 
-            System.Diagnostics.Debug.WriteLine("TEST: " + appUrl);
-
             services.AddHttpClient<IAuthenticationService, AuthenticationService>(c =>
                 c.BaseAddress = new Uri(appUrl));
             services.AddHttpClient<IUserService, UserService>(c =>
@@ -111,9 +107,12 @@ namespace Forum
             services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
 
             // Authentication and autorization
-            services.AddAuthentication();
+            //services.AddAuthentication().AddCookie(Microsoft.AspNetCore.Identity.Application)
+            //services.ConfigureIdentityCookieAndJWT(Configuration);
+
             services.ConfigureIdentity();
-            services.ConfigureJWT(Configuration);
+            services.ConfigureCookie();
+            //services.ConfigureJWT(Configuration);
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 
             services.AddControllersWithViews();
