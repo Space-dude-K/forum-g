@@ -44,6 +44,7 @@ namespace Forum
 
             // Views
             CreateMap<RegisterViewModel, UserForCreationDto>();
+            CreateMap<LoginViewModel, UserForAuthenticationDto>();
         }
     }
 }

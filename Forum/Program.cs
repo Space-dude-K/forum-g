@@ -6,11 +6,13 @@ namespace Forum
         {
             CreateHostBuilder(args).Build().Run();
         }
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-        .ConfigureWebHostDefaults(webBuilder =>
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            webBuilder.UseStartup<Startup>();
-        });
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+        }
     }
 }

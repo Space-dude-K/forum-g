@@ -39,12 +39,12 @@ namespace Forum.Extensions
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ForumContext>(opts => 
-            opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"),
-            b => b.MigrationsAssembly("Forum")
+                opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"),
+                b => b.MigrationsAssembly("Forum")
             ));
             services.AddDbContext<PrinterContext>(opts =>
-            opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"),
-            b => b.MigrationsAssembly("Forum")
+                opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"),
+                b => b.MigrationsAssembly("Forum")
             ));
         }
         public static void ConfigureRepositoryManager(this IServiceCollection services)
@@ -138,7 +138,7 @@ namespace Forum.Extensions
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtSettings = configuration.GetSection("JwtSettings");
-            var secretKey = Environment.GetEnvironmentVariable("SECRET");
+            var secretKey = configuration["Tokens:Key"];
             services.AddAuthentication(opt => 
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

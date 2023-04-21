@@ -2,14 +2,8 @@
 using Forum.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Interfaces.Forum;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Interfaces.User;
-using Azure;
-using Entities.DTO.ForumDto;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Identity;
-using Entities.ViewModels;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Forum.Controllers
 {
@@ -25,7 +19,30 @@ namespace Forum.Controllers
             _authenticationService = authenticationService;
             _userService = userService;
         }
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> LoginAsync()
+        {
+            return View();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            var loginResult = await _authenticationService.Login(model);
 
+            if (loginResult.IsSuccessStatusCode)
+            {
+                TempData["Success"] = "User logined successfully!";
+            }
+            else
+            {
+                var errorsRaw = await loginResult.Content.ReadAsStringAsync();
+                ModelState.AddModelError(string.Empty, errorsRaw);
+            }
+
+            return View(model);
+        }
         public async Task<IActionResult> RegisterAsync()
         {
             var dbRoles = await _userService.GetUserRoles();
