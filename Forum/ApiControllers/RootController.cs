@@ -16,7 +16,7 @@ namespace Forum.Controllers
         [HttpGet(Name = "GetRoot")]
         public IActionResult GetRoot([FromHeader(Name = "Accept")] string mediaType)
         {
-            if (mediaType.Contains("application/sd.k.apiroot+json"))
+            if (mediaType.Contains("application/sd.k.apiroot"))
             {
                 var list = new List<Link>
                 {

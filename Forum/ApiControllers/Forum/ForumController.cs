@@ -12,11 +12,14 @@ using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Forum.Controllers.Forum
 {
     [Route("api/categories/{categoryId}/forums")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public class ForumController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
@@ -165,7 +168,7 @@ namespace Forum.Controllers.Forum
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpPut("{forumId}")]
+        [HttpPut("{forumId}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]
         public async Task<IActionResult> UpdateForumForCategory(int categoryId, int forumId, [FromBody] ForumBaseForUpdateDto forum)

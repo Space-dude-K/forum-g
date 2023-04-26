@@ -12,11 +12,14 @@ using Entities.RequestFeatures.Forum;
 using Newtonsoft.Json;
 using Forum.Utility.ForumLinks;
 using Forum.ModelBinders;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Forum.Controllers.Forum
 {
     [Route("api/categories/{categoryId}/forums/{forumId}/topics/{topicId}/posts")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public class PostController : ControllerBase
     {
         private readonly IRepositoryManager _repository;

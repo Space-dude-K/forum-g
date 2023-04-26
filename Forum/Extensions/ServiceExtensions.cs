@@ -204,17 +204,6 @@ namespace Forum.Extensions
         }
         public static void ConfigureCookie(this IServiceCollection services)
         {
-            /*services.AddAuthentication(x =>
-            {
-                //x.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                //x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;+
-                x.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(IdentityConstants.ApplicationScheme);*/
-
             services.AddAuthentication(opts => opts.DefaultScheme = IdentityConstants.ApplicationScheme)
                 .AddCookie(IdentityConstants.ApplicationScheme)
                 .AddCookie(IdentityConstants.TwoFactorUserIdScheme, o =>

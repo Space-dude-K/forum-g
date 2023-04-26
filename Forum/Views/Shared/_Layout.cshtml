@@ -22,10 +22,6 @@
                     {
                         <div asp class="text-success">Hello, @User.Identity.Name</div>
                     }
-                    else
-                    {
-                        <div asp class="text-success">"UI is null"</div>
-                    }
 
                     @if (SignInManager.IsSignedIn(User))
                     {
