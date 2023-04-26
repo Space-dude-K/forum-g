@@ -13,13 +13,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Forum.Controllers.Forum
 {
     [Route("api/categories")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public class CategoryController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
@@ -41,7 +41,7 @@ namespace Forum.Controllers.Forum
             Response.Headers.Add("Allow", "GET, OPTIONS, POST");
             return Ok();
         }
-        [HttpGet(Name = "GetCategories"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet(Name = "GetCategories")]
         [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetCategories([FromQuery] ForumCategoryParameters forumCategoryParameters)
@@ -55,7 +55,7 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
-        [HttpGet("{categoryId}", Name = "GetCategoryById"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("{categoryId}", Name = "GetCategoryById")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetCategory(int categoryId, [FromQuery] ForumCategoryParameters forumCategoryParameters)
         {
@@ -73,7 +73,7 @@ namespace Forum.Controllers.Forum
                 return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
             }
         }
-        [HttpGet("collection/({ids})", Name = "CategoryCollection"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("collection/({ids})", Name = "CategoryCollection")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetCategoryCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids, 
             [FromQuery] ForumCategoryParameters forumCategoryParameters)
@@ -98,7 +98,7 @@ namespace Forum.Controllers.Forum
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
         [HttpPost(Name = "CreateCategory")]
-        [ServiceFilter(typeof(ValidationFilterAttribute)), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCategory([FromBody] ForumCategoryForCreationDto category)
         {
             var categoryEntity = _mapper.Map<ForumCategory>(category);
@@ -111,7 +111,7 @@ namespace Forum.Controllers.Forum
             return CreatedAtRoute("GetCategoryById", new { categoryId = categoryToReturn.Id }, categoryToReturn);
         }
         [HttpPost("collection")]
-        [ServiceFilter(typeof(ValidationFilterAttribute)), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCategoryCollection([FromBody] IEnumerable<ForumCategoryForCreationDto> categoryCollection)
         {
             if (categoryCollection == null)
@@ -129,7 +129,7 @@ namespace Forum.Controllers.Forum
             var ids = string.Join(",", categoryCollectionToReturn.Select(c => c.Id));
             return CreatedAtRoute("CategoryCollection", new { ids }, categoryCollectionToReturn);
         }
-        [HttpPut("{categoryId}", Name = "UpdateCategory"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("{categoryId}", Name = "UpdateCategory")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
         public async Task<IActionResult> UpdateCategory(int categoryId, [FromBody] ForumCategoryForUpdateDto category)
@@ -142,7 +142,7 @@ namespace Forum.Controllers.Forum
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpPatch("{categoryId}", Name = "PartiallyUpdateCategory"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPatch("{categoryId}", Name = "PartiallyUpdateCategory")]
         [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdateCategory(int categoryId, [FromBody] JsonPatchDocument<ForumCategoryForUpdateDto> patchDoc)
         {
@@ -172,7 +172,7 @@ namespace Forum.Controllers.Forum
 
             return NoContent();
         }
-        [HttpDelete("{categoryId}", Name = "DeleteCategory"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpDelete("{categoryId}", Name = "DeleteCategory")]
         [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
         public async Task<IActionResult> DeleteCategory(int categoryId)
         {

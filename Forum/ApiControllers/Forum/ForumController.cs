@@ -19,6 +19,7 @@ namespace Forum.Controllers.Forum
 {
     [Route("api/categories/{categoryId}/forums")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public class ForumController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
@@ -41,7 +42,7 @@ namespace Forum.Controllers.Forum
         }
         [HttpGet]
         [HttpHead]
-        [ServiceFilter(typeof(ValidateMediaTypeAttribute)), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetForumsForCategory(int categoryId, [FromQuery] ForumBaseParameters forumBaseParameters)
         {
             var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
@@ -62,7 +63,7 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
-        [HttpGet("{forumId}", Name = "GetForumForCategory"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("{forumId}", Name = "GetForumForCategory")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetForumForCategory(int categoryId, int forumId, [FromQuery] ForumBaseParameters forumBaseParameters)
         {
@@ -83,7 +84,7 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
-        [HttpGet("collection/({ids})", Name = "ForumCollection"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("collection/({ids})", Name = "ForumCollection")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetForumCollection(int categoryId, [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids,
             [FromQuery] ForumBaseParameters forumBaseParameters)
@@ -107,7 +108,7 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
-        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateForumForCategory(int categoryId, [FromBody] ForumBaseForCreationDto forum)
         {
@@ -134,7 +135,7 @@ namespace Forum.Controllers.Forum
 
             return CreatedAtRoute("GetForumForCategory", new { categoryId, id = forumToReturn.Id }, forumToReturn);
         }
-        [HttpPost("collection"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("collection")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateForumCollectionForCategory(int categoryId, [FromBody] IEnumerable<ForumBaseForCreationDto> forumCollection)
         {
@@ -157,7 +158,7 @@ namespace Forum.Controllers.Forum
 
             return CreatedAtRoute("ForumCollection", new { categoryId, ids }, forumCollectionToReturn);
         }
-        [HttpDelete("{forumId}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpDelete("{forumId}")]
         [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]
         public async Task<IActionResult> DeleteForumForCategory(int categoryId, int forumId)
         {
@@ -178,7 +179,7 @@ namespace Forum.Controllers.Forum
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpPatch("{forumId}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPatch("{forumId}")]
         [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdateForumForCategory(int categoryId, int forumId, [FromBody] JsonPatchDocument<ForumBaseForUpdateDto> patchDoc)
         {
