@@ -112,7 +112,7 @@ namespace Forum
 
             services.ConfigureIdentity();
             services.ConfigureCookie();
-            //services.ConfigureJWT(Configuration);
+            services.ConfigureJWT(Configuration);
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 
             services.AddControllersWithViews();

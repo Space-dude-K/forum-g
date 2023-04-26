@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using Entities.Models;
 using System.Reflection;
+using System;
 
 namespace Repository.DataShaping
 {
@@ -67,7 +68,7 @@ namespace Repository.DataShaping
 
             var objectProperty = entity.GetType().GetProperty("Id");
 
-            if(objectProperty.GetType() == typeof(int))
+            if(objectProperty.GetValue(entity).GetType() == typeof(int))
             {
                 shapedObject.Id = (int)objectProperty.GetValue(entity);
             }

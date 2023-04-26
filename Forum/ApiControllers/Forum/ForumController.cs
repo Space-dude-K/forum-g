@@ -12,6 +12,8 @@ using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Forum.Controllers.Forum
 {
@@ -39,7 +41,7 @@ namespace Forum.Controllers.Forum
         }
         [HttpGet]
         [HttpHead]
-        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute)), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetForumsForCategory(int categoryId, [FromQuery] ForumBaseParameters forumBaseParameters)
         {
             var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
@@ -60,7 +62,7 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
-        [HttpGet("{forumId}", Name = "GetForumForCategory")]
+        [HttpGet("{forumId}", Name = "GetForumForCategory"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetForumForCategory(int categoryId, int forumId, [FromQuery] ForumBaseParameters forumBaseParameters)
         {
@@ -81,7 +83,7 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
-        [HttpGet("collection/({ids})", Name = "ForumCollection")]
+        [HttpGet("collection/({ids})", Name = "ForumCollection"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetForumCollection(int categoryId, [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids,
             [FromQuery] ForumBaseParameters forumBaseParameters)
@@ -105,7 +107,7 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
-        [HttpPost]
+        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateForumForCategory(int categoryId, [FromBody] ForumBaseForCreationDto forum)
         {
@@ -132,7 +134,7 @@ namespace Forum.Controllers.Forum
 
             return CreatedAtRoute("GetForumForCategory", new { categoryId, id = forumToReturn.Id }, forumToReturn);
         }
-        [HttpPost("collection")]
+        [HttpPost("collection"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateForumCollectionForCategory(int categoryId, [FromBody] IEnumerable<ForumBaseForCreationDto> forumCollection)
         {
@@ -155,7 +157,7 @@ namespace Forum.Controllers.Forum
 
             return CreatedAtRoute("ForumCollection", new { categoryId, ids }, forumCollectionToReturn);
         }
-        [HttpDelete("{forumId}")]
+        [HttpDelete("{forumId}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]
         public async Task<IActionResult> DeleteForumForCategory(int categoryId, int forumId)
         {
@@ -165,7 +167,7 @@ namespace Forum.Controllers.Forum
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpPut("{forumId}")]
+        [HttpPut("{forumId}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]
         public async Task<IActionResult> UpdateForumForCategory(int categoryId, int forumId, [FromBody] ForumBaseForUpdateDto forum)
@@ -176,7 +178,7 @@ namespace Forum.Controllers.Forum
             await _repository.SaveAsync();
             return NoContent();
         }
-        [HttpPatch("{forumId}")]
+        [HttpPatch("{forumId}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdateForumForCategory(int categoryId, int forumId, [FromBody] JsonPatchDocument<ForumBaseForUpdateDto> patchDoc)
         {
