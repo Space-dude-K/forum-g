@@ -38,7 +38,6 @@ namespace Forum.ApiControllers.User
             return Ok();
         }
         [HttpGet("roles", Name = "GetUserRoles")]
-        [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<List<IdentityRole>> GetUserRoles()
         {
@@ -47,7 +46,6 @@ namespace Forum.ApiControllers.User
             return rolesFromDb;
         }
         [HttpGet("users", Name = "GetUsers")]
-        [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParameters)
         {

@@ -18,6 +18,8 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.CodeAnalysis;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace Forum.Extensions
 {
@@ -247,6 +249,64 @@ namespace Forum.Extensions
                     ValidAudience = jwtSettings.GetSection("validAudience").Value,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
+            });
+        }
+        public static void ConfigureSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Site API",
+                    Version = "v1",
+                    Description = "Site API by Space-dude-K",
+                    TermsOfService = new Uri("https://github.com/Space-dude-K/forum-g"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Space-Dude",
+                        Email = "omgtrent@mail.ru",
+                        Url = new Uri("https://github.com/Space-dude-K")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Site API license",
+                        Url = new Uri("https://github.com/Space-dude-K/forum-g")
+                    }
+                });
+                ;
+                s.SwaggerDoc("v2", new OpenApiInfo
+                {
+                    Title = "Site API",
+                    Version = "v2"
+                });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                s.IncludeXmlComments(xmlPath);
+
+                s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Place to add JWT with Bearer",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                s.AddSecurityRequirement(new OpenApiSecurityRequirement() 
+                {
+                    { 
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        },
+
+                    },
+                    new List<string>()
+                    }
+                });
             });
         }
     }
