@@ -116,6 +116,8 @@ namespace Forum
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 
             services.AddControllersWithViews();
+
+            services.ConfigureSwagger();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)
         {
@@ -165,6 +167,14 @@ namespace Forum
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Site API v1");
+                s.SwaggerEndpoint("/swagger/v2/swagger.json", "Site API v2");
+            });
+
         }
     }
 }

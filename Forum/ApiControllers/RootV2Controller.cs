@@ -6,6 +6,7 @@ namespace Forum.Controllers
     [ApiVersion("2.0", Deprecated = true)]
     [Route("api")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v2")]
     public class RootV2Controller : ControllerBase
     {
         private readonly LinkGenerator _linkGenerator;
