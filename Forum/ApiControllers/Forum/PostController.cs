@@ -34,13 +34,32 @@ namespace Forum.Controllers.Forum
             _mapper = mapper;
             _postLinks = postLinks;
         }
+        /// <summary>
+        /// Gets allowed post options
+        /// </summary>
+        /// <returns>The options list</returns>
+        /// <response code="200">Returns items</response>
+        /// <response code="401">If unauthorized</response>
         [HttpOptions]
         public IActionResult GetPostOptions()
         {
             Response.Headers.Add("Allow", "GET, OPTIONS, POST");
             return Ok();
         }
+        /// <summary>
+        /// Gets the list of all posts
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="forumId"></param>
+        /// <param name="topicId"></param>
+        /// <returns>The posts list</returns>
+        /// <response code="200">Returns items</response>
+        /// <response code="401">If unauthorized</response>
+        /// <response code="404">If topic not found</response>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
         [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetPostsForTopic(
@@ -67,9 +86,24 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
+        /// <summary>
+        /// Gets the post
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="forumId"></param>
+        /// <param name="topicId"></param>
+        /// <param name="postId"></param>
+        /// <returns>The post</returns>
+        /// <response code="200">Returns item</response>
+        /// <response code="401">If unauthorized</response>
+        /// <response code="404">If the topic or post doesn't exist</response>
         [HttpGet("{postId}", Name = "GetPostForTopic")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        public async Task<IActionResult> GetPostForTopic(int categoryId, int forumId, int topicId, int postId, [FromQuery] ForumPostParameters forumPostParameters)
+        public async Task<IActionResult> GetPostForTopic(int categoryId, int forumId, int topicId, int postId, 
+            [FromQuery] ForumPostParameters forumPostParameters)
         {
             var topicDb = await _repository.ForumTopic.GetTopicAsync(forumId, topicId, trackChanges: false);
             if (topicDb == null)
@@ -91,9 +125,26 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
+        /// <summary>
+        /// Gets the post collection
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="forumId"></param>
+        /// <param name="topicId"></param>
+        /// <param name="ids"></param>
+        /// <returns>The forum collection</returns>
+        /// <response code="200">Returns items</response>
+        /// <response code="400">If the id's is empty</response>
+        /// <response code="401">If unauthorized</response>
+        /// <response code="404">If some ids are not valid in a collection</response>
         [HttpGet("collection/({ids})", Name = "PostCollection")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        public async Task<IActionResult> GetPostCollection(int categoryId, int forumId, int topicId, [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids,
+        public async Task<IActionResult> GetPostCollection(int categoryId, int forumId, int topicId, 
+            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids,
             [FromQuery] ForumPostParameters forumPostParameters)
         {
             if (ids == null)
@@ -115,7 +166,18 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
+        /// <summary>
+        /// Creates a newly created post
+        /// </summary>
+        /// <param name="post"></param>
+        /// <returns>A newly created post</returns>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>
+        /// <response code="422">If the model is invalid</response>
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreatePostForTopic(int categoryId, int forumId, int topicId, [FromBody] ForumPostForCreationDto post)
         {
@@ -143,9 +205,24 @@ namespace Forum.Controllers.Forum
 
             return CreatedAtRoute("GetPostForTopic", new { categoryId, forumId, topicId, postId = postToReturn.Id }, postToReturn);
         }
+        /// <summary>
+        /// Creates a newly created post collection
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="forumId"></param>
+        /// <param name="topicId"></param>
+        /// <param name="postCollection"></param>
+        /// <returns>A newly created post collection</returns>
+        /// <response code="201">Returns the newly created items</response>
+        /// <response code="400">If the items is null</response>
+        /// <response code="422">If the model is invalid</response>
         [HttpPost("collection")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreatePostCollectionForForum(int categoryId, int forumId, int topicId, [FromBody] IEnumerable<ForumPostForCreationDto> postCollection)
+        public async Task<IActionResult> CreatePostCollectionForForum(int categoryId, int forumId, int topicId, 
+            [FromBody] IEnumerable<ForumPostForCreationDto> postCollection)
         {
             if (postCollection == null)
             {
@@ -166,7 +243,20 @@ namespace Forum.Controllers.Forum
 
             return CreatedAtRoute("PostCollection", new { categoryId, forumId, topicId, ids }, postCollectionToReturn);
         }
+        /// <summary>
+        /// Deletes existing post
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="forumId"></param>
+        /// <param name="topicId"></param>
+        /// <param name="postId"></param>
+        /// <response code="204">If post is deleted</response>
+        /// <response code="401">If unauthorized</response>
+        /// <response code="404">If topic or post doesn't exist</response>
         [HttpDelete("{postId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
         [ServiceFilter(typeof(ValidatePostForTopicExistsAttribute))]
         public async Task<IActionResult> DeletePostForTopic(int categoryId, int forumId, int topicId, int postId)
         {
@@ -177,10 +267,24 @@ namespace Forum.Controllers.Forum
 
             return NoContent();
         }
+        /// <summary>
+        /// Updates existing post
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="forumId"></param>
+        /// <param name="topicId"></param>
+        /// <param name="postId"></param>
+        /// <param name="post"></param>
+        /// <response code="204">If post is updated</response>
+        /// <response code="401">If unauthorized</response>
+        /// <response code="422">If the model is invalid</response>
         [HttpPut("{postId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidatePostForTopicExistsAttribute))]
-        public async Task<IActionResult> UpdateTopicForForum(int categoryId, int forumId, int topicId, int postId, 
+        public async Task<IActionResult> UpdatePostForTopic(int categoryId, int forumId, int topicId, int postId, 
             [FromBody] ForumPostForUpdateDto post)
         {
             var postForTopic = HttpContext.Items["post"] as ForumPost;
@@ -190,8 +294,22 @@ namespace Forum.Controllers.Forum
 
             return NoContent();
         }
-
+        /// <summary>
+        /// Partially updates existing post
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="forumId"></param>
+        /// <param name="topicId"></param>
+        /// <param name="patchDoc"></param>
+        /// <response code="204">If post is updated</response>
+        /// <response code="400">If path doc is null</response>
+        /// <response code="401">If unauthorized</response>
+        /// <response code="422">If the model is invalid</response>
         [HttpPatch("{postId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidatePostForTopicExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdatePostForTopic(int categoryId, int forumId, int topicId, int postId,
             [FromBody] JsonPatchDocument<ForumPostForUpdateDto> patchDoc)
