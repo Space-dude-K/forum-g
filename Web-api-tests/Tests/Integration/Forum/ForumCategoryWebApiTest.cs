@@ -6,10 +6,14 @@ using Entities.DTO.ForumDto.Update;
 using Entities.Models.Forum;
 using ForumTest.Extensions;
 using ForumTest.Tests.Integration.Forum.TestCases;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
+using System.Dynamic;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 using Xunit.Abstractions;
 
@@ -96,7 +100,16 @@ namespace ForumTest.Tests.Integration.Forum
             // Arrange
             var fac = new TestWithEfInMemoryDb<ForumContext>();
             var client = fac.CreateClient();
+            dynamic data = new ExpandoObject();
+            data.sub = Guid.NewGuid();
+            data.role = new[] { "sub_role", "Administrator" };
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //client.SetFakeBearerToken((object)data);
+            //client.SetFakeJwtBearerToken("TestUser", new[] { "Administrator" });
+            //client.SetFakeJwtBearerToken(claims1);
+            //_output.WriteLine("uri -> " + client.);
+
+
             var seedData = fac.Model.GetPopulatedModelWithSeedDataFromConfig<ForumCategory>();
 
             // Act
@@ -167,7 +180,14 @@ namespace ForumTest.Tests.Integration.Forum
             _output.WriteLine("uri -> " + uri);
 
             // Arrange
+            var claims = new Dictionary<string, object>
+            {
+                { ClaimTypes.Name, "test@sample.com" },
+                { ClaimTypes.Role, "Administrator" },
+                { "http://mycompany.com/customClaim", "someValue" },
+            };
             var client = new TestWithEfInMemoryDb<ForumContext>().CreateClient();
+            //client.SetFakeJwtBearerToken(claims);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             // Act
