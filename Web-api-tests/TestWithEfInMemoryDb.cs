@@ -1,6 +1,5 @@
 ﻿using Forum;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -15,13 +14,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Encodings.Web;
-using WebMotions.Fake.Authentication.JwtBearer;
+using System.Net.Http.Headers;
 
 namespace ForumTest
 {
@@ -33,6 +30,7 @@ namespace ForumTest
         public TestWithEfInMemoryDb()
         {
             HttpClient = this.CreateClient();
+            HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -44,118 +42,9 @@ namespace ForumTest
 
                 services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
 
-
-                /*var jwtSettings = configuration.GetSection("JwtSettings");
-                var secretKey = jwtSettings.GetSection("key").Value;
-                services.AddAuthentication(opt =>
-                {
-                    *//*opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;*//*
-                })
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
-                        ValidAudience = jwtSettings.GetSection("validAudience").Value,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-                    };
-                });*/
-
-
-
-
-
-
-
-                /*services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
-                {
-                    options.TokenValidationParameters = CreateTokenValidationParameters();
-                    options.Audience = MockJwtToken.Audience;
-                    options.Authority = MockJwtToken.Issuer;
-                    options.Configuration = new Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectConfiguration()
-                    {
-                        Issuer = MockJwtToken.Issuer,
-                    };
-                });*/
-
-
-                /*services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = "Test";
-                    options.DefaultChallengeScheme = "Test";
-                });*/
-
-
-
-                //services.AddTransient<IAuthenticationSchemeProvider, MockSchemeProvider>();
-
-
-                //services.AddAuthentication(FakeJwtBearerDefaults.AuthenticationScheme).AddFakeJwtBearer();
-
-
-                /*var authHandlerDescriptor = services.First(s => s.ImplementationType == typeof(JwtBearerHandler));
-                services.Remove(authHandlerDescriptor);*/
-                /*var authenticationBuilder = services.AddAuthentication();
-                authenticationBuilder.Services.Configure<AuthenticationOptions>(o =>
-                {
-                    o.SchemeMap.Clear();
-                    ((IList<AuthenticationSchemeBuilder>)o.Schemes).Clear();
-                });*/
-
-                /*services.AddAuthentication(options =>
-                {
-                    options.DefaultScheme = FakeJwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultAuthenticateScheme = FakeJwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = FakeJwtBearerDefaults.AuthenticationScheme;
-                }).AddFakeJwtBearer();*/
-
-                //services.AddTransient<IAuthenticationSchemeProvider, MockSchemeProvider>();
-
-                /*services.Configure<AuthenticationOptions>(o =>
-                {
-                    if (o.Schemes is List<AuthenticationSchemeBuilder> schemes)
-                    {
-                        schemes.RemoveAll(s => s.Name == JwtBearerDefaults.AuthenticationScheme);
-                        o.SchemeMap.Remove(JwtBearerDefaults.AuthenticationScheme);
-                    }
-                });*/
-                // remove the existing context configuration
-
-                // Disable Authentication.
-                /*var authHandlerDescriptor = services.First(s => s.ImplementationType == typeof(JwtBearerHandler));
-                services.Remove(authHandlerDescriptor);*/
-                /*List<ServiceDescriptor> servicesForRemove = services
-                    .Where(d => d.ServiceType.FullName.Contains("Microsoft.AspNetCore.Authentication")).ToList();
-
-                foreach (var s in servicesForRemove)
-                {
-                    services.Remove(s);
-                }*/
-
-                // Here we add our new configuration
-                /*var authenticationBuilder = services.AddAuthentication();
-                authenticationBuilder.Services.Configure<AuthenticationOptions>(o =>
-                {
-                    o.SchemeMap.Clear();
-                    ((IList<AuthenticationSchemeBuilder>)o.Schemes).Clear();
-                });*/
-                /*services.AddAuthentication(options =>
-                {
-                    options.DefaultScheme = FakeJwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultAuthenticateScheme = FakeJwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = FakeJwtBearerDefaults.AuthenticationScheme;
-                }).AddFakeJwtBearer();*/
-                //services.AddAuthentication(FakeJwtBearerDefaults.AuthenticationScheme).AddFakeJwtBearer();
-
                 var dbName = "InMemoryTestDb_" + Guid.NewGuid().ToString();
                 services.AddDbContext<TContext>(options =>
                     options.UseInMemoryDatabase(dbName));
-                Debug.WriteLine("Db name: " + dbName);
 
                 var sp = services.BuildServiceProvider();
                 using (var scope = sp.CreateScope())
