@@ -1,18 +1,11 @@
 ﻿using AutoMapper;
-using Azure;
-using Entities.DTO.ForumDto;
 using Entities.DTO.UserDto;
-using Entities.Models;
-using Entities.RequestFeatures.Forum;
 using Entities.RequestFeatures.User;
 using Forum.ActionsFilters;
-using Forum.Utility.ForumLinks;
 using Forum.Utility.UserLinks;
 using Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Forum.ApiControllers.User
 {
@@ -34,7 +27,7 @@ namespace Forum.ApiControllers.User
         [HttpOptions]
         public IActionResult GetUserOptions()
         {
-            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+            Response.Headers.Add("Allow", "GET, OPTIONS");
             return Ok();
         }
         [HttpGet("roles", Name = "GetUserRoles")]
