@@ -1,20 +1,11 @@
 ﻿using AutoMapper;
 using Entities.DTO.UserDto;
-using Entities.Models;
-using Entities.RequestFeatures.User;
 using Entities.ViewModels;
-using Forum.ViewModels;
 using Interfaces;
 using Interfaces.User;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {

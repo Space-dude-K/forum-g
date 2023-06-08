@@ -1,4 +1,5 @@
-﻿using Forum.ViewModels;
+﻿using Entities.ViewModels;
+using Forum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;

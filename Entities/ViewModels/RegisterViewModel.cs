@@ -1,6 +1,8 @@
 ﻿using Entities.ModelAttributes;
 using Entities.ViewModels;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 
 namespace Forum.ViewModels
 {
@@ -10,6 +12,9 @@ namespace Forum.ViewModels
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
+        public string Cabinet { get; set; }
+        public string InternalPhone { get; set; }
+        public string BirthDate { get; set; }
         [Required]
         public string UserName { get; set; }
         [Required]

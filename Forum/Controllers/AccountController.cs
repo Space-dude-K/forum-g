@@ -10,6 +10,7 @@ using System.Security.Claims;
 using Entities.Models;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Entities.ViewModels;
 
 namespace Forum.Controllers
 {

@@ -9,9 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Entities.Models;
 using Entities.DTO.UserDto.Create;
 using Microsoft.Extensions.Configuration;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
+using Entities.ViewModels;
 
 namespace Services
 {

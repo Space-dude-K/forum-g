@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="ActionsFilters\Printer\" />
+    <Folder Include="Views\Site\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

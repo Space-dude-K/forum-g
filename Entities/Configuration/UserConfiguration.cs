@@ -15,7 +15,7 @@ namespace Entities.Configuration
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
             builder.HasData(
-            SeedUsers(20)
+            SeedUsers(5)
             );
         }
         private List<AppUser> SeedUsers(int usersCount)
@@ -33,7 +33,7 @@ namespace Entities.Configuration
                     BirthDate = RandomDay().ToString(),
                     UserName = "G600-U" + i,
                     Email = "G600-U" + i + "@mfrb.by",
-                    PhoneNumber = Random.Shared.Next().ToString() + Random.Shared.Next().ToString() + Random.Shared.Next().ToString(),
+                    PhoneNumber = Random.Shared.Next().ToString() + Random.Shared.Next().ToString() + Random.Shared.Next().ToString()
                 };
 
                 users.Add(appUser);

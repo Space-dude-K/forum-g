@@ -109,383 +109,98 @@ namespace Forum.Migrations.Forum
                     b.HasData(
                         new
                         {
-                            Id = "2051629d-cd21-4957-b873-bea51d29f7fd",
+                            Id = "bbde42d1-d609-4f8a-8b38-c21e6dc34efe",
                             AccessFailedCount = 0,
-                            BirthDate = "27.02.2003 0:00:00",
-                            Cabinet = "944",
-                            ConcurrencyStamp = "d139137b-1213-4f4b-b164-576de7c63e97",
+                            BirthDate = "24.07.2020 0:00:00",
+                            Cabinet = "103",
+                            ConcurrencyStamp = "25909e3c-0f2a-403c-b6b0-4a33eee9e91c",
                             Email = "G600-U0@mfrb.by",
                             EmailConfirmed = false,
                             FirstName = "Ivan0",
-                            InternalPhone = "510880872",
+                            InternalPhone = "505510686",
                             LastName = "Petrov0",
                             LockoutEnabled = false,
-                            PhoneNumber = "165798383316823993401248649137",
+                            PhoneNumber = "3233254331311595925519934433",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8d73fd23-7cad-4833-a660-726354a5de8d",
+                            SecurityStamp = "a032f9fa-4c2b-44e3-bdfc-f9050bb3d044",
                             TwoFactorEnabled = false,
                             UserName = "G600-U0"
                         },
                         new
                         {
-                            Id = "d3080321-63ab-48bd-a275-c93067ba2f9d",
+                            Id = "75eaff78-efda-40cd-9572-95faeea51ef1",
                             AccessFailedCount = 0,
-                            BirthDate = "22.03.1995 0:00:00",
-                            Cabinet = "611",
-                            ConcurrencyStamp = "d33d008c-4afa-4ca1-abdc-5dad06b830c1",
+                            BirthDate = "15.07.2000 0:00:00",
+                            Cabinet = "88",
+                            ConcurrencyStamp = "0e1913e1-a299-4c2f-b3e0-44bf1007adce",
                             Email = "G600-U1@mfrb.by",
                             EmailConfirmed = false,
                             FirstName = "Ivan1",
-                            InternalPhone = "1533230432",
+                            InternalPhone = "1571008649",
                             LastName = "Petrov1",
                             LockoutEnabled = false,
-                            PhoneNumber = "15462945076167369451003679898",
+                            PhoneNumber = "147722010316561249631028463220",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "32a514cd-a2f3-449c-9d78-4d153b42d9ef",
+                            SecurityStamp = "bf5e15bb-209b-490e-b6db-0119686f1e3e",
                             TwoFactorEnabled = false,
                             UserName = "G600-U1"
                         },
                         new
                         {
-                            Id = "61c0264e-2363-4d0a-b5ac-87403dd07e70",
+                            Id = "054134b5-354f-4dd3-b1d3-681a4a15c4b1",
                             AccessFailedCount = 0,
-                            BirthDate = "10.07.2014 0:00:00",
-                            Cabinet = "708",
-                            ConcurrencyStamp = "b18b2c41-2c4f-445d-abae-6922a5e6c17c",
+                            BirthDate = "02.12.1996 0:00:00",
+                            Cabinet = "877",
+                            ConcurrencyStamp = "93a05d86-f748-420c-8b87-0c6a4c11e4d5",
                             Email = "G600-U2@mfrb.by",
                             EmailConfirmed = false,
                             FirstName = "Ivan2",
-                            InternalPhone = "710640452",
+                            InternalPhone = "1048734400",
                             LastName = "Petrov2",
                             LockoutEnabled = false,
-                            PhoneNumber = "145491056521403737292000233159",
+                            PhoneNumber = "200806498820912972061096593173",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b2aa278f-5297-4d86-ac01-b57601f422e3",
+                            SecurityStamp = "d6a82302-79e9-41b4-8f4e-a6010f4ec48a",
                             TwoFactorEnabled = false,
                             UserName = "G600-U2"
                         },
                         new
                         {
-                            Id = "c6a32867-0013-49ec-a6d4-267cab546c28",
+                            Id = "38169076-fecd-4b37-9424-4ac9d583ff9e",
                             AccessFailedCount = 0,
-                            BirthDate = "27.09.1999 0:00:00",
-                            Cabinet = "494",
-                            ConcurrencyStamp = "c2a68e28-7f07-464d-b5aa-38724479d150",
+                            BirthDate = "27.09.2014 0:00:00",
+                            Cabinet = "817",
+                            ConcurrencyStamp = "b9d8edd5-25b7-43cf-b9f7-8c0525905e1c",
                             Email = "G600-U3@mfrb.by",
                             EmailConfirmed = false,
                             FirstName = "Ivan3",
-                            InternalPhone = "1182277290",
+                            InternalPhone = "1553677160",
                             LastName = "Petrov3",
                             LockoutEnabled = false,
-                            PhoneNumber = "160407655250136365662063529",
+                            PhoneNumber = "74726025031652140637024588",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6c896025-638a-4ecd-a9ed-59072b7f299f",
+                            SecurityStamp = "8d05e15e-68c0-44ed-a535-36e93a4a2821",
                             TwoFactorEnabled = false,
                             UserName = "G600-U3"
                         },
                         new
                         {
-                            Id = "5540e31c-a272-4430-bcaa-6b0fe7f3ba14",
+                            Id = "b29b2479-2165-47f0-a021-258919a8990b",
                             AccessFailedCount = 0,
-                            BirthDate = "19.12.2008 0:00:00",
-                            Cabinet = "274",
-                            ConcurrencyStamp = "d333167c-bc5f-46ec-95ff-363528268080",
+                            BirthDate = "21.10.2014 0:00:00",
+                            Cabinet = "688",
+                            ConcurrencyStamp = "e85eac6c-6d2f-4597-8e1e-4cf9efdb415f",
                             Email = "G600-U4@mfrb.by",
                             EmailConfirmed = false,
                             FirstName = "Ivan4",
-                            InternalPhone = "713308458",
+                            InternalPhone = "1579087271",
                             LastName = "Petrov4",
                             LockoutEnabled = false,
-                            PhoneNumber = "639887927299758158787109123",
+                            PhoneNumber = "14956614547104796191860146980",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cb6af019-e5d2-438e-a511-461e64bb43b5",
+                            SecurityStamp = "a3551607-82eb-4414-a51b-6af4654310b1",
                             TwoFactorEnabled = false,
                             UserName = "G600-U4"
-                        },
-                        new
-                        {
-                            Id = "2f575a2d-61b3-4653-bfad-65d333d0ea13",
-                            AccessFailedCount = 0,
-                            BirthDate = "28.08.1999 0:00:00",
-                            Cabinet = "42",
-                            ConcurrencyStamp = "25a94e93-8c43-4d78-aaa5-95927224b0f1",
-                            Email = "G600-U5@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan5",
-                            InternalPhone = "1597133684",
-                            LastName = "Petrov5",
-                            LockoutEnabled = false,
-                            PhoneNumber = "87235371219028021411896607617",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "55c67cfd-e1cf-4ed0-93e8-537680dc7c0c",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U5"
-                        },
-                        new
-                        {
-                            Id = "3def3a5b-e1c0-4478-b96f-aeb466648e93",
-                            AccessFailedCount = 0,
-                            BirthDate = "12.10.2017 0:00:00",
-                            Cabinet = "501",
-                            ConcurrencyStamp = "7a1a83d8-19fe-4218-b5c9-25fb146b4ae6",
-                            Email = "G600-U6@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan6",
-                            InternalPhone = "1675750551",
-                            LastName = "Petrov6",
-                            LockoutEnabled = false,
-                            PhoneNumber = "16240580326863728211566808264",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "c63caf56-12bf-430c-a4dd-001805eedc6f",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U6"
-                        },
-                        new
-                        {
-                            Id = "5bd28483-9902-433f-9ab1-08d3092868b5",
-                            AccessFailedCount = 0,
-                            BirthDate = "14.02.2018 0:00:00",
-                            Cabinet = "652",
-                            ConcurrencyStamp = "f0505d66-df5a-4e9e-9c96-3387a6722cad",
-                            Email = "G600-U7@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan7",
-                            InternalPhone = "739485146",
-                            LastName = "Petrov7",
-                            LockoutEnabled = false,
-                            PhoneNumber = "2023733221725847308564151679",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "34168875-c398-4935-b05f-b955823e1d07",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U7"
-                        },
-                        new
-                        {
-                            Id = "05e25060-21c8-4fe9-8d81-bd4195c27a96",
-                            AccessFailedCount = 0,
-                            BirthDate = "18.07.2004 0:00:00",
-                            Cabinet = "893",
-                            ConcurrencyStamp = "b8d48635-5d10-4094-9fd9-a801f61d154d",
-                            Email = "G600-U8@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan8",
-                            InternalPhone = "471448790",
-                            LastName = "Petrov8",
-                            LockoutEnabled = false,
-                            PhoneNumber = "4268934912581328972106156656",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "751317e5-8024-4b3a-8d7a-aac0038b6e73",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U8"
-                        },
-                        new
-                        {
-                            Id = "06153dd3-5953-46da-a5e6-e945fb079c83",
-                            AccessFailedCount = 0,
-                            BirthDate = "24.01.2012 0:00:00",
-                            Cabinet = "449",
-                            ConcurrencyStamp = "a9a3b304-1931-42ed-95de-7dad707d0a6f",
-                            Email = "G600-U9@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan9",
-                            InternalPhone = "534488241",
-                            LastName = "Petrov9",
-                            LockoutEnabled = false,
-                            PhoneNumber = "3232679242136176489392680665",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "3979954f-6771-4d5a-9e69-72ef023970f0",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U9"
-                        },
-                        new
-                        {
-                            Id = "9dfb2e14-d57e-4b79-81b7-1cf4ae01b948",
-                            AccessFailedCount = 0,
-                            BirthDate = "11.02.2003 0:00:00",
-                            Cabinet = "695",
-                            ConcurrencyStamp = "3d98ffa6-4513-447d-8f14-d8b310a30711",
-                            Email = "G600-U10@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan10",
-                            InternalPhone = "540809420",
-                            LastName = "Petrov10",
-                            LockoutEnabled = false,
-                            PhoneNumber = "932750206204460584438780434",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "4d3cf709-007c-452e-8260-8ed635bb6763",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U10"
-                        },
-                        new
-                        {
-                            Id = "d88220a3-fa85-4b2d-b027-5b0b39e7dc15",
-                            AccessFailedCount = 0,
-                            BirthDate = "13.03.2023 0:00:00",
-                            Cabinet = "554",
-                            ConcurrencyStamp = "b6803a45-3605-4fa1-a46b-f25132ffab93",
-                            Email = "G600-U11@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan11",
-                            InternalPhone = "1634898877",
-                            LastName = "Petrov11",
-                            LockoutEnabled = false,
-                            PhoneNumber = "7425950798067706461553283657",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "47e4ffbf-e142-40c0-8b80-fb5cfa2cb352",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U11"
-                        },
-                        new
-                        {
-                            Id = "ca943fe5-6365-43d5-b5b5-1a7b303971bf",
-                            AccessFailedCount = 0,
-                            BirthDate = "05.05.2015 0:00:00",
-                            Cabinet = "338",
-                            ConcurrencyStamp = "08007ee7-ad18-487b-9937-2c56d2b38cc8",
-                            Email = "G600-U12@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan12",
-                            InternalPhone = "883661659",
-                            LastName = "Petrov12",
-                            LockoutEnabled = false,
-                            PhoneNumber = "2660345191505330144138227614",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "46286871-8a4c-40f7-9b75-fbd3605e666b",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U12"
-                        },
-                        new
-                        {
-                            Id = "2ebf472b-a36c-44c5-81ab-13e130048ccc",
-                            AccessFailedCount = 0,
-                            BirthDate = "11.11.1995 0:00:00",
-                            Cabinet = "261",
-                            ConcurrencyStamp = "c798940e-1c90-41b6-8e8a-486439b35d6f",
-                            Email = "G600-U13@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan13",
-                            InternalPhone = "1849837374",
-                            LastName = "Petrov13",
-                            LockoutEnabled = false,
-                            PhoneNumber = "2087792787212148135325682582",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "595b78d7-89b3-44d0-a5cb-ec320b1e06b1",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U13"
-                        },
-                        new
-                        {
-                            Id = "a8fb1302-24fa-43b5-98df-6fb95aff55c8",
-                            AccessFailedCount = 0,
-                            BirthDate = "23.08.1995 0:00:00",
-                            Cabinet = "53",
-                            ConcurrencyStamp = "5eb51220-af58-4718-b801-3f8be997d843",
-                            Email = "G600-U14@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan14",
-                            InternalPhone = "918888906",
-                            LastName = "Petrov14",
-                            LockoutEnabled = false,
-                            PhoneNumber = "16123261541314336666792912724",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "a70d728d-6845-41cb-a611-cac1d81da2da",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U14"
-                        },
-                        new
-                        {
-                            Id = "448b10cc-ce98-4e22-a0bd-d8c1a414df09",
-                            AccessFailedCount = 0,
-                            BirthDate = "24.05.2016 0:00:00",
-                            Cabinet = "4",
-                            ConcurrencyStamp = "6eb75546-3eac-4885-a2f1-057a46b6aa67",
-                            Email = "G600-U15@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan15",
-                            InternalPhone = "338138003",
-                            LastName = "Petrov15",
-                            LockoutEnabled = false,
-                            PhoneNumber = "631858564583048892503024912",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "9889ed97-ebb3-4d81-a59f-9e00449d7f85",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U15"
-                        },
-                        new
-                        {
-                            Id = "b22e995d-d3c2-4319-9df6-c8af8e86141a",
-                            AccessFailedCount = 0,
-                            BirthDate = "16.05.2009 0:00:00",
-                            Cabinet = "436",
-                            ConcurrencyStamp = "a3e334e5-c97b-4bfd-94d6-044872dba16e",
-                            Email = "G600-U16@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan16",
-                            InternalPhone = "1949770999",
-                            LastName = "Petrov16",
-                            LockoutEnabled = false,
-                            PhoneNumber = "212318729314521436471452845729",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "1b787661-3c4c-4967-84a7-cfa353dfcd55",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U16"
-                        },
-                        new
-                        {
-                            Id = "beeeea72-546a-48b0-b5dd-6ec5bf0805b2",
-                            AccessFailedCount = 0,
-                            BirthDate = "26.08.2000 0:00:00",
-                            Cabinet = "90",
-                            ConcurrencyStamp = "cbc7ee96-ae7a-45d8-81fa-5e42313bce78",
-                            Email = "G600-U17@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan17",
-                            InternalPhone = "724819791",
-                            LastName = "Petrov17",
-                            LockoutEnabled = false,
-                            PhoneNumber = "13667334742076341070264848158",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "887676ac-f5fd-49d4-8642-d57034c0072f",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U17"
-                        },
-                        new
-                        {
-                            Id = "9928ee03-ae3e-442e-bd76-e2ed34c4ca6d",
-                            AccessFailedCount = 0,
-                            BirthDate = "07.05.1999 0:00:00",
-                            Cabinet = "471",
-                            ConcurrencyStamp = "42cafacd-8ef9-4ce5-ab36-e0886876c6bb",
-                            Email = "G600-U18@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan18",
-                            InternalPhone = "419803303",
-                            LastName = "Petrov18",
-                            LockoutEnabled = false,
-                            PhoneNumber = "42646577719195852811967974044",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "96788635-44af-4951-818e-cc98f3c852fa",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U18"
-                        },
-                        new
-                        {
-                            Id = "a1e75877-9159-4701-8c3f-4d12bbdf857c",
-                            AccessFailedCount = 0,
-                            BirthDate = "04.06.2014 0:00:00",
-                            Cabinet = "673",
-                            ConcurrencyStamp = "bfdc5974-8a2d-41f9-9103-5dc68f6cd323",
-                            Email = "G600-U19@mfrb.by",
-                            EmailConfirmed = false,
-                            FirstName = "Ivan19",
-                            InternalPhone = "2121212778",
-                            LastName = "Petrov19",
-                            LockoutEnabled = false,
-                            PhoneNumber = "13784092032079354949378881090",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "a87b3553-1f35-4c42-9d21-cbc683691d00",
-                            TwoFactorEnabled = false,
-                            UserName = "G600-U19"
                         });
                 });
 
@@ -572,7 +287,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(5713),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(9535),
                             ForumCategoryId = 1,
                             ForumSubTitle = "Test forum subtitle 1",
                             ForumTitle = "Test forum title 1",
@@ -581,7 +296,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(5716),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(9538),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 2",
                             ForumTitle = "Test forum title 2",
@@ -590,7 +305,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(5718),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(9539),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 3",
                             ForumTitle = "Test forum title 3",
@@ -599,7 +314,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(5719),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(9541),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 4",
                             ForumTitle = "Test forum title 4",
@@ -608,7 +323,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(5721),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(9542),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 5",
                             ForumTitle = "Test forum title 5",
@@ -617,7 +332,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(5722),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(9544),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 6",
                             ForumTitle = "Test forum title 6",
@@ -658,42 +373,42 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(2401),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(6026),
                             ForumUserId = 1,
                             Name = "Test category 1"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(2403),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(6029),
                             ForumUserId = 2,
                             Name = "Test category 2"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(2404),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(6030),
                             ForumUserId = 1,
                             Name = "Test category 3"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(2405),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(6032),
                             ForumUserId = 2,
                             Name = "Test category 4"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(2406),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(6033),
                             ForumUserId = 2,
                             Name = "Test category 5"
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(2407),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(6035),
                             ForumUserId = 2,
                             Name = "Test category 6"
                         });
@@ -740,7 +455,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 884, DateTimeKind.Local).AddTicks(733),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 700, DateTimeKind.Local).AddTicks(4542),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             Likes = 1,
@@ -749,7 +464,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 884, DateTimeKind.Local).AddTicks(738),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 700, DateTimeKind.Local).AddTicks(4546),
                             ForumTopicId = 2,
                             ForumUserId = 2,
                             PostName = "Post name 2"
@@ -757,7 +472,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 884, DateTimeKind.Local).AddTicks(740),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 700, DateTimeKind.Local).AddTicks(4547),
                             ForumTopicId = 2,
                             ForumUserId = 2,
                             PostName = "Post name 3"
@@ -765,7 +480,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 884, DateTimeKind.Local).AddTicks(741),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 700, DateTimeKind.Local).AddTicks(4549),
                             ForumTopicId = 2,
                             ForumUserId = 2,
                             Likes = 34,
@@ -774,7 +489,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 884, DateTimeKind.Local).AddTicks(742),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 700, DateTimeKind.Local).AddTicks(4550),
                             ForumTopicId = 2,
                             ForumUserId = 2,
                             Likes = 65,
@@ -823,7 +538,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(8886),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 700, DateTimeKind.Local).AddTicks(2742),
                             ForumBaseId = 1,
                             ForumUserId = 1,
                             Name = "Test forum topic 1",
@@ -832,7 +547,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(8892),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 700, DateTimeKind.Local).AddTicks(2747),
                             ForumBaseId = 2,
                             ForumUserId = 2,
                             Name = "Test forum topic 2",
@@ -841,7 +556,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(8893),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 700, DateTimeKind.Local).AddTicks(2749),
                             ForumBaseId = 2,
                             ForumUserId = 2,
                             Name = "Test forum topic 3",
@@ -850,7 +565,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(8894),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 700, DateTimeKind.Local).AddTicks(2750),
                             ForumBaseId = 2,
                             ForumUserId = 2,
                             Name = "Test forum topic 4",
@@ -859,7 +574,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 883, DateTimeKind.Local).AddTicks(8895),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 700, DateTimeKind.Local).AddTicks(2751),
                             ForumBaseId = 2,
                             ForumUserId = 2,
                             Name = "Test forum topic 5",
@@ -911,7 +626,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 882, DateTimeKind.Local).AddTicks(8098),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(2040),
                             Karma = 0,
                             Lastname = "Сергеевич",
                             Name = "Константин",
@@ -920,7 +635,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 6, 7, 14, 27, 58, 882, DateTimeKind.Local).AddTicks(8110),
+                            CreatedAt = new DateTime(2023, 6, 8, 16, 32, 57, 699, DateTimeKind.Local).AddTicks(2051),
                             Karma = 0,
                             Lastname = "Григорьевич",
                             Name = "Александр",
@@ -957,13 +672,13 @@ namespace Forum.Migrations.Forum
                     b.HasData(
                         new
                         {
-                            Id = "5b81f2dc-064c-4328-88bd-68aa490af914",
+                            Id = "b96ab6b0-7086-4595-b634-ebbbbcc72799",
                             Name = "USER",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "8f3a0e3f-405a-4a84-8072-b20bceecbbd0",
+                            Id = "baf98e30-f9e3-4ec6-a7d0-93c4f36cb2ea",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

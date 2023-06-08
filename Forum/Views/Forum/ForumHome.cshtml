@@ -1,0 +1,77 @@
+﻿@model Entities.ViewModels.Forum.ForumHomeViewModel;
+@{
+    ViewData["Title"] = "ForumHome";
+}
+<link href="~/css/font-awesome.min.css" rel="stylesheet">
+<link href="~/css/forumBase.css" rel="stylesheet">
+<link href="~/css/f-2.css" rel="stylesheet">
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInRight">
+
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <div class="pull-left m-r-md">
+                            <i class="fa fa-globe text-navy mid-icon"></i>
+                        </div>
+                        <h2>Добро пожаловать на форум ГУ</h2>
+                        <span>123</span>
+                    </div>
+                </div>
+
+                <div class="ibox-content forum-container">
+
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <div class="forum-title">
+                            <div class="pull-right forum-desc">
+                                <samll>Total posts: @cat.TotalPosts</samll>
+                            </div>
+                            <h3>@cat.Name</h3>
+                        </div>
+
+                        @*@foreach (var forum in cat.ForumBases)
+                    {
+                    <div class="forum-item active">
+                    <div class="row">
+                    <div class="col-md-9">
+                    <div class="forum-icon">
+                    <i class="fa fa-shield"></i>
+                    </div>
+                    <a href=@Url.RouteUrl("ForumTopics", new { forumId = forum.Id }) class="forum-item-title">@forum.ForumTitle</a>
+                    <div class="forum-sub-title">forum-sub-title: @forum.ForumSubTitle</div>
+                    </div>
+                    <div class="col-md-1 forum-info">
+                    <span class="views-number">
+                    1216
+                    </span>
+                    <div>
+                    <small>Views</small>
+                    </div>
+                    </div>
+                    <div class="col-md-1 forum-info">
+                    <span class="views-number">
+                    @forum.ForumTopics.Count()
+                    </span>
+                    <div>
+                    <small>Topics</small>
+                    </div>
+                    </div>
+                    <div class="col-md-1 forum-info">
+                    <span class="views-number">
+                    @forum.TotalPosts
+                    </span>
+                    <div>
+                    <small>Posts</small>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    }*@
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
