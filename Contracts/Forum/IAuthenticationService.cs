@@ -1,4 +1,5 @@
 ﻿using Entities.DTO.UserDto;
+using Entities.ViewModels;
 using Forum.ViewModels;
 
 namespace Interfaces.Forum

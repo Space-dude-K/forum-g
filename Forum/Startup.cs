@@ -79,6 +79,8 @@ namespace Forum
                 c.BaseAddress = new Uri(appUrl));
             services.AddHttpClient<IUserService, UserService>(c =>
                 c.BaseAddress = new Uri(appUrl));
+            services.AddHttpClient<IForumService, ForumService>(c =>
+                c.BaseAddress = new Uri(appUrl));
 
             services.AddCustomMediaTypes();
 

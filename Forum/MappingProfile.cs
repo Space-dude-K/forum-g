@@ -6,6 +6,7 @@ using Entities.DTO.UserDto;
 using Entities.DTO.UserDto.Create;
 using Entities.Models;
 using Entities.Models.Forum;
+using Entities.ViewModels;
 using Forum.ViewModels;
 
 namespace Forum
