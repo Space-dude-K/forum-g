@@ -11,11 +11,13 @@ namespace Entities.Configuration
             builder.HasData(
             new IdentityRole
             {
+                Id = "1c5e174e-3b0e-446f-86af-483d56fd7210",
                 Name = "USER",
                 NormalizedName = "USER"
             },
             new IdentityRole
             {
+                Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
                 Name = "Administrator",
                 NormalizedName = "ADMINISTRATOR"
             }
