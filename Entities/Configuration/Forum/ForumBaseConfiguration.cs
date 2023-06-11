@@ -40,6 +40,10 @@ namespace Entities.Configuration.Forum
                 .Property(p => p.ForumUserId)
                 .HasColumnType("INTEGER")
                 .IsRequired(true);
+            builder
+                .Property(p => p.TotalViews)
+                .HasColumnType("INTEGER")
+                .IsRequired(true);
 
             builder
                 .Ignore(c => c.TotalPosts);

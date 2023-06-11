@@ -15,10 +15,11 @@ namespace Forum.Controllers
 
         public async Task<IActionResult> ForumHome()
         {
-            ForumHomeViewModel viewModel = new ForumHomeViewModel();
-            viewModel.Categories = await forumService.GetForumCategories();
+            //ForumHomeViewModel viewModel = new ForumHomeViewModel();
+            //viewModel.Categories = await forumService.GetForumCategories();
+            var model = await forumService.GetForumCategoriesAndForumBases();
 
-            return View("~/Views/Forum/ForumHome.cshtml", viewModel);
+            return View("~/Views/Forum/ForumHome.cshtml", model);
         }
     }
 }
