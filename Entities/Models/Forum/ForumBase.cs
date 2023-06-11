@@ -20,6 +20,7 @@ namespace Entities.Models.Forum
                 return ForumTopics?.Sum(t => t.ForumPosts.Count) ?? 0;
             }
         }
+        public int TotalViews { get; set; }
         public virtual ForumCategory ForumCategory { get; set; }
         public int ForumCategoryId { get; set; }
         public virtual ForumUser ForumUser { get; set; }
