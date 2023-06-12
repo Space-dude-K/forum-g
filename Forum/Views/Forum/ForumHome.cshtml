@@ -8,7 +8,7 @@
         <div class="col-lg-12">
             <div class="wrapper wrapper-content animated fadeInRight">
 
-                <div class="ibox-content m-b-sm border-bottom">
+                <div class="ibox-content m-b-sm">
                     <div class="p-xs">
                         <div class="pull-left m-r-md">
                             <i class="fa fa-globe text-navy mid-icon"></i>
@@ -23,7 +23,7 @@
                     @foreach (var cat in Model.Categories)
                     {
                         <div class="text-end">
-                            <h3 class="text-success ">@cat.Name</h3>
+                            <h3 class="text-success border-bottom">@cat.Name</h3>
                             @*<div >
                                 <samll>Total posts: @cat.TotalPosts</samll>
                             </div>*@
@@ -31,13 +31,13 @@
 
                         @foreach (var forum in cat.Forums)
                         {
-                            <div class="forum-item active">
+                            <div class="mb-4">
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="forum-icon">
                                             <i class="fa fa-shield"></i>
                                         </div>
-                                        <a href=@Url.RouteUrl("ForumTopics", new { forumId = forum.Id }) class="forum-item-title">@forum.ForumTitle</a>
+                                        <a href=@Url.RouteUrl("ForumTopics", new { categoryId = forum.ForumCategoryId, forumId = forum.Id })>@forum.ForumTitle</a>
                                         <div class="forum-sub-title">forum-sub-title: @forum.ForumSubTitle</div>
                                     </div>
                                     <div class="col-md-1 forum-info">
@@ -64,6 +64,7 @@
                                             <small>Posts</small>
                                         </div>
                                     </div>
+                                    
                                 </div>
                             </div>
                         }

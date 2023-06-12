@@ -112,7 +112,7 @@ namespace Forum.Extensions
                 new RateLimitRule
                 {
                     Endpoint = "*",
-                    Limit= 100,
+                    Limit= 1000,
                     Period = "5m"
                 }
             };
