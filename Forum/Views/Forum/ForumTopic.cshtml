@@ -1,0 +1,115 @@
+﻿@model Entities.ViewModels.Forum.ForumTopicViewModel;
+@{
+    ViewData["Title"] = "ForumTopic";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <h2 class="text-center">Сообщений в подтеме:@* @Model.TotalPosts*@</h2>
+                        <div class="forum-sub-title text-center">Автор: @*@Model.SubTopicAuthor*@, подтема создана: @*@Model.SubTopicCreatedAt*@</div>
+                    </div>
+                </div>
+                <div class="forum-base-create-panel">
+                    @*<button type="button" class="btn btn-light" onclick="location.href='@Url.Action("ForumSubTopics", "Forum", new { forumTopicId = Model.TopicId })'">Вернуться к списку подтем</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @foreach (var post in Model.Posts)
+    {
+        <div class="ibox-content rounded">
+            <div class="forum-post-main-container">
+
+                <div class="forum-post-header row ">
+                    <div class="forum-post-header-sended col pull-left" id="forum-post-header-sended-@post.Id">
+                        <p class="date-sended mb-1">Отправлено: @post.CreatedAt</p>
+                    </div>
+                    <div class="col text-center">
+                        @*<button type="button" class="btn btn-light mr-0 ml-1 pull-right" onclick="ForumPostReply(@post.Id, '@post.ForumUser.SimplifiedName', '@post.CreatedAt')" title="Редактировать сообщение">Ответить</button>*@
+                    </div>
+                </div>
+
+                <div class="forum-post-body row border">
+                    @*<div class="forum-post-body-account col text-left mt-3 ">
+                        @Html.ActionLink(@post.ForumUser.SimplifiedName, "ForumAccount", "Forum", new { name = @post.ForumUser.ApplicationUser.NormalizedUserName }, null)
+                        <!-- <p class="mt-2" href="@Url.Action("ForumAccount", "Forum", new { name = @post.ForumUser.ApplicationUser.NormalizedUserName })">@post.ForumUser.SimplifiedName</p> -->
+                        <img class="rounded rounded mx-auto d-block mt-3" src="@Url.Content(@post.ImgSrc)" alt="Empty avatar" />
+                        <div class="forum-post-body-account-counter">
+                            <p class="m-0 mt-3">Сообщений:</p>
+                            <p>@post.ForumUser.TotalPostCounter</p>
+                        </div>
+                        <div class="forum-post-body-account-date">
+                            <p class="m-0">Дата регистрации:</p>
+                            <p>@post.ForumUser.CreatedAt</p>
+                        </div>
+
+                        @if (post.IsUserHasAccess)
+                        {
+                            <div class="d-flex justify-content-center mb-16 mr-1">
+                                <button type="button" class="btn btn-light mr-0 ml-1" onclick="EnableEditModeForumPost(@post.Id)" title="Редактировать сообщение"><img src="~/images/icons/bootstrap-icons-1.5.0/pencil.svg" width="12" height="12" /></button>
+                                <button type="button" class="btn btn-light mr-0 ml-1" onclick="SaveChangesForumPost(@post.Id)" title="Сохранить изменения"><img src="~/images/icons/bootstrap-icons-1.5.0/save.svg" width="12" height="12" /></button>
+                                <button type="button" class="btn btn-light mr-1 ml-1" onclick="DeleteForumPost(@post.Id)" title="Удалить сообщение"><img src="~/images/icons/bootstrap-icons-1.5.0/recycle.svg" width="12" height="12" /></button>
+                            </div>
+                        }
+                    </div>*@
+                    <div class="col">
+                        <div class="forum-post-body-message-main row border-left" id="forum-post-body-message-main">
+                            <!--<textarea class="forum-post-body-message-main-content1" id="forum-post-body-message-main-content-@post.Id" name="input"></textarea> -->
+                            <div class="forum-post-body-message-main-content-div mt-2 ml-2" id="forum-post-body-message-main-content-div-@post.Id">@Html.Raw(post.PostText)</div>
+                        </div>
+
+                        <!--
+                        <div class="forum-post-body-message-signature row">
+
+                        </div>
+                         -->
+                    </div>
+                </div>
+                <div class="forum-post-footer row">
+                    <div class="col text-center">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @*<div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="ibox-content m-b-sm justify-content-md-center text-center" id="text-area-tiny-mce-forum-post-container">
+                    <textarea id="text-area-tiny-mce-forum-post-add" name="input"> </textarea>
+                    <button id="post-add-button" type="button" class="btn btn-light mt-2" onclick="CreatePost(@Model.SubTopicId, @Model.TotalPages, @Model.TotalPosts)">Отправить сообщение</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+    @*<div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="ibox-content ">
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        @for (int i = 1; i < @Model.TotalPages + 1; i++)
+                        {
+                            <button type="button" class="btn btn-light" id="forum-post-page-number-button-@i" onclick="location.href='@Url.RouteUrl("ForumSubTopicPosts", new { subTopicId = Model.SubTopicId, pageId = i })'">@i</button>
+                        }
+                        <div class="btn-group" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                @for (int i = 1; i < @Model.TotalPages + 1; i++)
+                                {
+                                    <a class="dropdown-item" href="@Url.RouteUrl("ForumSubTopicPosts", new { subTopicId = Model.SubTopicId, pageId = i })" id="forum-post-page-number-dropdown-@i">@i</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+</div>

@@ -15,11 +15,23 @@ namespace Forum.Controllers
 
         public async Task<IActionResult> ForumHome()
         {
-            //ForumHomeViewModel viewModel = new ForumHomeViewModel();
-            //viewModel.Categories = await forumService.GetForumCategories();
-            var model = await forumService.GetForumCategoriesAndForumBases();
+            var model = await forumService.GetForumCategoriesAndForumBasesForModel();
 
             return View("~/Views/Forum/ForumHome.cshtml", model);
+        }
+        [Route("categories/{categoryId}/forums/{forumId}/topics", Name = "ForumTopics")]
+        public async Task<IActionResult> ForumTopics(int categoryId, int forumId)
+        {
+            var model = await forumService.GetForumTopicsForModel(categoryId, forumId);
+
+            return View("~/Views/Forum/ForumBase.cshtml", model);
+        }
+        [Route("categories/{categoryId}/forums/{forumId}/topics/{topicId}", Name = "TopicPosts")]
+        public async Task<IActionResult> ForumTopics(int categoryId, int forumId, int topicId)
+        {
+            var model = await forumService.GetTopicPostsForModel(categoryId, forumId, topicId);
+
+            return View("~/Views/Forum/ForumTopic.cshtml", model);
         }
     }
 }

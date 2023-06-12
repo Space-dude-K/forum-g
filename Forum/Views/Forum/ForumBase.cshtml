@@ -1,0 +1,57 @@
+﻿@model Entities.ViewModels.Forum.ForumBaseViewModel;
+@{
+    ViewData["Title"] = "ForumBase";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInRight">
+
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <div class="pull-left m-r-md">
+                            <i class="fa fa-globe text-navy mid-icon"></i>
+                        </div>
+                        <h2>Добро пожаловать на форум ГУ</h2>
+                        <span>123</span>
+                    </div>
+                </div>
+
+                <div class="ibox-content forum-container">
+
+                    @foreach (var topic in Model.Topics)
+                    {
+                        <div class="forum-item active">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="forum-icon">
+                                        <i class="fa fa-shield"></i>
+                                    </div>
+                                    <a href=@Url.RouteUrl("TopicPosts", new { forumId = topic.ForumBaseId, topicId = topic.Id }) class="forum-item-title">@topic.Name</a>
+                                    <div class="forum-sub-title">Автор: @topic.Author, @topic.CreatedAt</div>
+                                </div>
+                                <div class="col-md-1 forum-info">
+                                    <span class="views-number">
+                                        @topic.TopicViewCounter 
+                                    </span>
+                                    <div>
+                                        <small>Просмотров</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 forum-info">
+                                    <span class="views-number">
+                                        @topic.TotalPosts
+                                    </span>
+                                    <div>
+                                        <small>Ответов</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

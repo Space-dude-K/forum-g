@@ -27,6 +27,12 @@ namespace Entities.Configuration.Forum
                 .IsRequired(false)
                 .IsUnicode(true);
             builder
+                .Property(p => p.PostText)
+                .HasColumnType("NVARCHAR")
+                .HasMaxLength(256)
+                .IsRequired(false)
+                .IsUnicode(true);
+            builder
                 .Property(p => p.Likes)
                 .HasColumnType("INTEGER")
                 .IsRequired(false);
