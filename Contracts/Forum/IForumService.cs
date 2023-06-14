@@ -10,5 +10,6 @@ namespace Interfaces.Forum
         Task<ForumHomeViewModel> GetForumCategoriesAndForumBasesForModel();
         Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId);
         Task<ForumTopicViewModel> GetTopicPostsForModel(int categoryId, int forumId, int topicId);
+        Task<bool> IncreaseViewCounterForForumBase(int categoryId, int forumId);
     }
 }

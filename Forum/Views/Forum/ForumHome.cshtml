@@ -40,24 +40,24 @@
                                         <a href=@Url.RouteUrl("ForumTopics", new { categoryId = forum.ForumCategoryId, forumId = forum.Id })>@forum.ForumTitle</a>
                                         <div class="forum-sub-title">forum-sub-title: @forum.ForumSubTitle</div>
                                     </div>
-                                    <div class="col-md-1 forum-info">
-                                        <span class="views-number">
-                                            1216
+                                    <div class="col-md-1 fw-bolder">
+                                        <span>
+                                            @forum.TotalViews
                                         </span>
                                         <div>
                                             <small>Views</small>
                                         </div>
                                     </div>
-                                    <div class="col-md-1 forum-info">
-                                        <span class="views-number">
-                                            @*@forum.ForumTopics.Count()*@
+                                    <div class="col-md-1 fw-bolder">
+                                        <span>
+                                            @forum.TopicsCount
                                         </span>
                                         <div>
                                             <small>Topics</small>
                                         </div>
                                     </div>
-                                    <div class="col-md-1 forum-info">
-                                        <span class="views-number">
+                                    <div class="col-md-1 fw-bolder">
+                                        <span>
                                             @forum.TotalPosts
                                         </span>
                                         <div>
