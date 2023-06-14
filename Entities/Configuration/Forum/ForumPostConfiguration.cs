@@ -60,6 +60,37 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 1,
                     PostName = "Post name 1",
+                    PostText = "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads",
+                    Likes = 1,
+                    CreatedAt = DateTime.Now,
+                    ForumTopicId = 1,
+                    ForumUserId = 1
+                },
+                new ForumPost()
+                {
+                    Id = 6,
+                    PostName = "Post name 1",
+                    PostText = "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads",
+                    Likes = 1,
+                    CreatedAt = DateTime.Now,
+                    ForumTopicId = 1,
+                    ForumUserId = 1
+                },
+                new ForumPost()
+                {
+                    Id = 7,
+                    PostName = "Post name 1",
+                    PostText = "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads",
+                    Likes = 1,
+                    CreatedAt = DateTime.Now,
+                    ForumTopicId = 1,
+                    ForumUserId = 1
+                },
+                new ForumPost()
+                {
+                    Id = 8,
+                    PostName = "Post name 1",
+                    PostText = "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads",
                     Likes = 1,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 1,

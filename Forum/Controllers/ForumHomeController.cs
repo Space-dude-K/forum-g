@@ -23,6 +23,7 @@ namespace Forum.Controllers
         public async Task<IActionResult> ForumTopics(int categoryId, int forumId)
         {
             var model = await forumService.GetForumTopicsForModel(categoryId, forumId);
+            await forumService.IncreaseViewCounterForForumBase(categoryId, forumId);
 
             return View("~/Views/Forum/ForumBase.cshtml", model);
         }

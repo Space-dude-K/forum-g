@@ -69,6 +69,30 @@ namespace Entities.Configuration.Forum
                 },
                 new ForumTopic()
                 {
+                    Id = 6,
+                    Name = "Test forum topic 1a",
+                    CreatedAt = DateTime.Now,
+                    ForumBaseId = 1,
+                    ForumUserId = 1
+                },
+                new ForumTopic()
+                {
+                    Id = 7,
+                    Name = "Test forum topic 1b",
+                    CreatedAt = DateTime.Now,
+                    ForumBaseId = 1,
+                    ForumUserId = 1
+                },
+                new ForumTopic()
+                {
+                    Id = 8,
+                    Name = "Test forum topic 1c",
+                    CreatedAt = DateTime.Now,
+                    ForumBaseId = 1,
+                    ForumUserId = 1
+                },
+                new ForumTopic()
+                {
                     Id = 2,
                     Name = "Test forum topic 2",
                     CreatedAt = DateTime.Now,

@@ -6,6 +6,12 @@ using Interfaces.Forum;
 using Services.Utils;
 using Entities.DTO.ForumDto.ForumView;
 using Entities.ViewModels.Forum;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System;
+using Entities.DTO.ForumDto.Update;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Services
 {
@@ -34,6 +40,18 @@ namespace Services
             for(int i = 0; i < forumHomeViewModel.Categories.Count; i++)
             {
                 forumHomeViewModel.Categories[i].Forums = await GetForumBases(forumHomeViewModel.Categories[i].Id);
+
+                for (int j = 0; j < forumHomeViewModel.Categories[i].Forums.Count; j++)
+                {
+                    var topics = await GetForumTopics(forumHomeViewModel.Categories[i].Id, forumHomeViewModel.Categories[i].Forums[j].Id);
+                    forumHomeViewModel.Categories[i].Forums[j].TopicsCount = topics.Count;
+
+                    for (int k = 0; k < topics.Count; k++)
+                    {
+                        var posts = await GetTopicPosts(forumHomeViewModel.Categories[i].Id, forumHomeViewModel.Categories[i].Forums[j].Id, topics[k].Id);
+                        forumHomeViewModel.Categories[i].Forums[j].TotalPosts += posts.Count;
+                    }
+                }
             }
 
             return forumHomeViewModel;
@@ -75,7 +93,7 @@ namespace Services
         }
         public async Task<List<ForumViewBaseDto>> GetForumBases(int categoryId)
         {
-            List<ForumViewBaseDto> forumViewBaseDtos = new List<ForumViewBaseDto>();
+            List<ForumViewBaseDto> forumViewBaseDtos = new();
 
             var tokenResponse =
                 await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
@@ -96,7 +114,7 @@ namespace Services
         }
         public async Task<List<ForumViewTopicDto>> GetForumTopics(int categoryId, int forumId)
         {
-            List<ForumViewTopicDto> forumViewTopicDtos = new();
+            List<ForumViewTopicDto> forumViewTopicDtos = new List<ForumViewTopicDto>();
 
             var tokenResponse =
                 await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
@@ -124,15 +142,52 @@ namespace Services
             var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
-            var response = await _client.GetAsync("api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString());
+            var response = await _client.GetAsync("api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString() + "/posts");
 
             if (response.IsSuccessStatusCode)
             {
                 var rawData = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(rawData);
                 forumViewPostDtos = JsonConvert.DeserializeObject<IEnumerable<ForumViewPostDto>>(rawData).ToList();
             }
 
             return forumViewPostDtos;
+        }
+        public async Task<bool> IncreaseViewCounterForForumBase(int categoryId, int forumId)
+        {
+            bool result = false;
+
+            var tokenResponse =
+                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+
+
+            string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString();
+            var response = await _client.GetAsync(uri + "?&fields=TotalViews");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                int totalViews = JsonConvert.DeserializeObject<IEnumerable<ForumViewBaseDto>>(rawData).First().TotalViews;
+
+                totalViews++;
+
+                var jsonPatchObject = new JsonPatchDocument<ForumViewBaseDto>();
+                jsonPatchObject.Replace(fc => fc.TotalViews, totalViews);
+
+                var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
+                var responseAfterUpdate = await _client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+
+                if(responseAfterUpdate.IsSuccessStatusCode)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
         }
     }
 }
