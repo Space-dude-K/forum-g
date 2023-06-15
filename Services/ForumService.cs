@@ -56,9 +56,10 @@ namespace Services
 
             return forumHomeViewModel;
         }
-        public async Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId)
+        public async Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId, string forumTitle)
         {
             ForumBaseViewModel forumHomeViewModel = new();
+            forumHomeViewModel.ForumTitle = forumTitle;
             forumHomeViewModel.Topics = await GetForumTopics(categoryId, forumId);
 
             return forumHomeViewModel;
@@ -158,7 +159,8 @@ namespace Services
             bool result = false;
 
             var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+                await authenticationService.
+                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
             var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
             var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
 
@@ -182,6 +184,43 @@ namespace Services
                 var responseAfterUpdate = await _client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
 
                 if(responseAfterUpdate.IsSuccessStatusCode)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+        public async Task<bool> IncreaseViewCounterForTopic(int categoryId, int forumId, int topicId)
+        {
+            bool result = false;
+
+            var tokenResponse =
+                await authenticationService.
+                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+
+            string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString();
+            var response = await _client.GetAsync(uri + "?&fields=TopicViewCounter");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                int totalViews = JsonConvert.DeserializeObject<IEnumerable<ForumViewTopicDto>>(rawData).First().TotalViews;
+
+                totalViews++;
+
+                var jsonPatchObject = new JsonPatchDocument<ForumViewTopicDto>();
+                jsonPatchObject.Replace(fc => fc.TotalViews, totalViews);
+
+                var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
+                var responseAfterUpdate = 
+                    await _client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+
+                if (responseAfterUpdate.IsSuccessStatusCode)
                 {
                     result = true;
                 }

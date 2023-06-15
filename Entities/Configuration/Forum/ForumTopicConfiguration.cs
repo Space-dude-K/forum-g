@@ -35,7 +35,7 @@ namespace Entities.Configuration.Forum
                 .HasColumnType("Date")
                 .IsRequired(false);
             builder
-                .Property(p => p.TopicViewCounter)
+                .Property(p => p.TotalViews)
                 .HasColumnType("INTEGER")
                 .IsRequired(true);
 

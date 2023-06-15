@@ -1,3 +1,11 @@
 ﻿body
 {
+
+}
+.rounded-div
+{
+    width: 100%;
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 8px;
 }

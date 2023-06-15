@@ -16,7 +16,7 @@ namespace Entities.Models.Forum
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public int TotalPosts { get; set; }
-        public int TopicViewCounter { get; set; }
+        public int TotalViews { get; set; }
         public virtual ForumUser ForumUser { get; set; }
         public int ForumUserId { get; set; }
         public virtual ForumBase ForumBase { get; set; }

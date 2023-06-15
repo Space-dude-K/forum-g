@@ -23,7 +23,7 @@
                     @foreach (var cat in Model.Categories)
                     {
                         <div class="text-end">
-                            <h3 class="text-success border-bottom">@cat.Name</h3>
+                            <h3 class="text-success border-bottom mb-3">@cat.Name</h3>
                             @*<div >
                                 <samll>Total posts: @cat.TotalPosts</samll>
                             </div>*@
@@ -32,12 +32,12 @@
                         @foreach (var forum in cat.Forums)
                         {
                             <div class="mb-4">
-                                <div class="row">
+                                <div class="row bg-light text-dark rounded-div">
                                     <div class="col-md-9">
                                         <div class="forum-icon">
                                             <i class="fa fa-shield"></i>
                                         </div>
-                                        <a href=@Url.RouteUrl("ForumTopics", new { categoryId = forum.ForumCategoryId, forumId = forum.Id })>@forum.ForumTitle</a>
+                                        <a href=@Url.RouteUrl("ForumTopics", new { categoryId = forum.ForumCategoryId, forumId = forum.Id, forumTitle = forum.ForumTitle })>@forum.ForumTitle</a>
                                         <div class="forum-sub-title">forum-sub-title: @forum.ForumSubTitle</div>
                                     </div>
                                     <div class="col-md-1 fw-bolder">
