@@ -1,6 +1,8 @@
-﻿using Entities.ViewModels.Forum;
+﻿using Entities.DTO.ForumDto.ForumView;
+using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Forum.Controllers
 {
@@ -18,6 +20,15 @@ namespace Forum.Controllers
             var model = await forumService.GetForumCategoriesAndForumBasesForModel();
 
             return View("~/Views/Forum/ForumHome.cshtml", model);
+        }
+        public async Task<IActionResult> RedirectToCreateCategory()
+        {
+            return View("~/Views/Forum/Add/ForumAddCategory.cshtml");
+        }
+        public async Task<IActionResult> RedirectToCreateForumBase(string model)
+        {
+            ForumHomeViewModel modelD = JsonConvert.DeserializeObject<ForumHomeViewModel>(model);
+            return View("~/Views/Forum/Add/ForumAddForumBase.cshtml", modelD);
         }
         [Route("categories/{categoryId}/forums/{forumId}/topics", Name = "ForumTopics")]
         public async Task<IActionResult> ForumTopics(int categoryId, int forumId, string forumTitle)

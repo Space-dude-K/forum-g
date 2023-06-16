@@ -1,0 +1,93 @@
+﻿@model Entities.ViewModels.Forum.ForumHomeViewModel;
+@{
+    ViewData["Title"] = "ForumAddForumBase";
+}
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/forum.js"></script>
+<div class="container">
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInRight">
+
+            <div class="ibox-content m-b-sm border-bottom">
+                <div class="p-xs">
+                    <h2 class="text-center">Создание форума</h2>
+                </div>
+            </div>
+
+            <div class="ibox-content forum-container">
+                <div class="mt-3 mb-3 input-group">
+                    <button type="button" class="btn btn-secondary">Категория</button>
+                    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <input id="cat-name-forum-add1" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        @foreach (var cat in Model.Categories)
+                        {
+                            <li><a class="dropdown-item" href="#">@cat.Name</a></li>
+                        }
+                    </ul>
+                </div>
+
+                @*<div class="dropdown mb-3 mt-3">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Выбор категории
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        @foreach (var cat in Model.Categories)
+                        {
+                            <li><a class="dropdown-item" href="#">@cat.Name</a></li>
+                        }
+                    </ul>
+                </div>*@
+
+
+                @*<div class="input-group mb-3">
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Выбор категории
+                        </a>
+                        <div id="cat-dropdown" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <h6 class="dropdown-header">Категории:</h6>
+                            @foreach (var cat in Model.Categories)
+                            {
+                                <a class="dropdown-item" href="#">@cat.Name</a>
+                            }
+                        </div>
+                    </div>
+                </div>*@
+
+                @*<div class="form-group d-flex flex-column ">
+                    <label asp-for="@Model.Categories"></label>
+                    <select class="form-select" asp-for="@Model.Categories" asp-items="new SelectList(@Model.Categories.Select(c => c.Name).ToList())"></select>
+                    <span asp-validation-for="@Model.Categories" class="text-danger"></span>
+                </div>*@
+
+                @*<div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Категория:</span>
+                    </div>
+                    <input id="cat-name-forum-add" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                </div>*@
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Форум:</span>
+                    </div>
+                    <input id="forum-name-add" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Подзаголовок:</span>
+                    </div>
+                    <input id="forum-subtitle-add" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                </div>
+                <div class="text-center">
+                    <button id="myButton" type="button" class="btn btn-light" onclick="CreateForum()">Создать</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
