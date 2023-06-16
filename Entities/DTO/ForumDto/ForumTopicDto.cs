@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int TopicViewCounter { get; set; }
+        public int TotalViews { get; set; }
         public int TotalPosts { get; set; }
         public string Author { get; set; }
         public DateTime? CreatedAt { get; set; }

@@ -8,8 +8,9 @@ namespace Interfaces.Forum
     {
         Task<List<ForumViewCategoryDto>> GetForumCategories();
         Task<ForumHomeViewModel> GetForumCategoriesAndForumBasesForModel();
-        Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId);
+        Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId, string forumTitle);
         Task<ForumTopicViewModel> GetTopicPostsForModel(int categoryId, int forumId, int topicId);
         Task<bool> IncreaseViewCounterForForumBase(int categoryId, int forumId);
+        Task<bool> IncreaseViewCounterForTopic(int categoryId, int forumId, int topicId);
     }
 }

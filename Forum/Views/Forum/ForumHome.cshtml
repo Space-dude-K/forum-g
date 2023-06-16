@@ -1,4 +1,5 @@
-﻿@model Entities.ViewModels.Forum.ForumHomeViewModel;
+﻿@using Newtonsoft.Json;
+@model Entities.ViewModels.Forum.ForumHomeViewModel;
 @{
     ViewData["Title"] = "ForumHome";
 }
@@ -18,12 +19,18 @@
                     </div>
                 </div>
 
+                <div class="forum-base-create-panel btn-group-md">
+                    <button type="button" class="btn btn-light" onclick="location.href='@Url.Action("RedirectToCreateCategory", "ForumHome")'">Создать категорию</button>
+                    <button type="button" class="btn btn-light" onclick="location.href='@Url.Action("RedirectToCreateForumBase", "ForumHome", new { model = JsonConvert.SerializeObject(@Model) })'">Создать форум</button>
+
+                </div>
+
                 <div class="ibox-content">
 
                     @foreach (var cat in Model.Categories)
                     {
                         <div class="text-end">
-                            <h3 class="text-success border-bottom">@cat.Name</h3>
+                            <h3 class="text-success border-bottom mb-3">@cat.Name</h3>
                             @*<div >
                                 <samll>Total posts: @cat.TotalPosts</samll>
                             </div>*@
@@ -32,15 +39,15 @@
                         @foreach (var forum in cat.Forums)
                         {
                             <div class="mb-4">
-                                <div class="row">
+                                <div class="row bg-light text-dark rounded-div">
                                     <div class="col-md-9">
                                         <div class="forum-icon">
                                             <i class="fa fa-shield"></i>
                                         </div>
-                                        <a href=@Url.RouteUrl("ForumTopics", new { categoryId = forum.ForumCategoryId, forumId = forum.Id })>@forum.ForumTitle</a>
+                                        <a href=@Url.RouteUrl("ForumTopics", new { categoryId = forum.ForumCategoryId, forumId = forum.Id, forumTitle = forum.ForumTitle })>@forum.ForumTitle</a>
                                         <div class="forum-sub-title">forum-sub-title: @forum.ForumSubTitle</div>
                                     </div>
-                                    <div class="col-md-1 fw-bolder">
+                                    <div class="col-md-1">
                                         <span>
                                             @forum.TotalViews
                                         </span>
@@ -48,7 +55,7 @@
                                             <small>Views</small>
                                         </div>
                                     </div>
-                                    <div class="col-md-1 fw-bolder">
+                                    <div class="col-md-1">
                                         <span>
                                             @forum.TopicsCount
                                         </span>
@@ -56,7 +63,7 @@
                                             <small>Topics</small>
                                         </div>
                                     </div>
-                                    <div class="col-md-1 fw-bolder">
+                                    <div class="col-md-1">
                                         <span>
                                             @forum.TotalPosts
                                         </span>

@@ -79,7 +79,7 @@
 
                 <div class="form-group d-flex flex-column">
                     <label asp-for="Roles"></label>
-                    <select id="multiselect" multiple class="form-select multi-select-dropdown" asp-for="@Model.Roles" asp-items="new SelectList(@Model.Roles)"></select>
+                    <select id="multiselect"  multiple class="form-select multi-select-dropdown" asp-for="@Model.Roles" asp-items="new SelectList(@Model.Roles)"></select>
                     <span asp-validation-for="Roles" class="text-danger"></span>
                 </div>
 
