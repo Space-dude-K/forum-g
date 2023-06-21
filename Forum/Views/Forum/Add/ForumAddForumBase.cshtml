@@ -21,8 +21,8 @@
                     <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                         <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
-                    <input id="cat-name-forum-add1" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <input id="cat-name-forum-add" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                    <ul id="cat-dropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                         @foreach (var cat in Model.Categories)
                         {
                             <li><a class="dropdown-item" href="#">@cat.Name</a></li>
