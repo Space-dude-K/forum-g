@@ -1,4 +1,5 @@
-﻿using Entities.DTO.ForumDto.ForumView;
+﻿using AutoMapper;
+using Entities.DTO.ForumDto.ForumView;
 using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,12 @@ namespace Forum.Controllers
     public class ForumHomeController : Controller
     {
         private readonly IForumService forumService;
+        private readonly IMapper _mapper;
 
-        public ForumHomeController(IForumService forumService)
+        public ForumHomeController(IForumService forumService, IMapper mapper)
         {
             this.forumService = forumService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> ForumHome()
@@ -27,9 +30,16 @@ namespace Forum.Controllers
         }
         public async Task<IActionResult> RedirectToCreateForumBase(string model)
         {
-            ForumHomeViewModel modelD = JsonConvert.DeserializeObject<ForumHomeViewModel>(model);
-            return View("~/Views/Forum/Add/ForumAddForumBase.cshtml", modelD);
+            //ForumCategoryCreationView modelD = JsonConvert.DeserializeObject<ForumHomeViewModel>(model);
+            var catAddModel = _mapper.Map<ForumBaseCreationView>(JsonConvert.DeserializeObject<ForumHomeViewModel>(model));
+            return View("~/Views/Forum/Add/ForumAddForumBase.cshtml", catAddModel);
         }
+        /*public async Task<IActionResult> CreateForumCategory(ForumHomeViewModel model)
+        {
+            var user = _mapper.Map<ForumHomeViewModel>(model-);
+            return View("~/Views/Forum/Add/ForumAddForumBase.cshtml", modelD);
+        }*/
+        
         [Route("categories/{categoryId}/forums/{forumId}/topics", Name = "ForumTopics")]
         public async Task<IActionResult> ForumTopics(int categoryId, int forumId, string forumTitle)
         {
