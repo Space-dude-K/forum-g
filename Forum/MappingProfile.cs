@@ -7,6 +7,7 @@ using Entities.DTO.UserDto.Create;
 using Entities.Models;
 using Entities.Models.Forum;
 using Entities.ViewModels;
+using Entities.ViewModels.Forum;
 using Forum.ViewModels;
 
 namespace Forum
@@ -46,6 +47,12 @@ namespace Forum
             // Views
             CreateMap<RegisterViewModel, UserForCreationDto>();
             CreateMap<LoginViewModel, UserForAuthenticationDto>();
+
+            CreateMap<ForumHomeViewModel, ForumBaseCreationView>()
+                .ForMember(dest => dest.Categories, m => m.MapFrom(src => src.Categories.Select(c => c.Name)));
+            CreateMap<ForumBaseCreationView, ForumBaseForCreationDto>()
+                .ForMember(dest => dest.ForumTitle, m => m.MapFrom(src => src.ForumTitle))
+                .ForMember(dest => dest.ForumSubTitle, m => m.MapFrom(src => src.ForumSubtitle));
         }
     }
 }
