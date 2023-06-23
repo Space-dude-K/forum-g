@@ -28,12 +28,7 @@ namespace Forum.Controllers
         {
             return View("~/Views/Forum/Add/ForumAddCategory.cshtml");
         }
-        public async Task<IActionResult> RedirectToCreateForumBase(string model)
-        {
-            //ForumCategoryCreationView modelD = JsonConvert.DeserializeObject<ForumHomeViewModel>(model);
-            var catAddModel = _mapper.Map<ForumBaseCreationView>(JsonConvert.DeserializeObject<ForumHomeViewModel>(model));
-            return View("~/Views/Forum/Add/ForumAddForumBase.cshtml", catAddModel);
-        }
+        
         /*public async Task<IActionResult> CreateForumCategory(ForumHomeViewModel model)
         {
             var user = _mapper.Map<ForumHomeViewModel>(model-);

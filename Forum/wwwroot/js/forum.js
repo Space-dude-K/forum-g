@@ -1,8 +1,12 @@
 ﻿$(document).ready(function ()
 {
-    $('#cat-dropdown a').on('click', function ()
+    $(document).ready(function ()
     {
-        var txt = ($(this).text());
-        document.getElementById('cat-name-forum-add').value = txt;
+        $("#cat-dropdown").change(function ()
+        {
+            selectElement = document.querySelector('#cat-dropdown');
+            output = selectElement.value;
+            document.querySelector('#cat-name-forum-add').value = output;
+        });
     });
 });
