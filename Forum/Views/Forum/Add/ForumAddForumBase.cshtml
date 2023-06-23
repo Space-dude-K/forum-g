@@ -51,10 +51,14 @@
 
                     <div class="form-group d-flex flex-column">
                         <label asp-for="Categories"></label>
-                        <select id="multiselect" multiple class="form-select multi-select-dropdown" asp-for="@Model.Categories" asp-items="new SelectList(@Model.Categories)"></select>
+                        <select id="cat-dropdown" class="form-select" asp-for="@Model" asp-items="new SelectList(@Model.Categories)"></select>
                         <span asp-validation-for="Categories" class="text-danger"></span>
                     </div>
-
+                    <div class="form-group">
+                        <label asp-for="SelectedCategory"></label>
+                        <input asp-for="SelectedCategory" type="text" id="cat-name-forum-add" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" />
+                        <span asp-validation-for="SelectedCategory" class="text-danger"></span>
+                    </div>
                     <div class="form-group">
                         <label asp-for="ForumTitle"></label>
                         <input asp-for="ForumTitle" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" />

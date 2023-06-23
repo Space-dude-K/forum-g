@@ -21,7 +21,7 @@
 
                 <div class="forum-base-create-panel btn-group-md">
                     <button type="button" class="btn btn-light" onclick="location.href='@Url.Action("RedirectToCreateCategory", "ForumHome")'">Создать категорию</button>
-                    <button type="button" class="btn btn-light" onclick="location.href='@Url.Action("RedirectToCreateForumBase", "ForumHome", new { model = JsonConvert.SerializeObject(@Model) })'">Создать форум</button>
+                    <button type="button" class="btn btn-light" onclick="location.href='@Url.Action("RedirectToCreateForumBase", "ForumBaseCreation", new { model = JsonConvert.SerializeObject(@Model) })'">Создать форум</button>
 
                 </div>
 
