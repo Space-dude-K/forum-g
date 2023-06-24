@@ -243,10 +243,24 @@ namespace Services
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
             string uri = "api/categories/" + categoryId.ToString() + "/forums";
 
-            // Arrange
             var jsonContent = JsonConvert.SerializeObject(forum);
 
-            // Act
+            var response = await _client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+
+            return response.IsSuccessStatusCode;
+        }
+        public async Task<bool> CreateForumCategory(ForumCategoryForCreationDto category)
+        {
+            var tokenResponse =
+                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+            string uri = "api/categories/";
+
+            var jsonContent = JsonConvert.SerializeObject(category);
+
             var response = await _client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
             return response.IsSuccessStatusCode;

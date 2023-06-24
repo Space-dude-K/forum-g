@@ -8,6 +8,7 @@ namespace Interfaces.Forum
     public interface IForumService
     {
         Task<bool> CreateForumBase(int categoryId, ForumBaseForCreationDto forum);
+        Task<bool> CreateForumCategory(ForumCategoryForCreationDto category);
         Task<List<ForumViewCategoryDto>> GetForumCategories();
         Task<ForumHomeViewModel> GetForumCategoriesAndForumBasesForModel();
         Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId, string forumTitle);
