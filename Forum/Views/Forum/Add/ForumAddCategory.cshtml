@@ -1,6 +1,6 @@
-﻿@model Entities.ViewModels.Forum.ForumHomeViewModel;
+﻿@model Entities.ViewModels.Forum.ForumCategoryCreationView;
 @{
-    ViewData["Title"] = "ForumAddCategory";
+    ViewData["Title"] = "ForumAddForumCategory";
 }
 
 <div class="container">
@@ -8,21 +8,24 @@
         <div class="col-lg-12">
             <div class="wrapper wrapper-content animated fadeInRight">
 
-                <div class="ibox-content m-b-sm">
+                <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
                         <h2 class="text-center">Создание категории</h2>
                     </div>
                 </div>
+
                 <div class="ibox-content forum-container">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Категория:</span>
+                    <form asp-controller="ForumCategoryCreation" asp-action="RedirectToCreateCategory" method="post">
+                        <div class="form-group">
+                            <label asp-for="@Model.CategoryName"></label>
+                            <input asp-for="@Model.CategoryName" class="form-control" />
+                            <span asp-validation-for="@Model.CategoryName" class="text-danger"></span>
                         </div>
-                        <input id="catName" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-                    </div>
-                    <div class="text-center">
-                        <button id="myButton" type="button" class="btn btn-light" onclick="CreateCategory()">Создать</button>
-                    </div>
+                        <div class="text-center">
+                            <button type="submit" value="Submit" class="btn-primary mt-2">Создать категорию</button>
+                        </div>
+
+                    </form>
                 </div>
             </div>
         </div>

@@ -59,6 +59,8 @@ namespace Forum
                 .ForMember(dest => dest.ForumTitle, m => m.MapFrom(src => src.ForumTitle))
                 .ForMember(dest => dest.ForumSubTitle, m => m.MapFrom(src => src.ForumSubtitle));
 
+            CreateMap<ForumCategoryCreationView, ForumCategoryForCreationDto>()
+                .ForMember(dest => dest.Name, m => m.MapFrom(src => src.CategoryName));
 
             /*CreateMap<ForumHomeViewModel, ForumBaseCreationView>()
                 .ForMember(dest => dest.Categories, m => m.MapFrom(src => src.Categories.Select(c => c.Name)));

@@ -20,7 +20,9 @@ namespace Forum.Controllers.Forum
         [HttpGet]
         public async Task<IActionResult> RedirectToCreateForumBase(string model)
         {
-            //ForumCategoryCreationView modelD = JsonConvert.DeserializeObject<ForumHomeViewModel>(model);
+            if(string.IsNullOrEmpty(model))
+                return BadRequest(ModelState);
+
             var catAddModel = _mapper.Map<ForumBaseCreationView>(JsonConvert.DeserializeObject<ForumHomeViewModel>(model));
             return View("~/Views/Forum/Add/ForumAddForumBase.cshtml", catAddModel);
         }
