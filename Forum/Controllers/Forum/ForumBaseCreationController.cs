@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
+using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -8,15 +10,12 @@ namespace Forum.Controllers.Forum
     public class ForumBaseCreationController : Controller
     {
         private readonly IMapper _mapper;
+        private readonly IForumService _forumService;
 
-        public ForumBaseCreationController(IMapper mapper)
+        public ForumBaseCreationController(IMapper mapper, IForumService forumService)
         {
             _mapper = mapper;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
+            _forumService = forumService;
         }
         [HttpGet]
         public async Task<IActionResult> RedirectToCreateForumBase(string model)
@@ -28,7 +27,13 @@ namespace Forum.Controllers.Forum
         [HttpPost]
         public async Task<IActionResult> RedirectToCreateForumBase(ForumBaseCreationView model)
         {
-            return View("~/Views/Forum/Add/ForumAddForumBase.cshtml", model);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var forumToAdd = _mapper.Map<ForumBaseForCreationDto>(model);
+            await _forumService.CreateForumBase(model.SelectedCategoryId, forumToAdd);
+
+            return RedirectToAction("ForumHome", "ForumHome");
         }
     }
 }

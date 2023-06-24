@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Entities.DTO.ForumDto;
 using Entities.DTO.ForumDto.Create;
+using Entities.DTO.ForumDto.ForumView;
 using Entities.DTO.ForumDto.Update;
 using Entities.DTO.UserDto;
 using Entities.DTO.UserDto.Create;
@@ -9,6 +10,7 @@ using Entities.Models.Forum;
 using Entities.ViewModels;
 using Entities.ViewModels.Forum;
 using Forum.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Forum
 {
@@ -48,11 +50,21 @@ namespace Forum
             CreateMap<RegisterViewModel, UserForCreationDto>();
             CreateMap<LoginViewModel, UserForAuthenticationDto>();
 
+            CreateMap<ForumViewCategoryDto, SelectListItem>()
+                .ForMember(dest => dest.Value, m => m.MapFrom(src => src.Id.ToString()))
+                .ForMember(dest => dest.Text, m => m.MapFrom(src => src.Name));
             CreateMap<ForumHomeViewModel, ForumBaseCreationView>()
-                .ForMember(dest => dest.Categories, m => m.MapFrom(src => src.Categories.Select(c => c.Name)));
+                .ForMember(dest => dest.Categories, m => m.MapFrom(src => src.Categories));
             CreateMap<ForumBaseCreationView, ForumBaseForCreationDto>()
                 .ForMember(dest => dest.ForumTitle, m => m.MapFrom(src => src.ForumTitle))
                 .ForMember(dest => dest.ForumSubTitle, m => m.MapFrom(src => src.ForumSubtitle));
+
+
+            /*CreateMap<ForumHomeViewModel, ForumBaseCreationView>()
+                .ForMember(dest => dest.Categories, m => m.MapFrom(src => src.Categories.Select(c => c.Name)));
+            CreateMap<ForumBaseCreationView, ForumBaseForCreationDto>()
+                .ForMember(dest => dest.ForumTitle, m => m.MapFrom(src => src.ForumTitle))
+                .ForMember(dest => dest.ForumSubTitle, m => m.MapFrom(src => src.ForumSubtitle));*/
         }
     }
 }

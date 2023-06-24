@@ -12,6 +12,9 @@ using System.Text;
 using System;
 using Entities.DTO.ForumDto.Update;
 using Microsoft.AspNetCore.JsonPatch;
+using Entities;
+using System.Security.Policy;
+using Entities.DTO.ForumDto.Create;
 
 namespace Services
 {
@@ -227,6 +230,26 @@ namespace Services
             }
 
             return result;
+        }
+
+        // POST
+        public async Task<bool> CreateForumBase(int categoryId, ForumBaseForCreationDto forum)
+        {
+            var tokenResponse =
+                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+            string uri = "api/categories/" + categoryId.ToString() + "/forums";
+
+            // Arrange
+            var jsonContent = JsonConvert.SerializeObject(forum);
+
+            // Act
+            var response = await _client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+
+            return response.IsSuccessStatusCode;
         }
     }
 }

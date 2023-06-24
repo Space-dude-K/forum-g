@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Contracts\Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Forum\" />
+  </ItemGroup>
+
 </Project>
