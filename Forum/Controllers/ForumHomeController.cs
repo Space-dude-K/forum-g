@@ -4,23 +4,24 @@ using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Services;
 
 namespace Forum.Controllers
 {
     public class ForumHomeController : Controller
     {
-        private readonly IForumService forumService;
+        private readonly IForumService _forumService;
         private readonly IMapper _mapper;
 
         public ForumHomeController(IForumService forumService, IMapper mapper)
         {
-            this.forumService = forumService;
+            _forumService = forumService;
             _mapper = mapper;
         }
 
         public async Task<IActionResult> ForumHome()
         {
-            var model = await forumService.GetForumCategoriesAndForumBasesForModel();
+            var model = await _forumService.GetForumCategoriesAndForumBasesForModel();
 
             return View("~/Views/Forum/ForumHome.cshtml", model);
         }
@@ -36,18 +37,18 @@ namespace Forum.Controllers
         }*/
         
         [Route("categories/{categoryId}/forums/{forumId}/topics", Name = "ForumTopics")]
-        public async Task<IActionResult> ForumTopics(int categoryId, int forumId, string forumTitle)
+        public async Task<IActionResult> ForumTopics(int categoryId, int forumId)
         {
-            var model = await forumService.GetForumTopicsForModel(categoryId, forumId, forumTitle);
-            await forumService.IncreaseViewCounterForForumBase(categoryId, forumId);
+            var model = await _forumService.GetForumTopicsForModel(categoryId, forumId);
+            await _forumService.IncreaseViewCounterForForumBase(categoryId, forumId);
 
             return View("~/Views/Forum/ForumBase.cshtml", model);
         }
         [Route("categories/{categoryId}/forums/{forumId}/topics/{topicId}", Name = "TopicPosts")]
-        public async Task<IActionResult> ForumTopics(int categoryId, int forumId, int topicId)
+        public async Task<IActionResult> TopicPosts(int categoryId, int forumId, int topicId)
         {
-            var model = await forumService.GetTopicPostsForModel(categoryId, forumId, topicId);
-            await forumService.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
+            var model = await _forumService.GetTopicPostsForModel(categoryId, forumId, topicId);
+            await _forumService.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
 
             return View("~/Views/Forum/ForumTopic.cshtml", model);
         }
