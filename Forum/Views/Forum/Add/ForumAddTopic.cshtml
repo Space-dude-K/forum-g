@@ -1,0 +1,33 @@
+﻿@model Entities.ViewModels.Forum.ForumTopicCreationView;
+@{
+    ViewData["Title"] = "ForumAddForumTopic";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInRight">
+
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <h2 class="text-center">Создание топика</h2>
+                    </div>
+                </div>
+
+                <div class="ibox-content forum-container">
+                    <form asp-route="ForumTopicCreate" method="post">
+                        <div class="form-group">
+                            <label asp-for="@Model.TopicName"></label>
+                            <input asp-for="@Model.TopicName" class="form-control" />
+                            <span asp-validation-for="@Model.TopicName" class="text-danger"></span>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" value="Submit" class="btn-primary mt-2">Создать топик</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

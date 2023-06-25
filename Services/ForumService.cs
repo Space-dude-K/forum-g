@@ -59,10 +59,10 @@ namespace Services
 
             return forumHomeViewModel;
         }
-        public async Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId, string forumTitle)
+        public async Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId)
         {
             ForumBaseViewModel forumHomeViewModel = new();
-            forumHomeViewModel.ForumTitle = forumTitle;
+            //forumHomeViewModel.ForumTitle = forumTitle;
             forumHomeViewModel.Topics = await GetForumTopics(categoryId, forumId);
 
             return forumHomeViewModel;
@@ -260,6 +260,22 @@ namespace Services
             string uri = "api/categories/";
 
             var jsonContent = JsonConvert.SerializeObject(category);
+
+            var response = await _client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+
+            return response.IsSuccessStatusCode;
+        }
+        public async Task<bool> CreateForumTopic(int categoryId, int forumId, ForumTopicForCreationDto topic)
+        {
+            var tokenResponse =
+                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+            string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics";
+
+            var jsonContent = JsonConvert.SerializeObject(topic);
 
             var response = await _client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 

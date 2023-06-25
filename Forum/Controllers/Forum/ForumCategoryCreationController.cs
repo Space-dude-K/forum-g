@@ -3,7 +3,6 @@ using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Forum.Controllers.Forum
 {
