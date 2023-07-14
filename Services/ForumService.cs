@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.JsonPatch;
 using Entities;
 using System.Security.Policy;
 using Entities.DTO.ForumDto.Create;
+using Entities.DTO.UserDto;
+using Entities.Models.Forum;
 
 namespace Services
 {
@@ -71,9 +73,13 @@ namespace Services
         {
             ForumTopicViewModel forumHomeViewModel = new();
             forumHomeViewModel.Posts = await GetTopicPosts(categoryId, forumId, topicId);
+            var postUserTask = forumHomeViewModel.Posts.Select(async p => p.ForumUser = await GetForumUser(p.ForumUserId));
+
+            await Task.WhenAll(postUserTask);
 
             return forumHomeViewModel;
         }
+
         public async Task<List<ForumViewCategoryDto>> GetForumCategories()
         {
             List<ForumViewCategoryDto> forumViewCategoryDtos = new List<ForumViewCategoryDto>();
@@ -146,7 +152,8 @@ namespace Services
             var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
-            var response = await _client.GetAsync("api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString() + "/posts");
+            string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString() + "/posts";
+            var response = await _client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -157,6 +164,29 @@ namespace Services
 
             return forumViewPostDtos;
         }
+        public async Task<ForumUserDto> GetForumUser(int userId)
+        {
+            ForumUserDto forumUser = new();
+
+            var tokenResponse =
+                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+
+            string uri = "api/users/" + userId.ToString();
+            var response = await _client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                forumUser = JsonConvert.DeserializeObject<IEnumerable<ForumUserDto>>(rawData).First();
+            }
+
+            return forumUser;
+        }
+
+        // COUNTERS
         public async Task<bool> IncreaseViewCounterForForumBase(int categoryId, int forumId)
         {
             bool result = false;

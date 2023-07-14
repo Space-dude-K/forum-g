@@ -16,6 +16,7 @@ namespace Repository.Forum
 
         public void CreateTopicForForum(int forumBaseId, ForumTopic topic)
         {
+            // TODO
             topic.ForumUserId = 1;
             topic.ForumBaseId = forumBaseId;
             Create(topic);

@@ -38,7 +38,7 @@ namespace Services
         {
             var response = await _client.GetAsync("api/users");
             var rawData = await response.Content.ReadAsStringAsync();
-            var responseContent = JsonConvert.DeserializeObject<IEnumerable<UserDto>>(rawData).ToList();
+            var responseContent = JsonConvert.DeserializeObject<IEnumerable<ForumUserDto>>(rawData).ToList();
 
             var model = new RegisterTableViewModel()
             {

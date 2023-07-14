@@ -73,7 +73,7 @@ namespace Forum
             services.AddScoped<IDataShaper<ForumTopicDto>, DataShaper<ForumTopicDto>>();
             services.AddScoped<IDataShaper<ForumPostDto>, DataShaper<ForumPostDto>>();
 
-            services.AddScoped<IDataShaper<UserDto>, DataShaper<UserDto>>();
+            services.AddScoped<IDataShaper<ForumUserDto>, DataShaper<ForumUserDto>>();
 
             services.AddHttpClient<IAuthenticationService, AuthenticationService>(c =>
                 c.BaseAddress = new Uri(appUrl));

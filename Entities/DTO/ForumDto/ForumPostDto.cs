@@ -1,4 +1,7 @@
-﻿namespace Entities.DTO.ForumDto
+﻿using Entities.Models.Forum;
+using Entities.DTO.UserDto;
+
+namespace Entities.DTO.ForumDto
 {
     public class ForumPostDto
     {
@@ -10,5 +13,6 @@
         public DateTime? UpdatedAt { get; set; }
         public int ForumTopicId { get; set; }
         public int ForumUserId { get; set; }
+        public ForumUserDto ForumUser { get; set; }
     }
 }

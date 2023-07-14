@@ -182,6 +182,7 @@ namespace Forum.Controllers.Forum
 
             var forumEntity = _mapper.Map<ForumBase>(forum);
             forumEntity.CreatedAt = DateTime.Now;
+            // TODO
             forumEntity.ForumUserId = 1;
             _repository.ForumBase.CreateForumForCategory(categoryId, forumEntity);
             await _repository.SaveAsync();

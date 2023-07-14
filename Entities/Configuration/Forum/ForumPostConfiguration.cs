@@ -102,7 +102,7 @@ namespace Entities.Configuration.Forum
                     PostName = "Post name 2",
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumPost()
                 {
@@ -110,7 +110,7 @@ namespace Entities.Configuration.Forum
                     PostName = "Post name 3",
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumPost()
                 {
@@ -119,7 +119,7 @@ namespace Entities.Configuration.Forum
                     Likes = 34,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumPost()
                 {
@@ -128,7 +128,7 @@ namespace Entities.Configuration.Forum
                     Likes = 65,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 }
             );
             #endregion

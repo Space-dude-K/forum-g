@@ -186,6 +186,7 @@ namespace Forum.Controllers.Forum
 
             var topicEntity = _mapper.Map<ForumTopic>(topic);
             topicEntity.CreatedAt = DateTime.Now;
+            // TODO
             topicEntity.ForumUserId = 1;
             _repository.ForumTopic.CreateTopicForForum(forumId, topicEntity);
             await _repository.SaveAsync();

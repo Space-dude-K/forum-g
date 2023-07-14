@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Entities.RequestFeatures.User;
 using Repository.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Entities.Models.Forum;
 
 namespace Repository.User
 {
@@ -22,14 +23,13 @@ namespace Repository.User
 
             return users;
         }
-        public async Task<List<AppUser>> GetUserAsync(string userId, UserParameters userParameters, bool trackChanges)
+        public async Task<AppUser> GetUserAsync(string userId, UserParameters userParameters, bool trackChanges)
         {
-            var users = await FindByCondition(u => u.Id.Equals(userId), trackChanges)
+            var user = await FindByCondition(u => u.Id.Equals(Int32.Parse(userId)), trackChanges)
                 .Search(userParameters.SearchTerm)
-                .Sort(userParameters.OrderBy)
-                .ToListAsync();
+                .Sort(userParameters.OrderBy).SingleOrDefaultAsync();
 
-            return users;
+            return user;
         }
     }
 }

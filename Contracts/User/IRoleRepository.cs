@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Interfaces.User
 {
     public interface IRoleRepository
     {
-        Task<List<IdentityRole>> GetAllRolesAsync(bool trackChanges);
+        Task<List<AppRole>> GetAllRolesAsync(bool trackChanges);
     }
 }

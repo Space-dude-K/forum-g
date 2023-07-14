@@ -81,7 +81,7 @@ namespace Entities.Configuration.Forum
                     ForumSubTitle = "Test forum subtitle 2",
                     CreatedAt = DateTime.Now,
                     ForumCategoryId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumBase()
                 {
@@ -90,7 +90,7 @@ namespace Entities.Configuration.Forum
                     ForumSubTitle = "Test forum subtitle 3",
                     CreatedAt = DateTime.Now,
                     ForumCategoryId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumBase()
                 {
@@ -99,7 +99,7 @@ namespace Entities.Configuration.Forum
                     ForumSubTitle = "Test forum subtitle 4",
                     CreatedAt = DateTime.Now,
                     ForumCategoryId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumBase()
                 {
@@ -108,7 +108,7 @@ namespace Entities.Configuration.Forum
                     ForumSubTitle = "Test forum subtitle 5",
                     CreatedAt = DateTime.Now,
                     ForumCategoryId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumBase()
                 {
@@ -117,7 +117,7 @@ namespace Entities.Configuration.Forum
                     ForumSubTitle = "Test forum subtitle 6",
                     CreatedAt = DateTime.Now,
                     ForumCategoryId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 }
             );
             #endregion

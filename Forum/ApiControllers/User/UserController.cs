@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities.DTO.UserDto;
+using Entities.Models;
 using Entities.RequestFeatures.User;
 using Forum.ActionsFilters;
 using Forum.Utility.UserLinks;
@@ -32,7 +33,7 @@ namespace Forum.ApiControllers.User
         }
         [HttpGet("roles", Name = "GetUserRoles")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        public async Task<List<IdentityRole>> GetUserRoles()
+        public async Task<List<AppRole>> GetUserRoles()
         {
             var rolesFromDb = await _repository.Roles.GetAllRolesAsync(trackChanges: false);
 
@@ -43,7 +44,7 @@ namespace Forum.ApiControllers.User
         public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParameters)
         {
             var usersFromDb = await _repository.Users.GetAllUsersAsync(userParameters, trackChanges: false);
-            var usersDto = _mapper.Map<IEnumerable<UserDto>>(usersFromDb);
+            var usersDto = _mapper.Map<IEnumerable<ForumUserDto>>(usersFromDb);
             var links = _userDataLinks.TryGenerateLinks(usersDto, userParameters.Fields, HttpContext);
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
@@ -53,8 +54,8 @@ namespace Forum.ApiControllers.User
         public async Task<IActionResult> GetUser(string userId, [FromQuery] UserParameters userParameters)
         {
             var usersFromDb = await _repository.Users.GetUserAsync(userId, userParameters, trackChanges: false);
-            var usersDto = _mapper.Map<IEnumerable<UserDto>>(usersFromDb);
-            var links = _userDataLinks.TryGenerateLinks(usersDto, userParameters.Fields, HttpContext);
+            var usersDto = _mapper.Map<ForumUserDto>(usersFromDb);
+            var links = _userDataLinks.TryGenerateLinks(new List<ForumUserDto>() { usersDto }, userParameters.Fields, HttpContext);
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }

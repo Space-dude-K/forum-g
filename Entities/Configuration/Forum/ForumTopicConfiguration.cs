@@ -97,7 +97,7 @@ namespace Entities.Configuration.Forum
                     Name = "Test forum topic 2",
                     CreatedAt = DateTime.Now,
                     ForumBaseId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumTopic()
                 {
@@ -105,7 +105,7 @@ namespace Entities.Configuration.Forum
                     Name = "Test forum topic 3",
                     CreatedAt = DateTime.Now,
                     ForumBaseId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumTopic()
                 {
@@ -113,7 +113,7 @@ namespace Entities.Configuration.Forum
                     Name = "Test forum topic 4",
                     CreatedAt = DateTime.Now,
                     ForumBaseId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumTopic()
                 {
@@ -121,7 +121,7 @@ namespace Entities.Configuration.Forum
                     Name = "Test forum topic 5",
                     CreatedAt = DateTime.Now,
                     ForumBaseId = 2,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 }
             );
             #endregion
