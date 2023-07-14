@@ -17,6 +17,7 @@ namespace Repository.Forum
 
         public void CreateCategory(ForumCategory category)
         {
+            // TODO
             category.ForumUserId = 1;
             
             /*if(category.ForumBases.Any())

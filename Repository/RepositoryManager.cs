@@ -16,6 +16,7 @@ namespace Repository
 
         private IRoleRepository _roleRepository;
         private UserDataRepository _userDataRepository;
+        private ForumUserDataRepository _forumUserDataRepository;
 
         private IForumCategoryRepository _forumCategoryRepository;
         private IForumBaseRepository _forumBaseRepository;
@@ -37,6 +38,16 @@ namespace Repository
                     _roleRepository = new RoleRepository(_forumContext);
 
                 return _roleRepository;
+            }
+        }
+        public IForumUserDataRepository ForumUsers
+        {
+            get
+            {
+                if (_forumUserDataRepository == null)
+                    _forumUserDataRepository = new ForumUserDataRepository(_forumContext);
+
+                return _forumUserDataRepository;
             }
         }
         public IUserDataRepository Users

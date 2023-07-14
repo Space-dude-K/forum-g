@@ -19,6 +19,8 @@ namespace Entities.Configuration
             SeedUsers(5)
             );
 
+            //builder.OwnsOne(o => o.ForumUser).HasData(new Models.Forum.ForumUser() { Id = 1 });
+
             //8e445865-a24d-4543-a6c6-9443d048cdb9
             
         }
@@ -30,6 +32,7 @@ namespace Entities.Configuration
             {
                 AppUser appUser = new()
                 {
+                    Id = i + 2,
                     FirstName = "Ivan" + i,
                     LastName = "Petrov" + i,
                     Cabinet = Random.Shared.Next(999).ToString(),
@@ -39,7 +42,8 @@ namespace Entities.Configuration
                     NormalizedUserName = ("G600-U" + i).ToUpper(),
                     Email = "G600-U" + i + "@mfrb.by",
                     NormalizedEmail = ("G600-U" + i + "@mfrb.by").ToUpper(),
-                    PhoneNumber = Random.Shared.Next().ToString() + Random.Shared.Next().ToString() + Random.Shared.Next().ToString()
+                    PhoneNumber = Random.Shared.Next().ToString() + Random.Shared.Next().ToString() + Random.Shared.Next().ToString(),
+                    ForumUser = new() { Id = i + 1 }
                 };
 
                 //users.Add(appUser);
@@ -54,7 +58,8 @@ namespace Entities.Configuration
         {
             AppUser appUser = new()
             {
-                Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
+                //Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
+                Id = 1,
                 FirstName = "System",
                 LastName = "Admin",
                 Cabinet = 0.ToString(),
@@ -66,6 +71,8 @@ namespace Entities.Configuration
                 NormalizedEmail = "ADMIN@ADMIN.BY",
                 PhoneNumber = 0.ToString(),
                 PasswordHash = "AQAAAAIAAYagAAAAEJmQy9UwxkODjbb/iQlo7ezznBC5omr0sEhFEoTgafpAxZZRFsyVCFG8NXKSc2SGJA=="
+
+                
                 //SecurityStamp = "FGXU4FIM2LMJZFDJD3YCUQEHQRZY4GSS",
                 //ConcurrencyStamp = "b2394a5e-7d96-43c8-b354-c741d3f0733f"
             };

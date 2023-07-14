@@ -10,14 +10,9 @@ using Repository;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Marvin.Cache.Headers;
 using AspNetCoreRateLimit;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Net.Http.Headers;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using Microsoft.CodeAnalysis;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -198,8 +193,8 @@ namespace Forum.Extensions
                 o.User.RequireUniqueEmail = true;
             });
 
-            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-            builder.AddRoles<IdentityRole>();
+            builder = new IdentityBuilder(builder.UserType, typeof(AppRole), builder.Services);
+            builder.AddRoles<AppRole>();
             builder.AddEntityFrameworkStores<ForumContext>()
             .AddDefaultTokenProviders();
             builder.AddSignInManager<SignInManager<AppUser>>();

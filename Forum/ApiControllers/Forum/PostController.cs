@@ -197,6 +197,7 @@ namespace Forum.Controllers.Forum
 
             var postEntity = _mapper.Map<ForumPost>(post);
             postEntity.CreatedAt = DateTime.Now;
+            // TOOD
             postEntity.ForumUserId = 1;
             _repository.ForumPost.CreatePostForTopic(topicId, postEntity);
             await _repository.SaveAsync();

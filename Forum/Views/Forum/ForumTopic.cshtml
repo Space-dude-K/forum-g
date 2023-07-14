@@ -35,10 +35,9 @@
                 </div>
 
                 <div class="forum-post-body row border">
-                    @*<div class="forum-post-body-account col text-left mt-3 ">
-                        @Html.ActionLink(@post.ForumUser.SimplifiedName, "ForumAccount", "Forum", new { name = @post.ForumUser.ApplicationUser.NormalizedUserName }, null)
-                        <!-- <p class="mt-2" href="@Url.Action("ForumAccount", "Forum", new { name = @post.ForumUser.ApplicationUser.NormalizedUserName })">@post.ForumUser.SimplifiedName</p> -->
-                        <img class="rounded rounded mx-auto d-block mt-3" src="@Url.Content(@post.ImgSrc)" alt="Empty avatar" />
+                    <div class="forum-post-body-account col text-left mt-3 ">
+                        @Html.ActionLink(@post.ForumUser.FirstAndLastNames, "ForumAccount", "Forum", new { name = @post.ForumUser.FirstAndLastNames }, null)
+                        <img class="rounded rounded mx-auto d-block mt-3" src="@Url.Content(@post.ForumUser.AvatarImgSrc)" alt="Empty avatar" />
                         <div class="forum-post-body-account-counter">
                             <p class="m-0 mt-3">Сообщений:</p>
                             <p>@post.ForumUser.TotalPostCounter</p>
@@ -48,15 +47,15 @@
                             <p>@post.ForumUser.CreatedAt</p>
                         </div>
 
-                        @if (post.IsUserHasAccess)
+                        @*@if (post.IsUserHasAccess)
                         {
                             <div class="d-flex justify-content-center mb-16 mr-1">
                                 <button type="button" class="btn btn-light mr-0 ml-1" onclick="EnableEditModeForumPost(@post.Id)" title="Редактировать сообщение"><img src="~/images/icons/bootstrap-icons-1.5.0/pencil.svg" width="12" height="12" /></button>
                                 <button type="button" class="btn btn-light mr-0 ml-1" onclick="SaveChangesForumPost(@post.Id)" title="Сохранить изменения"><img src="~/images/icons/bootstrap-icons-1.5.0/save.svg" width="12" height="12" /></button>
                                 <button type="button" class="btn btn-light mr-1 ml-1" onclick="DeleteForumPost(@post.Id)" title="Удалить сообщение"><img src="~/images/icons/bootstrap-icons-1.5.0/recycle.svg" width="12" height="12" /></button>
                             </div>
-                        }
-                    </div>*@
+                        }*@
+                    </div>
                     <div class="col">
                         <div class="forum-post-body-message-main row border-left" id="forum-post-body-message-main">
                             <!--<textarea class="forum-post-body-message-main-content1" id="forum-post-body-message-main-content-@post.Id" name="input"></textarea> -->

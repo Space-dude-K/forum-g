@@ -50,7 +50,7 @@ namespace Entities.Configuration.Forum
                 .HasOne(p => p.ForumUser)
                 .WithMany()
                 .HasConstraintName("FK_ForumCategory_ForumUser_Id")
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
             #endregion
 
             #region DbDataSeed
@@ -67,7 +67,7 @@ namespace Entities.Configuration.Forum
                     Id = 2,
                     Name = "Test category 2",
                     CreatedAt = DateTime.Now,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumCategory()
                 {
@@ -81,21 +81,21 @@ namespace Entities.Configuration.Forum
                     Id = 4,
                     Name = "Test category 4",
                     CreatedAt = DateTime.Now,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumCategory()
                 {
                     Id = 5,
                     Name = "Test category 5",
                     CreatedAt = DateTime.Now,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 },
                 new ForumCategory()
                 {
                     Id = 6,
                     Name = "Test category 6",
                     CreatedAt = DateTime.Now,
-                    ForumUserId = 2
+                    ForumUserId = 1
                 }
             );
             #endregion

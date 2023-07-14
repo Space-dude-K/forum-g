@@ -17,18 +17,20 @@ namespace Forum.Controllers
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<AppRole> _roleManager;
         private readonly IAuthenticationManager _authenticationManager;
+        private readonly IRepositoryManager _repository;
 
         public AuthenticationController(ILoggerManager logger, IMapper mapper, 
-            UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, 
-            IAuthenticationManager authenticationManager)
+            UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, 
+            IAuthenticationManager authenticationManager, IRepositoryManager repository)
         {
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
             _roleManager = roleManager;
             _authenticationManager = authenticationManager;
+            _repository = repository;
         }
         [HttpPost()]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
@@ -37,6 +39,7 @@ namespace Forum.Controllers
         {
             var user = _mapper.Map<AppUser>(userForRegistration);
             var result = await _userManager.CreateAsync(user, userForRegistration.Password);
+            _repository.ForumUsers.CreateForumUser(user.Id);
 
             if (!result.Succeeded)
             {

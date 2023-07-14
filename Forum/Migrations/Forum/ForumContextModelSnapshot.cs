@@ -22,10 +22,57 @@ namespace Forum.Migrations.Forum
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Entities.Models.AppRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "USER",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        });
+                });
+
             modelBuilder.Entity("Entities.Models.AppUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -109,11 +156,11 @@ namespace Forum.Migrations.Forum
                     b.HasData(
                         new
                         {
-                            Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
+                            Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = "0",
                             Cabinet = "0",
-                            ConcurrencyStamp = "c8976a73-04fa-4c76-9d37-b0c215463ec4",
+                            ConcurrencyStamp = "e26e672f-9f70-4320-b952-08c325b25099",
                             Email = "Admin@admin.by",
                             EmailConfirmed = false,
                             FirstName = "System",
@@ -125,7 +172,6 @@ namespace Forum.Migrations.Forum
                             PasswordHash = "AQAAAAIAAYagAAAAEJmQy9UwxkODjbb/iQlo7ezznBC5omr0sEhFEoTgafpAxZZRFsyVCFG8NXKSc2SGJA==",
                             PhoneNumber = "0",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0200b739-835c-4088-8243-adb8d69ebf1a",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -217,7 +263,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(984),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6234),
                             ForumCategoryId = 1,
                             ForumSubTitle = "Test forum subtitle 1",
                             ForumTitle = "Test forum title 1",
@@ -227,51 +273,51 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(988),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6237),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 2",
                             ForumTitle = "Test forum title 2",
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             TotalViews = 0
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(990),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6239),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 3",
                             ForumTitle = "Test forum title 3",
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             TotalViews = 0
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(991),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6241),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 4",
                             ForumTitle = "Test forum title 4",
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             TotalViews = 0
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(993),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6243),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 5",
                             ForumTitle = "Test forum title 5",
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             TotalViews = 0
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(994),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6244),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 6",
                             ForumTitle = "Test forum title 6",
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             TotalViews = 0
                         });
                 });
@@ -309,43 +355,43 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 470, DateTimeKind.Local).AddTicks(7644),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2497),
                             ForumUserId = 1,
                             Name = "Test category 1"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 470, DateTimeKind.Local).AddTicks(7646),
-                            ForumUserId = 2,
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2499),
+                            ForumUserId = 1,
                             Name = "Test category 2"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 470, DateTimeKind.Local).AddTicks(7648),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2500),
                             ForumUserId = 1,
                             Name = "Test category 3"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 470, DateTimeKind.Local).AddTicks(7649),
-                            ForumUserId = 2,
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2502),
+                            ForumUserId = 1,
                             Name = "Test category 4"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 470, DateTimeKind.Local).AddTicks(7650),
-                            ForumUserId = 2,
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2503),
+                            ForumUserId = 1,
                             Name = "Test category 5"
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 470, DateTimeKind.Local).AddTicks(7652),
-                            ForumUserId = 2,
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2504),
+                            ForumUserId = 1,
                             Name = "Test category 6"
                         });
                 });
@@ -396,7 +442,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(5905),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1691),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             Likes = 1,
@@ -406,7 +452,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(5911),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1696),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             Likes = 1,
@@ -416,7 +462,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(5912),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1698),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             Likes = 1,
@@ -426,7 +472,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(5914),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1699),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             Likes = 1,
@@ -436,34 +482,34 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(5915),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1700),
                             ForumTopicId = 2,
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             PostName = "Post name 2"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(5916),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1701),
                             ForumTopicId = 2,
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             PostName = "Post name 3"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(5946),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1703),
                             ForumTopicId = 2,
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             Likes = 34,
                             PostName = "Post name 4"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(5948),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1704),
                             ForumTopicId = 2,
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             Likes = 65,
                             PostName = "Post name 5"
                         });
@@ -510,7 +556,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(4076),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9649),
                             ForumBaseId = 1,
                             ForumUserId = 1,
                             Name = "Test forum topic 1",
@@ -519,7 +565,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(4082),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9655),
                             ForumBaseId = 1,
                             ForumUserId = 1,
                             Name = "Test forum topic 1a",
@@ -528,7 +574,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(4083),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9657),
                             ForumBaseId = 1,
                             ForumUserId = 1,
                             Name = "Test forum topic 1b",
@@ -537,7 +583,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(4084),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9658),
                             ForumBaseId = 1,
                             ForumUserId = 1,
                             Name = "Test forum topic 1c",
@@ -546,36 +592,36 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(4086),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9660),
                             ForumBaseId = 2,
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             Name = "Test forum topic 2",
                             TotalViews = 0
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(4088),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9661),
                             ForumBaseId = 2,
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             Name = "Test forum topic 3",
                             TotalViews = 0
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(4089),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9662),
                             ForumBaseId = 2,
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             Name = "Test forum topic 4",
                             TotalViews = 0
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 471, DateTimeKind.Local).AddTicks(4090),
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9663),
                             ForumBaseId = 2,
-                            ForumUserId = 2,
+                            ForumUserId = 1,
                             Name = "Test forum topic 5",
                             TotalViews = 0
                         });
@@ -584,34 +630,24 @@ namespace Forum.Migrations.Forum
             modelBuilder.Entity("Entities.Models.Forum.ForumUser", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("CreatedAt")
                         .IsRequired()
                         .HasColumnType("Date");
 
-                    b.Property<int>("Karma")
+                    b.Property<int?>("Karma")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(0);
 
-                    b.Property<string>("Lastname")
-                        .HasMaxLength(256)
-                        .IsUnicode(true)
-                        .HasColumnType("NVARCHAR");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .IsUnicode(true)
-                        .HasColumnType("NVARCHAR");
-
-                    b.Property<string>("Surname")
-                        .HasMaxLength(256)
-                        .IsUnicode(true)
-                        .HasColumnType("NVARCHAR");
+                    b.Property<int?>("TotalPostCounter")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("Date");
@@ -625,65 +661,12 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 470, DateTimeKind.Local).AddTicks(3737),
-                            Karma = 0,
-                            Lastname = "Сергеевич",
-                            Name = "Константин",
-                            Surname = "Феофанов"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2023, 6, 15, 11, 28, 3, 470, DateTimeKind.Local).AddTicks(3749),
-                            Karma = 0,
-                            Lastname = "Григорьевич",
-                            Name = "Александр",
-                            Surname = "Петров"
+                            AppUserId = 1,
+                            CreatedAt = new DateTime(2023, 6, 27, 18, 44, 13, 195, DateTimeKind.Local).AddTicks(8813)
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1c5e174e-3b0e-446f-86af-483d56fd7210",
-                            Name = "USER",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        });
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -697,9 +680,8 @@ namespace Forum.Migrations.Forum
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -708,7 +690,7 @@ namespace Forum.Migrations.Forum
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -722,9 +704,8 @@ namespace Forum.Migrations.Forum
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -733,7 +714,7 @@ namespace Forum.Migrations.Forum
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -744,9 +725,8 @@ namespace Forum.Migrations.Forum
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -755,13 +735,13 @@ namespace Forum.Migrations.Forum
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -772,20 +752,20 @@ namespace Forum.Migrations.Forum
                     b.HasData(
                         new
                         {
-                            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            RoleId = "1c5e174e-3b0e-446f-86af-483d56fd7210"
+                            UserId = 1,
+                            RoleId = 1
                         },
                         new
                         {
-                            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210"
+                            UserId = 1,
+                            RoleId = 2
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -848,7 +828,7 @@ namespace Forum.Migrations.Forum
                     b.HasOne("Entities.Models.Forum.ForumUser", "ForumUser")
                         .WithMany()
                         .HasForeignKey("ForumUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired()
                         .HasConstraintName("FK_ForumCategory_ForumUser_Id");
 
@@ -897,16 +877,28 @@ namespace Forum.Migrations.Forum
                     b.Navigation("ForumUser");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Entities.Models.Forum.ForumUser", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Entities.Models.AppUser", "AppUser")
+                        .WithOne("ForumUser")
+                        .HasForeignKey("Entities.Models.Forum.ForumUser", "Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("FK_ForumUser_AppUser_Id");
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+                {
+                    b.HasOne("Entities.Models.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.HasOne("Entities.Models.AppUser", null)
                         .WithMany()
@@ -915,7 +907,7 @@ namespace Forum.Migrations.Forum
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.HasOne("Entities.Models.AppUser", null)
                         .WithMany()
@@ -924,9 +916,9 @@ namespace Forum.Migrations.Forum
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Entities.Models.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -939,12 +931,18 @@ namespace Forum.Migrations.Forum
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.HasOne("Entities.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Entities.Models.AppUser", b =>
+                {
+                    b.Navigation("ForumUser")
                         .IsRequired();
                 });
 

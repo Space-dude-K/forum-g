@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Entities
 {
-    public class ForumContext : IdentityDbContext<AppUser>
+    public class ForumContext : IdentityDbContext<AppUser, AppRole, int>
     {
         public ForumContext(DbContextOptions<ForumContext> options) : base(options)
         {
@@ -21,9 +21,10 @@ namespace Entities
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new ForumUserConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
-            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            
 
             modelBuilder.ApplyConfiguration(new ForumCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ForumBaseConfiguration());
@@ -34,17 +35,28 @@ namespace Entities
             modelBuilder.ApplyConfiguration(new ForumAccountTypeConfiguration());
 
             // Seeding the relation between our Admin and roles to AspNetUserRoles table
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
-                new IdentityUserRole<string>
+            modelBuilder.Entity<IdentityUserRole<int>>().HasData(
+                new IdentityUserRole<int>
                 {
-                    RoleId = "1c5e174e-3b0e-446f-86af-483d56fd7210",
-                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+                    RoleId = 1,
+                    UserId = 1
                 },
-                new IdentityUserRole<string>
+                new IdentityUserRole<int>
                 {
-                    RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+                    RoleId = 2,
+                    UserId = 1
                 }
+            /*new IdentityUserRole<string>
+            {
+                RoleId = "1c5e174e-3b0e-446f-86af-483d56fd7210",
+                UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+            },
+            new IdentityUserRole<string>
+            {
+                RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210",
+                UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+            }*/
+
             );
         }
         public DbSet<ForumUser> ForumUsers { get; set; }

@@ -9,13 +9,13 @@ namespace Forum.Utility.UserLinks
     public class UserDataLinks
     {
         private readonly LinkGenerator _linkGenerator;
-        private readonly IDataShaper<UserDto> _dataShaper;
-        public UserDataLinks(LinkGenerator linkGenerator, IDataShaper<UserDto> dataShaper)
+        private readonly IDataShaper<ForumUserDto> _dataShaper;
+        public UserDataLinks(LinkGenerator linkGenerator, IDataShaper<ForumUserDto> dataShaper)
         {
             _linkGenerator = linkGenerator;
             _dataShaper = dataShaper;
         }
-        public LinkResponse TryGenerateLinks(IEnumerable<UserDto> usersDto, string fields, HttpContext httpContext)
+        public LinkResponse TryGenerateLinks(IEnumerable<ForumUserDto> usersDto, string fields, HttpContext httpContext)
         {
             var shapedUsers = ShapeData(usersDto, fields);
 
@@ -24,7 +24,7 @@ namespace Forum.Utility.UserLinks
 
             return ReturnShapedUsers(shapedUsers);
         }
-        private List<Entity> ShapeData(IEnumerable<UserDto> usersDto, string fields)
+        private List<Entity> ShapeData(IEnumerable<ForumUserDto> usersDto, string fields)
         {
             return _dataShaper.ShapeData(usersDto, fields)
              .Select(e => e.Entity)
@@ -40,7 +40,7 @@ namespace Forum.Utility.UserLinks
         {
             return new LinkResponse { ShapedEntities = shapedUsers };
         }
-        private LinkResponse ReturnLinkdedUsers(IEnumerable<UserDto> usersDto, string fields, HttpContext httpContext, List<Entity> shapedUsers)
+        private LinkResponse ReturnLinkdedUsers(IEnumerable<ForumUserDto> usersDto, string fields, HttpContext httpContext, List<Entity> shapedUsers)
         {
             var usersDtoList = usersDto.ToList();
 
@@ -55,7 +55,7 @@ namespace Forum.Utility.UserLinks
 
             return new LinkResponse { HasLinks = true, LinkedEntities = linkedUsers };
         }
-        private List<Link> CreateLinksForUser(HttpContext httpContext, Guid userId, string fields = "")
+        private List<Link> CreateLinksForUser(HttpContext httpContext, int userId, string fields = "")
         {
             var links = new List<Link>
             {

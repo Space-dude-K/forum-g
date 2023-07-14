@@ -1,27 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models.Forum
 {
     public class ForumUser
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "User name is a required field.")]
-        [MaxLength(60, ErrorMessage = "Maximum length for the Name is 60 characters.")]
-        public string Name { get; set; }
-        [Required(ErrorMessage = "User surname is a required field.")]
-        [MaxLength(60, ErrorMessage = "Maximum length for the user surname is 60 characters.")]
-        public string Surname { get; set; }
-        [Required(ErrorMessage = "User lastname is a required field.")]
-        [MaxLength(60, ErrorMessage = "Maximum length for the user lastname is 60 characters.")]
-        public string Lastname { get; set; }
-        public int Karma { get; set; }
+        public string SimplifiedName { get; set; }
+        public int? Karma { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public virtual ForumAccount ForumAccount { get; set; }
+        public int? TotalPostCounter { get; set; }
+        public string AvatarImgSrc { get; set; }
+        public virtual AppUser AppUser { get; set; }
+        public int AppUserId { get; set; }
     }
 }

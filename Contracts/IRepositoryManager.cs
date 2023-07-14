@@ -13,6 +13,8 @@ namespace Interfaces
         IForumTopicRepository ForumTopic { get; }
         IForumPostRepository ForumPost { get; }
         IPrinterDeviceRepository PrinterDevice { get; }
+        IForumUserDataRepository ForumUsers { get; }
+
         Task SaveAsync();
     }
 }

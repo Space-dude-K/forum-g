@@ -5,6 +5,6 @@ namespace Entities.ViewModels
 {
     public class RegisterTableViewModel
     {
-        public List<UserDto> AppUsers { get; set; }
+        public List<ForumUserDto> AppUsers { get; set; }
     }
 }

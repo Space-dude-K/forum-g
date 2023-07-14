@@ -19,7 +19,7 @@ namespace Forum
         public MappingProfile()
         {
             // User
-            CreateMap<AppUser, UserDto>();
+            CreateMap<AppUser, ForumUserDto>();
             CreateMap<UserForCreationDto, AppUser>();
 
             // Category

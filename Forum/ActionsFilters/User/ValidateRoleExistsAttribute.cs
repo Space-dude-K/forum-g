@@ -4,14 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Entities.DTO.UserDto;
 using Entities.DTO.UserDto.Create;
+using Entities.Models;
 
 namespace Forum.ActionsFilters.User
 {
     public class ValidateRoleExistsAttribute : IAsyncActionFilter
     {
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<AppRole> _roleManager;
         private readonly ILoggerManager _logger;
-        public ValidateRoleExistsAttribute(RoleManager<IdentityRole> roleManager, ILoggerManager logger)
+        public ValidateRoleExistsAttribute(RoleManager<AppRole> roleManager, ILoggerManager logger)
         {
             _roleManager = roleManager;
             _logger = logger;
