@@ -10,6 +10,7 @@ namespace Entities.Models
         public string Cabinet { get; set; }
         public string InternalPhone { get; set; }
         public string BirthDate { get; set; }
+        public DateTime? CreatedAt { get; set; }
         public virtual ForumUser ForumUser { get; set; }
     }
 }
