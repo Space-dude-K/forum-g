@@ -39,6 +39,7 @@ namespace Forum.Migrations.Forum
                     Cabinet = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InternalPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BirthDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -348,8 +349,8 @@ namespace Forum.Migrations.Forum
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "BirthDate", "Cabinet", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "InternalPhone", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, "0", "0", "e26e672f-9f70-4320-b952-08c325b25099", "Admin@admin.by", false, "System", "0", "Admin", false, null, "ADMIN@ADMIN.BY", "ADMIN", "AQAAAAIAAYagAAAAEJmQy9UwxkODjbb/iQlo7ezznBC5omr0sEhFEoTgafpAxZZRFsyVCFG8NXKSc2SGJA==", "0", false, null, false, "Admin" });
+                columns: new[] { "Id", "AccessFailedCount", "BirthDate", "Cabinet", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "InternalPhone", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { 1, 0, "0", "0", "11a4148e-4bfe-4929-a2a7-fd50c34ce76e", new DateTime(2023, 7, 18, 14, 58, 18, 970, DateTimeKind.Local).AddTicks(4714), "Admin@admin.by", false, "System", "0", "Admin", false, null, "ADMIN@ADMIN.BY", "ADMIN", "AQAAAAIAAYagAAAAEJmQy9UwxkODjbb/iQlo7ezznBC5omr0sEhFEoTgafpAxZZRFsyVCFG8NXKSc2SGJA==", "0", false, null, false, "Admin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -363,19 +364,19 @@ namespace Forum.Migrations.Forum
             migrationBuilder.InsertData(
                 table: "ForumUser",
                 columns: new[] { "Id", "AppUserId", "CreatedAt", "UpdatedAt" },
-                values: new object[] { 1, 1, new DateTime(2023, 6, 27, 18, 44, 13, 195, DateTimeKind.Local).AddTicks(8813), null });
+                values: new object[] { 1, 1, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(1742), null });
 
             migrationBuilder.InsertData(
                 table: "ForumCategory",
                 columns: new[] { "Id", "CreatedAt", "ForumUserId", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2497), 1, "Test category 1", null },
-                    { 2, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2499), 1, "Test category 2", null },
-                    { 3, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2500), 1, "Test category 3", null },
-                    { 4, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2502), 1, "Test category 4", null },
-                    { 5, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2503), 1, "Test category 5", null },
-                    { 6, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(2504), 1, "Test category 6", null }
+                    { 1, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(5273), 1, "Test category 1", null },
+                    { 2, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(5276), 1, "Test category 2", null },
+                    { 3, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(5277), 1, "Test category 3", null },
+                    { 4, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(5278), 1, "Test category 4", null },
+                    { 5, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(5280), 1, "Test category 5", null },
+                    { 6, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(5281), 1, "Test category 6", null }
                 });
 
             migrationBuilder.InsertData(
@@ -383,12 +384,12 @@ namespace Forum.Migrations.Forum
                 columns: new[] { "Id", "CreatedAt", "ForumCategoryId", "ForumSubTitle", "ForumTitle", "ForumUserId", "TotalViews", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6234), 1, "Test forum subtitle 1", "Test forum title 1", 1, 0, null },
-                    { 2, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6237), 2, "Test forum subtitle 2", "Test forum title 2", 1, 0, null },
-                    { 3, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6239), 2, "Test forum subtitle 3", "Test forum title 3", 1, 0, null },
-                    { 4, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6241), 2, "Test forum subtitle 4", "Test forum title 4", 1, 0, null },
-                    { 5, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6243), 2, "Test forum subtitle 5", "Test forum title 5", 1, 0, null },
-                    { 6, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(6244), 2, "Test forum subtitle 6", "Test forum title 6", 1, 0, null }
+                    { 1, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(8653), 1, "Test forum subtitle 1", "Test forum title 1", 1, 0, null },
+                    { 2, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(8657), 2, "Test forum subtitle 2", "Test forum title 2", 1, 0, null },
+                    { 3, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(8659), 2, "Test forum subtitle 3", "Test forum title 3", 1, 0, null },
+                    { 4, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(8660), 2, "Test forum subtitle 4", "Test forum title 4", 1, 0, null },
+                    { 5, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(8662), 2, "Test forum subtitle 5", "Test forum title 5", 1, 0, null },
+                    { 6, new DateTime(2023, 7, 18, 14, 58, 18, 971, DateTimeKind.Local).AddTicks(8663), 2, "Test forum subtitle 6", "Test forum title 6", 1, 0, null }
                 });
 
             migrationBuilder.InsertData(
@@ -396,14 +397,14 @@ namespace Forum.Migrations.Forum
                 columns: new[] { "Id", "CreatedAt", "ForumBaseId", "ForumUserId", "Name", "TotalViews", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9649), 1, 1, "Test forum topic 1", 0, null },
-                    { 2, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9660), 2, 1, "Test forum topic 2", 0, null },
-                    { 3, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9661), 2, 1, "Test forum topic 3", 0, null },
-                    { 4, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9662), 2, 1, "Test forum topic 4", 0, null },
-                    { 5, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9663), 2, 1, "Test forum topic 5", 0, null },
-                    { 6, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9655), 1, 1, "Test forum topic 1a", 0, null },
-                    { 7, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9657), 1, 1, "Test forum topic 1b", 0, null },
-                    { 8, new DateTime(2023, 6, 27, 18, 44, 13, 196, DateTimeKind.Local).AddTicks(9658), 1, 1, "Test forum topic 1c", 0, null }
+                    { 1, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(1801), 1, 1, "Test forum topic 1", 0, null },
+                    { 2, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(1809), 2, 1, "Test forum topic 2", 0, null },
+                    { 3, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(1837), 2, 1, "Test forum topic 3", 0, null },
+                    { 4, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(1839), 2, 1, "Test forum topic 4", 0, null },
+                    { 5, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(1840), 2, 1, "Test forum topic 5", 0, null },
+                    { 6, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(1806), 1, 1, "Test forum topic 1a", 0, null },
+                    { 7, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(1807), 1, 1, "Test forum topic 1b", 0, null },
+                    { 8, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(1808), 1, 1, "Test forum topic 1c", 0, null }
                 });
 
             migrationBuilder.InsertData(
@@ -411,14 +412,14 @@ namespace Forum.Migrations.Forum
                 columns: new[] { "Id", "CreatedAt", "ForumTopicId", "ForumUserId", "Likes", "PostName", "PostText", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1691), 1, 1, 1, "Post name 1", "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads", null },
-                    { 2, new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1700), 2, 1, null, "Post name 2", null, null },
-                    { 3, new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1701), 2, 1, null, "Post name 3", null, null },
-                    { 4, new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1703), 2, 1, 34, "Post name 4", null, null },
-                    { 5, new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1704), 2, 1, 65, "Post name 5", null, null },
-                    { 6, new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1696), 1, 1, 1, "Post name 1", "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads", null },
-                    { 7, new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1698), 1, 1, 1, "Post name 1", "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads", null },
-                    { 8, new DateTime(2023, 6, 27, 18, 44, 13, 197, DateTimeKind.Local).AddTicks(1699), 1, 1, 1, "Post name 1", "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads", null }
+                    { 1, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(3721), 1, 1, 1, "Post name 1", "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads", null },
+                    { 2, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(3730), 2, 1, null, "Post name 2", null, null },
+                    { 3, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(3731), 2, 1, null, "Post name 3", null, null },
+                    { 4, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(3733), 2, 1, 34, "Post name 4", null, null },
+                    { 5, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(3734), 2, 1, 65, "Post name 5", null, null },
+                    { 6, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(3726), 1, 1, 1, "Post name 1", "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads", null },
+                    { 7, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(3728), 1, 1, 1, "Post name 1", "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads", null },
+                    { 8, new DateTime(2023, 7, 18, 14, 58, 18, 972, DateTimeKind.Local).AddTicks(3729), 1, 1, 1, "Post name 1", "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads", null }
                 });
 
             migrationBuilder.CreateIndex(

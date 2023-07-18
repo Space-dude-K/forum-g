@@ -72,6 +72,12 @@ namespace Services
         public async Task<ForumTopicViewModel> GetTopicPostsForModel(int categoryId, int forumId, int topicId)
         {
             ForumTopicViewModel forumHomeViewModel = new();
+            var topicAuthor = await GetForumUser(topicId);
+            forumHomeViewModel.SubTopicAuthor = topicAuthor.FirstAndLastNames;
+
+            var topics = await GetForumTopics(categoryId, forumId);
+            forumHomeViewModel.SubTopicCreatedAt = topics.FirstOrDefault(t => t.Id == topicId).CreatedAt.Value.ToShortDateString();
+
             forumHomeViewModel.Posts = await GetTopicPosts(categoryId, forumId, topicId);
             var postUserTask = forumHomeViewModel.Posts.Select(async p => p.ForumUser = await GetForumUser(p.ForumUserId));
 

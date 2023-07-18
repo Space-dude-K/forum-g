@@ -33,6 +33,12 @@ namespace Forum.Controllers
             _signInManager = signInManager;
         }
         [HttpGet]
+        public IActionResult Account(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View("~/Views/Forum/Add/ForumAddTopic.cshtml");
+        }
+        [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
