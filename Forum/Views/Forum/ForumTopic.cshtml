@@ -9,8 +9,8 @@
             <div class="wrapper wrapper-content animated fadeInRight">
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
-                        <h2 class="text-center">Сообщений в подтеме:@* @Model.TotalPosts*@</h2>
-                        <div class="forum-sub-title text-center">Автор: @*@Model.SubTopicAuthor*@, подтема создана: @*@Model.SubTopicCreatedAt*@</div>
+                        <h2 class="text-center">Сообщений в подтеме: @Model.TotalPosts</h2>
+                        <div class="forum-sub-title text-center">Автор: @Model.SubTopicAuthor, подтема создана: @Model.SubTopicCreatedAt</div>
                     </div>
                 </div>
                 <div class="forum-base-create-panel">
@@ -44,7 +44,7 @@
                         </div>
                         <div class="forum-post-body-account-date">
                             <p class="m-0">Дата регистрации:</p>
-                            <p>@post.ForumUser.CreatedAt</p>
+                            <p>@post.CreatedAt</p>
                         </div>
 
                         @*@if (post.IsUserHasAccess)

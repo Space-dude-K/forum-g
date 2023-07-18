@@ -62,6 +62,7 @@ namespace Entities.Configuration
                 Id = 1,
                 FirstName = "System",
                 LastName = "Admin",
+                CreatedAt = DateTime.Now,
                 Cabinet = 0.ToString(),
                 InternalPhone = 0.ToString(),
                 BirthDate = 0.ToString(),

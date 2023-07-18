@@ -12,6 +12,7 @@
         public string AvatarImgSrc { get; set; }
         public int TotalPostCounter { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public string UserRegistrationDate { get { return CreatedAt.Value.ToShortDateString(); } }
         public ICollection<string> Roles { get; set; }
     }
 }

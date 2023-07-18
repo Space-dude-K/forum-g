@@ -10,6 +10,7 @@ namespace Entities.DTO.ForumDto
         public string PostText { get; set; }
         public int Likes { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public string PostDate { get { return CreatedAt.Value.ToShortDateString(); } }
         public DateTime? UpdatedAt { get; set; }
         public int ForumTopicId { get; set; }
         public int ForumUserId { get; set; }
