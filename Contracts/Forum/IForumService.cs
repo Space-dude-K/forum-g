@@ -13,7 +13,7 @@ namespace Interfaces.Forum
         Task<List<ForumViewCategoryDto>> GetForumCategories();
         Task<ForumHomeViewModel> GetForumCategoriesAndForumBasesForModel();
         Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId);
-        Task<ForumTopicViewModel> GetTopicPostsForModel(int categoryId, int forumId, int topicId);
+        Task<ForumTopicViewModel> GetTopicPostsForModel(int categoryId, int forumId, int topicId, int pageNumber, int pageSize);
         Task<bool> IncreaseViewCounterForForumBase(int categoryId, int forumId);
         Task<bool> IncreaseViewCounterForTopic(int categoryId, int forumId, int topicId);
     }

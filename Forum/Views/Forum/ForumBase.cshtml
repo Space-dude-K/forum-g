@@ -34,7 +34,7 @@
                                     <div class="forum-icon">
                                         <i class="fa fa-shield"></i>
                                     </div>
-                                    <a href=@Url.RouteUrl("TopicPosts", new { categoryId = @Context.Request.RouteValues["categoryId"], forumId = topic.ForumBaseId, topicId = topic.Id }) class="forum-item-title">@topic.Name</a>
+                                    <a href=@Url.RouteUrl("TopicPosts", new { categoryId = @Context.Request.RouteValues["categoryId"], forumId = topic.ForumBaseId, topicId = topic.Id, pageId = 1 }) class="forum-item-title">@topic.Name</a>
                                     <div class="forum-sub-title">Автор: @topic.Author, @topic.CreatedAt</div>
                                 </div>
                                 <div class="col-md-1">
