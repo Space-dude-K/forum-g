@@ -60,7 +60,7 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 1,
                     PostName = "Post name 1",
-                    PostText = "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads",
+                    PostText = "1111111111111111111111",
                     Likes = 1,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 1,
@@ -70,7 +70,7 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 6,
                     PostName = "Post name 1",
-                    PostText = "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads",
+                    PostText = "222222222222222222",
                     Likes = 1,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 1,
@@ -80,7 +80,7 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 7,
                     PostName = "Post name 1",
-                    PostText = "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads",
+                    PostText = "333333333333333",
                     Likes = 1,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 1,
@@ -90,7 +90,27 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 8,
                     PostName = "Post name 1",
-                    PostText = "ASdsad sdad asd asdas dsad asdsddddddddddddddddddddddddddd das das dasssssssssssssssssssssssssssssssssssssssssssss dsads",
+                    PostText = "44444444444444",
+                    Likes = 1,
+                    CreatedAt = DateTime.Now,
+                    ForumTopicId = 1,
+                    ForumUserId = 1
+                },
+                new ForumPost()
+                {
+                    Id = 9,
+                    PostName = "Post name 1",
+                    PostText = "555555555555555",
+                    Likes = 1,
+                    CreatedAt = DateTime.Now,
+                    ForumTopicId = 1,
+                    ForumUserId = 1
+                },
+                new ForumPost()
+                {
+                    Id = 10,
+                    PostName = "Post name 1",
+                    PostText = "666666666666666",
                     Likes = 1,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 1,

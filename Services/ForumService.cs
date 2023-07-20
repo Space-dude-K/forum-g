@@ -53,7 +53,10 @@ namespace Services
 
                     for (int k = 0; k < topics.Count; k++)
                     {
-                        var posts = await GetTopicPosts(forumHomeViewModel.Categories[i].Id, forumHomeViewModel.Categories[i].Forums[j].Id, topics[k].Id);
+                        var posts = await GetTopicPosts(
+                            forumHomeViewModel.Categories[i].Id, 
+                            forumHomeViewModel.Categories[i].Forums[j].Id, 
+                            topics[k].Id, 0, 0);
                         forumHomeViewModel.Categories[i].Forums[j].TotalPosts += posts.Count;
                     }
                 }
@@ -69,23 +72,24 @@ namespace Services
 
             return forumHomeViewModel;
         }
-        public async Task<ForumTopicViewModel> GetTopicPostsForModel(int categoryId, int forumId, int topicId)
+        public async Task<ForumTopicViewModel> GetTopicPostsForModel(int categoryId, int forumId, int topicId, int pageNumber, int pageSize)
         {
             ForumTopicViewModel forumHomeViewModel = new();
             var topicAuthor = await GetForumUser(topicId);
             forumHomeViewModel.SubTopicAuthor = topicAuthor.FirstAndLastNames;
 
             var topics = await GetForumTopics(categoryId, forumId);
+            forumHomeViewModel.TopicId = topicId;
             forumHomeViewModel.SubTopicCreatedAt = topics.FirstOrDefault(t => t.Id == topicId).CreatedAt.Value.ToShortDateString();
 
-            forumHomeViewModel.Posts = await GetTopicPosts(categoryId, forumId, topicId);
+            forumHomeViewModel.Posts = await GetTopicPosts(categoryId, forumId, topicId, pageNumber, pageSize);
+            forumHomeViewModel.TotalPosts = await GetTopicPostCount(categoryId, forumId, topicId);
             var postUserTask = forumHomeViewModel.Posts.Select(async p => p.ForumUser = await GetForumUser(p.ForumUserId));
 
             await Task.WhenAll(postUserTask);
 
             return forumHomeViewModel;
         }
-
         public async Task<List<ForumViewCategoryDto>> GetForumCategories()
         {
             List<ForumViewCategoryDto> forumViewCategoryDtos = new List<ForumViewCategoryDto>();
@@ -148,7 +152,7 @@ namespace Services
 
             return forumViewTopicDtos;
         }
-        public async Task<List<ForumViewPostDto>> GetTopicPosts(int categoryId, int forumId, int topicId)
+        public async Task<List<ForumViewPostDto>> GetTopicPosts(int categoryId, int forumId, int topicId, int pageNumber, int pageSize)
         {
             List<ForumViewPostDto> forumViewPostDtos = new();
 
@@ -158,7 +162,26 @@ namespace Services
             var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
-            string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString() + "/posts";
+
+            bool allPosts = pageNumber == 0 && pageSize == 0;
+            string uri = string.Empty;
+
+            if (false)
+            {
+                uri = "api/categories/" + categoryId.ToString() +
+                "/forums/" + forumId.ToString() +
+                "/topics/" + topicId.ToString();
+            }
+            else
+            {
+                uri = "api/categories/" + categoryId.ToString() +
+                "/forums/" + forumId.ToString() +
+                "/topics/" + topicId.ToString() +
+                "/posts?pageNumber=" + pageNumber.ToString() +
+                "&pageSize=" + pageSize.ToString();
+            }
+
+            
             var response = await _client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
@@ -169,6 +192,30 @@ namespace Services
             }
 
             return forumViewPostDtos;
+        }
+        public async Task<int> GetTopicPostCount(int categoryId, int forumId, int topicId)
+        {
+            int totalPosts = 0;
+
+            var tokenResponse =
+                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+
+            string uri = uri = "api/categories/" + categoryId.ToString() +
+                "/forums/" + forumId.ToString() +
+                "/topics/" + topicId.ToString() + "/posts/count";
+
+            var response = await _client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                totalPosts = JsonConvert.DeserializeObject<int>(rawData);
+            }
+
+            return totalPosts;
         }
         public async Task<ForumUserDto> GetForumUser(int userId)
         {

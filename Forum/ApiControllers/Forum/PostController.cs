@@ -47,6 +47,40 @@ namespace Forum.Controllers.Forum
             return Ok();
         }
         /// <summary>
+        /// Gets post count
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="forumId"></param>
+        /// <param name="topicId"></param>
+        /// <returns>The posts list</returns>
+        /// <response code="200">Returns items count</response>
+        /// <response code="401">If unauthorized</response>
+        /// <response code="404">If topic not found</response>
+        [HttpGet("count", Name = "GetPostCountForTopic")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        public async Task<IActionResult> GetPostCountForTopic(
+            int categoryId, int forumId, int topicId, [FromQuery] ForumPostParameters forumPostParameters)
+        {
+            if (!forumPostParameters.ValidLikeRange)
+                return BadRequest("Max likes cant be less than min");
+
+            var topic = await _repository.ForumTopic.GetTopicAsync(forumId, topicId, trackChanges: false);
+
+            if (topic == null)
+            {
+                _logger.LogInfo($"Topic with forum id: {forumId} and topic id: {topicId} doesn't exist in the database.");
+
+                return NotFound();
+            }
+
+            var postsFromDb = await _repository.ForumPost.GetAllPostsFromTopicAsync(topicId, forumPostParameters, trackChanges: false);
+
+            return Ok(postsFromDb.Count);
+        }
+        /// <summary>
         /// Gets the list of all posts
         /// </summary>
         /// <param name="categoryId"></param>

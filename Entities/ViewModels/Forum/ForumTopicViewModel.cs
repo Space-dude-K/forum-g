@@ -5,7 +5,9 @@ namespace Entities.ViewModels.Forum
 {
     public class ForumTopicViewModel
     {
-        public int TotalPosts { get { return Posts.Count; } }
+        public int TotalPosts { get; set; }
+        public int TotalPages { get { return (TotalPosts - 1) / 9; } }
+        public int TopicId { get; set; }
         public string SubTopicAuthor { get; set; }
         public string SubTopicCreatedAt { get; set; }
         public List<ForumViewPostDto> Posts { get; set; }
