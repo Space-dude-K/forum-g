@@ -87,25 +87,15 @@
         </div>
     </div>*@
 
-    <div class="row">
+    <div class="row mt-3 ">
         <div class="col-lg-12">
             <div class="wrapper wrapper-content animated fadeInRight">
                 <div class="ibox-content ">
                     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                        @*@for (int i = 1; i < @Model.TotalPages + 1; i++)
+                        @for (int i = 1; i < @Model.TotalPages + 1; i++)
                         {
-                            <button type="button" class="btn btn-light" id="forum-post-page-number-button-@i" onclick="location.href='@Url.RouteUrl("TopicPosts", new { categoryId = @Context.Request.RouteValues["categoryId"], forumId = @Context.Request.RouteValues["forumId"], topicId = @Context.Request.RouteValues["topicId"], pageId = i })'">@i</button>
-                        }*@
-                        <div class="btn-group" role="group">
-                            <button id="btnGroupDrop1" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                @for (int i = 1; i < @Model.TotalPages + 1; i++)
-                                {
-                                    <a class="dropdown-item" href="@Url.RouteUrl("TopicPosts", new { categoryId = @Context.Request.RouteValues["categoryId"], forumId = @Context.Request.RouteValues["forumId"], topicId = @Context.Request.RouteValues["topicId"], pageId = i })" id="forum-post-page-number-dropdown-@i">@i</a>
-                                }
-                            </div>
-                        </div>
+                            <button type="button" class="btn btn-light" onclick="location.href='@Url.RouteUrl("TopicPosts", new { categoryId = @Context.Request.RouteValues["categoryId"], forumId = @Context.Request.RouteValues["forumId"], topicId = @Context.Request.RouteValues["topicId"], pageId = i })'">@i</button>
+                        }
                     </div>
                 </div>
             </div>
