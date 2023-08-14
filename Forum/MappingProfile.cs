@@ -65,6 +65,10 @@ namespace Forum
             CreateMap<ForumTopicCreationView, ForumTopicForCreationDto>()
                 .ForMember(dest => dest.Name, m => m.MapFrom(src => src.TopicName));
 
+            CreateMap<ForumTopicViewModel, ForumPostForCreationDto>()
+                .ForMember(dest => dest.PostText, m => m.MapFrom(src => src.PostText));
+
+
             /*CreateMap<ForumHomeViewModel, ForumBaseCreationView>()
                 .ForMember(dest => dest.Categories, m => m.MapFrom(src => src.Categories.Select(c => c.Name)));
             CreateMap<ForumBaseCreationView, ForumBaseForCreationDto>()

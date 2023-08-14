@@ -2,7 +2,100 @@
 @{
     ViewData["Title"] = "ForumTopic";
 }
+<script src="~/lib/tinymce/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: "#text-area-tiny-mce-forum-post-add",
+        language: 'ru',
+        branding: false,
+        height: 250,
+        menubar: false,
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount'
+        ],
+        toolbar: 'undo redo | formatselect | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | help',
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+    });
+</script>
+<script>
+    var postViewConfig =
+    {
+        selector: ".forum-post-body-message-main-content",
+        language: 'ru',
+        branding: false,
+        menubar: false,
+        statusbar: false,
+        toolbar: false,
+        resize: false,
+        width: "100%",
+        height: "100%",
+        min_height: 320,
+        autoresize: true,
+        readonly: 1,
+        plugins:
+            [
+                'advlist autolink autoresize lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code'
+            ],
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px } tox-tinymce { border: 0}'
+    };
 
+    tinymce.init(postViewConfig);
+</script>
+<script>
+    function CreatePost(categoryId, forumId, topicId) {
+        var postText = (((tinyMCE.get("text-area-tiny-mce-forum-post-add").getContent())
+            .replace(/(&nbsp;)*/g, ""))
+            .replace(/(<p>)*/g, ""))
+            .replace(/<(\/)?p[^>]*>/g, "");
+
+        if (jQuery.isEmptyObject(postText)) {
+            console.log('Сообщение не может быть пустым.');
+            alert('Сообщение не может быть пустым.');
+        }
+        else {
+            $.ajax(
+                {
+                    type: "POST",
+                    data: { categoryId: categoryId, forumId: forumId, topicId: topicId, postText: postText },
+                    url: "@Url.Action("CreateForumPost", "ForumPostCreation")"
+                })
+                .done(function (r) {
+                    window.location.href = r.redirectToUrl;
+                })
+                .fail(function (jqXHR, exception) {
+                    var msg = '';
+                    if (jqXHR.status === 0) {
+                        msg = 'Not connect.\n Verify Network.';
+                    } else if (jqXHR.status == 404) {
+                        msg = 'Requested page not found. [404]';
+                    } else if (jqXHR.status == 500) {
+                        msg = 'Internal Server Error [500].';
+                    } else if (exception === 'parsererror') {
+                        msg = 'Requested JSON parse failed.';
+                    } else if (exception === 'timeout') {
+                        msg = 'Time out error.';
+                    } else if (exception === 'abort') {
+                        msg = 'Ajax request aborted.';
+                    } else {
+                        msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                    }
+
+                    console.log("Ошибка при создании сообщения: " + msg);
+                    //$('#post').html(msg);
+                })
+                .always(function () {
+                    console.log("CreatePost - complete.");
+                });;
+        }
+    }
+</script>
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
@@ -80,12 +173,28 @@
         <div class="col-lg-12">
             <div class="wrapper wrapper-content animated fadeInRight">
                 <div class="ibox-content m-b-sm justify-content-md-center text-center" id="text-area-tiny-mce-forum-post-container">
-                    <textarea id="text-area-tiny-mce-forum-post-add" name="input"> </textarea>
-                    <button id="post-add-button" type="button" class="btn btn-light mt-2" onclick="CreatePost(@Model.SubTopicId, @Model.TotalPages, @Model.TotalPosts)">Отправить сообщение</button>
+                    <form asp-controller="ForumPostCreationController" asp-action="ForumPostCreate" method="post">
+                        <div class="form-group">
+                            <textarea asp-for="@Model.PostText" id="text-area-tiny-mce-forum-post-add" name="input"> </textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" value="Submit" class="btn-primary mt-2">Создать категорию</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>*@
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="ibox-content m-b-sm justify-content-md-center text-center" id="text-area-tiny-mce-forum-post-container">
+                    <textarea id="text-area-tiny-mce-forum-post-add" name="input"> </textarea>
+                    <button id="post-add-button" type="button" class="btn btn-light mt-2" onclick="CreatePost(@Context.Request.RouteValues["categoryId"], @Context.Request.RouteValues["forumId"], @Context.Request.RouteValues["topicId"])">Отправить сообщение</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row mt-3 ">
         <div class="col-lg-12">

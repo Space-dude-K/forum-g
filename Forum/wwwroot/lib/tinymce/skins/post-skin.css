@@ -1,0 +1,7 @@
+.tox:not([dir=rtl]) 
+{
+    direction: ltr;
+    text-align: left;
+    outline: 0 !important;
+    border: none;
+}
