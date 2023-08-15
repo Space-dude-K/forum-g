@@ -9,6 +9,7 @@ namespace Interfaces.Forum
     {
         Task<bool> CreateForumBase(int categoryId, ForumBaseForCreationDto forum);
         Task<bool> CreateForumCategory(ForumCategoryForCreationDto category);
+        Task<bool> CreateForumPost(int categoryId, int forumId, int topicId, ForumPostForCreationDto post);
         Task<bool> CreateForumTopic(int categoryId, int forumId, ForumTopicForCreationDto topic);
         Task<List<ForumViewCategoryDto>> GetForumCategories();
         Task<ForumHomeViewModel> GetForumCategoriesAndForumBasesForModel();
