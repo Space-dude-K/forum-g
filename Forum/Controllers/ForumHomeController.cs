@@ -45,8 +45,9 @@ namespace Forum.Controllers
             return View("~/Views/Forum/ForumBase.cshtml", model);
         }
         [Route("categories/{categoryId}/forums/{forumId}/topics/{topicId}/{pageId}", Name = "TopicPosts")]
-        public async Task<IActionResult> TopicPosts(int categoryId, int forumId, int topicId, int pageId = 1)
+        public async Task<IActionResult> TopicPosts(int categoryId, int forumId, int topicId, int pageId)
         {
+            pageId = pageId == 0 ? 1 : pageId;
             int maxiumPostsPerPage = 4;
             var model = await _forumService.GetTopicPostsForModel(categoryId, forumId, topicId, pageId, maxiumPostsPerPage);
             int currentDataSliceIndex = maxiumPostsPerPage * (pageId - 1);

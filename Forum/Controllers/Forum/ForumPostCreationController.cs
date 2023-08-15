@@ -28,17 +28,16 @@ namespace Forum.Controllers.Forum
             return View("~/Views/Forum/Add/ForumAddTopic.cshtml");
         }
         [HttpPost]
-        [Route("categories/{categoryId}/forums/{forumId}/topics/{topicId}/posts", Name = "ForumPostCreate")]
+        [Route("ForumPostCreation/CreateForumPost")]
         public async Task<IActionResult> CreateForumPost(int categoryId, int forumId, int topicId, ForumTopicViewModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            /*if (!ModelState.IsValid)
+                return BadRequest(ModelState);*/
 
-            var topicToAdd = _mapper.Map<ForumPostForCreationDto>(model);
-            //var res = await _forumService.CreateForumTopic(categoryId, forumId, topicToAdd);
+            var postToAdd = _mapper.Map<ForumPostForCreationDto>(model);
+            var res = await _forumService.CreateForumPost(categoryId, forumId, topicId, postToAdd);
 
-            return RedirectToAction("ForumTopics", "ForumHome",
-                new { categoryId = categoryId, forumId = forumId });
+            return RedirectToAction("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages });
         }
     }
 }
