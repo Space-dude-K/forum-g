@@ -14,10 +14,10 @@
             };
             AddRange(items);
         }
-        public static PagedList<T> ToPagedList(IEnumerable<T> source, int pageNumber, int pageSize)
+        public static PagedList<T> ToPagedList(IEnumerable<T> source, int pageNumber, int pageSize, bool getAll = false)
         {
             var count = source.Count();
-            var items = source
+            var items = getAll ? source.ToList() : source
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize).ToList();
 
