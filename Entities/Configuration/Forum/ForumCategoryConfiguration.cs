@@ -22,6 +22,18 @@ namespace Entities.Configuration.Forum
                 .IsRequired(false)
                 .IsUnicode(true);
             builder
+                .Property(p => p.TotalForums)
+                .HasColumnType("INTEGER")
+                .IsRequired(true);
+            builder
+                .Property(p => p.TotalTopics)
+                .HasColumnType("INTEGER")
+                .IsRequired(true);
+            builder
+                .Property(p => p.TotalPosts)
+                .HasColumnType("INTEGER")
+                .IsRequired(true);
+            builder
                 .Property(p => p.CreatedAt)
                 .HasColumnType("Date")
                 .IsRequired(false);
@@ -33,9 +45,6 @@ namespace Entities.Configuration.Forum
                 .Property(p => p.ForumUserId)
                 .HasColumnType("INTEGER")
                 .IsRequired(true);
-
-            builder
-                .Ignore(c => c.TotalPosts);
 
             builder
                 .HasKey(p => p.Id)

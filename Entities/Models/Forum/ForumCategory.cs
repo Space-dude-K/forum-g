@@ -15,15 +15,11 @@ namespace Entities.Models.Forum
         [Required(ErrorMessage = "Category title is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the category title is 60 characters.")]
         public string Name { get; set; }
+        public int TotalPosts { get; set; }
+        public int TotalTopics { get; set; }
+        public int TotalForums { get; set; }
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
-        public int TotalPosts
-        {
-            get
-            {
-                return ForumBases.Sum(f => f.ForumTopics.Sum(t => t.ForumPosts.Count));
-            }
-        }
         public virtual ForumUser ForumUser { get; set; }
         public int ForumUserId { get; set; }
         public virtual ICollection<ForumBase> ForumBases { get; set; }

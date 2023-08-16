@@ -13,16 +13,6 @@ namespace Repository.Extensions
         {
             return posts.Where(e => (e.Likes >= minLikes && e.Likes <= maxLikes));
         }
-
-        public static IQueryable<ForumPost> Search(this IQueryable<ForumPost> posts, string searchTerm)
-        {
-            if (string.IsNullOrWhiteSpace(searchTerm))
-                return posts;
-
-            var lowerCaseTerm = searchTerm.Trim().ToLower();
-
-            return posts.Where(e => e.PostName.ToLower().Contains(lowerCaseTerm));
-        }
         public static IQueryable<ForumTopic> Search(this IQueryable<ForumTopic> topics, string searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
@@ -98,12 +88,12 @@ namespace Repository.Extensions
         public static IQueryable<ForumPost> Sort(this IQueryable<ForumPost> posts, string orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
-                return posts.OrderBy(e => e.PostName);
+                return posts.OrderBy(e => e.Id);
 
             var orderQuery = OrderQueryBuilder.CreateOrderQuery<ForumPost>(orderByQueryString);
 
             if (string.IsNullOrWhiteSpace(orderQuery))
-                return posts.OrderBy(e => e.PostName);
+                return posts.OrderBy(e => e.Id);
 
             return posts.OrderBy(orderQuery);
         }

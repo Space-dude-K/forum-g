@@ -37,8 +37,8 @@ namespace Forum.Controllers.Forum
 
             var postToAdd = _mapper.Map<ForumPostForCreationDto>(model);
             var res = await _forumService.CreateForumPost(categoryId, forumId, topicId, postToAdd);
-
-            model.TotalPosts = await _forumService.GetTopicPostCount(categoryId, forumId, topicId);
+            var resCounter = await _forumService.IncreasePostCounter(categoryId);
+            model.TotalPosts = await _forumService.GetTopicPostCount(categoryId);
             //model = await _forumService.GetTopicPostsForModel(categoryId, forumId, topicId, totalPages, 4);
 
             return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });

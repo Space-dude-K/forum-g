@@ -8,5 +8,6 @@ namespace Entities.DTO.ForumDto.Manipulation
         [Required(ErrorMessage = "Category title is a required field.")]
         [MaxLength(30, ErrorMessage = "Maximum length for the category name is 30 characters.")]
         public string Name { get; set; }
+        public int TotalPosts { get; set; }
     }
 }
