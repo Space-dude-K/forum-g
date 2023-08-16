@@ -55,8 +55,6 @@
             .replace(/(<p>)*/g, ""))
             .replace(/<(\/)?p[^>]*>/g, "");
 
-        
-
         if (jQuery.isEmptyObject(postText)) {
             console.log('Сообщение не может быть пустым.');
             alert('Сообщение не может быть пустым.');
@@ -69,9 +67,7 @@
                     url: "@Url.Action("CreateForumPost", "ForumPostCreation")"
                 })
                 .done(function (r) {
-                    //alert(r.redirectToUrl);
                     window.location.href = r.redirectToUrl + "?c=" + (new Date()).valueOf();
-                    //window.location.reload(true);
                 })
                 .fail(function (jqXHR, exception) {
                     var msg = '';

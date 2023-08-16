@@ -3,6 +3,16 @@
 @{
     ViewData["Title"] = "ForumHome";
 }
+<script>
+    var beforeload = new Date().getTime();
+    window.onload = gettimeload;
+    function gettimeload() {
+        var aftrload = new Date().getTime();
+        // Time calculating in seconds
+        time = (aftrload - beforeload) / 1000
+        $("#lbl_loadingTime").text("Время загрузки - " + time);
+    }
+</script>
 <link rel="stylesheet" href="~/css/forum-style.css" />
 <div class="container">
     <div class="row">
@@ -15,7 +25,7 @@
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
                         <h2>Добро пожаловать на форум ГУ</h2>
-                        <span>123</span>
+                        <label id="lbl_loadingTime">Test</label>
                     </div>
                 </div>
 

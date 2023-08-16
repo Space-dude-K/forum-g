@@ -81,9 +81,16 @@ namespace Services
             var topics = await GetForumTopics(categoryId, forumId);
             forumHomeViewModel.TopicId = topicId;
             forumHomeViewModel.SubTopicCreatedAt = topics.FirstOrDefault(t => t.Id == topicId).CreatedAt.Value.ToShortDateString();
+            forumHomeViewModel.TotalPosts = await GetTopicPostCount(categoryId, forumId, topicId);
+
+            // Default paging to latest topic message.
+            if(pageNumber != 1 && forumHomeViewModel.TotalPages > 1)
+            {
+                pageNumber = forumHomeViewModel.TotalPages;
+            }
 
             forumHomeViewModel.Posts = await GetTopicPosts(categoryId, forumId, topicId, pageNumber, pageSize);
-            forumHomeViewModel.TotalPosts = await GetTopicPostCount(categoryId, forumId, topicId);
+            
             var postUserTask = forumHomeViewModel.Posts.Select(async p => p.ForumUser = await GetForumUser(p.ForumUserId));
 
             await Task.WhenAll(postUserTask);
