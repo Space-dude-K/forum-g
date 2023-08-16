@@ -76,7 +76,7 @@ namespace Forum.Controllers.Forum
                 return NotFound();
             }
 
-            var postsFromDb = await _repository.ForumPost.GetAllPostsFromTopicAsync(topicId, forumPostParameters, trackChanges: false);
+            var postsFromDb = await _repository.ForumPost.GetAllPostsFromTopicAsync(topicId, forumPostParameters, true, trackChanges: false);
 
             return Ok(postsFromDb.Count);
         }
@@ -111,7 +111,7 @@ namespace Forum.Controllers.Forum
                 return NotFound();
             }
 
-            var postsFromDb = await _repository.ForumPost.GetAllPostsFromTopicAsync(topicId, forumPostParameters, trackChanges: false);
+            var postsFromDb = await _repository.ForumPost.GetAllPostsFromTopicAsync(topicId, forumPostParameters, false, trackChanges: false);
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(postsFromDb.MetaData));
 

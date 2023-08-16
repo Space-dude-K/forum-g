@@ -3,6 +3,7 @@ using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Forum.Controllers.Forum
 {
@@ -29,7 +30,7 @@ namespace Forum.Controllers.Forum
         }
         [HttpPost]
         [Route("ForumPostCreation/CreateForumPost")]
-        public async Task<IActionResult> CreateForumPost(int categoryId, int forumId, int topicId, ForumTopicViewModel model)
+        public async Task<IActionResult> CreateForumPost(int categoryId, int forumId, int topicId, int totalPages, ForumTopicViewModel model)
         {
             /*if (!ModelState.IsValid)
                 return BadRequest(ModelState);*/
@@ -37,7 +38,13 @@ namespace Forum.Controllers.Forum
             var postToAdd = _mapper.Map<ForumPostForCreationDto>(model);
             var res = await _forumService.CreateForumPost(categoryId, forumId, topicId, postToAdd);
 
-            return RedirectToAction("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages });
+            model.TotalPosts = await _forumService.GetTopicPostCount(categoryId, forumId, topicId);
+            //model = await _forumService.GetTopicPostsForModel(categoryId, forumId, topicId, totalPages, 4);
+
+            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
+            //return Ok(res);
+            //return View("~/Views/Forum/ForumTopic.cshtml", model);
+            //return RedirectToAction("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages });
         }
     }
 }

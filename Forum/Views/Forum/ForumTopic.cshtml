@@ -49,11 +49,13 @@
     tinymce.init(postViewConfig);
 </script>
 <script>
-    function CreatePost(categoryId, forumId, topicId) {
+    function CreatePost(categoryId, forumId, topicId, totalPages) {
         var postText = (((tinyMCE.get("text-area-tiny-mce-forum-post-add").getContent())
             .replace(/(&nbsp;)*/g, ""))
             .replace(/(<p>)*/g, ""))
             .replace(/<(\/)?p[^>]*>/g, "");
+
+        
 
         if (jQuery.isEmptyObject(postText)) {
             console.log('Сообщение не может быть пустым.');
@@ -63,11 +65,13 @@
             $.ajax(
                 {
                     type: "POST",
-                    data: { categoryId: categoryId, forumId: forumId, topicId: topicId, postText: postText },
+                    data: { categoryId: categoryId, forumId: forumId, topicId: topicId, totalPages: totalPages, postText: postText },
                     url: "@Url.Action("CreateForumPost", "ForumPostCreation")"
                 })
                 .done(function (r) {
-                    window.location.href = r.redirectToUrl;
+                    //alert(r.redirectToUrl);
+                    window.location.href = r.redirectToUrl + "?c=" + (new Date()).valueOf();
+                    //window.location.reload(true);
                 })
                 .fail(function (jqXHR, exception) {
                     var msg = '';
@@ -190,7 +194,7 @@
             <div class="wrapper wrapper-content animated fadeInRight">
                 <div class="ibox-content m-b-sm justify-content-md-center text-center" id="text-area-tiny-mce-forum-post-container">
                     <textarea id="text-area-tiny-mce-forum-post-add" name="input"> </textarea>
-                    <button id="post-add-button" type="button" class="btn btn-light mt-2" onclick="CreatePost(@Context.Request.RouteValues["categoryId"], @Context.Request.RouteValues["forumId"], @Context.Request.RouteValues["topicId"])">Отправить сообщение</button>
+                    <button id="post-add-button" type="button" class="btn btn-light mt-2" onclick="return CreatePost(@Context.Request.RouteValues["categoryId"], @Context.Request.RouteValues["forumId"], @Context.Request.RouteValues["topicId"], @Model.TotalPages)">Отправить сообщение</button>
                 </div>
             </div>
         </div>

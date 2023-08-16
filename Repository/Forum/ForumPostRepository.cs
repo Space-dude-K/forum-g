@@ -28,7 +28,7 @@ namespace Repository.Forum
         }
 
         public async Task<PagedList<ForumPost>> GetAllPostsFromTopicAsync(
-            int? forumTopicId, ForumPostParameters forumPostParameters, bool trackChanges)
+            int? forumTopicId, ForumPostParameters forumPostParameters, bool getAll, bool trackChanges)
         {
             var posts = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId), trackChanges)
                 .FilterPosts(forumPostParameters.MinLikes, forumPostParameters.MaxLikes)
@@ -36,7 +36,7 @@ namespace Repository.Forum
                 .Sort(forumPostParameters.OrderBy)
                 .ToListAsync();
 
-            return PagedList<ForumPost>.ToPagedList(posts, forumPostParameters.PageNumber, forumPostParameters.PageSize);
+            return PagedList<ForumPost>.ToPagedList(posts, forumPostParameters.PageNumber, forumPostParameters.PageSize, getAll);
         }
         public async Task<PagedList<ForumPost>> GetAllPostsFromCategoryAsyncForBiggerData(
             int? forumTopicId, ForumPostParameters forumPostParameters, bool trackChanges)

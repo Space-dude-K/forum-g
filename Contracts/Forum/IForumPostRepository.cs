@@ -7,7 +7,7 @@ namespace Interfaces.Forum
     public interface IForumPostRepository
     {
         Task<PagedList<ForumPost>> GetAllPostsFromTopicAsync(
-            int? forumTopicId, ForumPostParameters forumPostParameters, bool trackChanges);
+            int? forumTopicId, ForumPostParameters forumPostParameters, bool getAll, bool trackChanges);
         Task<PagedList<ForumPost>> GetAllPostsFromCategoryAsyncForBiggerData(
             int? forumTopicId, ForumPostParameters forumPostParameters, bool trackChanges);
         void CreatePostForTopic(int forumTopicId, ForumPost post);
