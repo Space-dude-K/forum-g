@@ -21,12 +21,6 @@ namespace Entities.Configuration.Forum
                 .HasColumnType("INTEGER")
                 .IsRequired(true);
             builder
-                .Property(p => p.PostName)
-                .HasColumnType("NVARCHAR")
-                .HasMaxLength(256)
-                .IsRequired(false)
-                .IsUnicode(true);
-            builder
                 .Property(p => p.PostText)
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(256)
@@ -59,7 +53,6 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 1,
-                    PostName = "Post name 1",
                     PostText = "1111111111111111111111",
                     Likes = 1,
                     CreatedAt = DateTime.Now,
@@ -69,7 +62,6 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 6,
-                    PostName = "Post name 1",
                     PostText = "222222222222222222",
                     Likes = 1,
                     CreatedAt = DateTime.Now,
@@ -79,7 +71,6 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 7,
-                    PostName = "Post name 1",
                     PostText = "333333333333333",
                     Likes = 1,
                     CreatedAt = DateTime.Now,
@@ -89,7 +80,6 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 8,
-                    PostName = "Post name 1",
                     PostText = "44444444444444",
                     Likes = 1,
                     CreatedAt = DateTime.Now,
@@ -99,7 +89,6 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 9,
-                    PostName = "Post name 1",
                     PostText = "555555555555555",
                     Likes = 1,
                     CreatedAt = DateTime.Now,
@@ -109,7 +98,7 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 10,
-                    PostName = "Post name 1",
+                    
                     PostText = "666666666666666",
                     Likes = 1,
                     CreatedAt = DateTime.Now,
@@ -119,7 +108,6 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 2,
-                    PostName = "Post name 2",
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
                     ForumUserId = 1
@@ -127,7 +115,6 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 3,
-                    PostName = "Post name 3",
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
                     ForumUserId = 1
@@ -135,7 +122,6 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 4,
-                    PostName = "Post name 4",
                     Likes = 34,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
@@ -144,7 +130,6 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 5,
-                    PostName = "Post name 5",
                     Likes = 65,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,

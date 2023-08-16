@@ -4,14 +4,30 @@
     ViewData["Title"] = "ForumHome";
 }
 <script>
-    var beforeload = new Date().getTime();
-    window.onload = gettimeload;
-    function gettimeload() {
-        var aftrload = new Date().getTime();
-        // Time calculating in seconds
-        time = (aftrload - beforeload) / 1000
-        $("#lbl_loadingTime").text("Время загрузки - " + time);
+    function msToTime(s) 
+    {
+        // Pad to 2 or 3 digits, default is 2
+        function pad(n, z) {
+            z = z || 2;
+            return ('00' + n).slice(-z);
+        }
+
+        var ms = s % 1000;
+        s = (s - ms) / 1000;
+        var secs = s % 60;
+        s = (s - secs) / 60;
+        var mins = s % 60;
+        var hrs = (s - mins) / 60;
+
+        return pad(hrs) + ':' + pad(mins) + ':' + pad(secs) + '.' + pad(ms, 3);
     }
+    window.addEventListener('load', (event) => 
+    {
+        fTime = msToTime((Date.now() - window.performance.timing.navigationStart));
+        console.log('All assets are loaded')
+        console.log(fTime);
+        $("#lbl_loadingTime").text("Время загрузки - " + fTime);
+    });
 </script>
 <link rel="stylesheet" href="~/css/forum-style.css" />
 <div class="container">
@@ -66,7 +82,7 @@
                                     </div>
                                     <div class="col-md-1">
                                         <span>
-                                            @forum.TopicsCount
+                                            @cat.TotalTopics
                                         </span>
                                         <div>
                                             <small>Topics</small>
@@ -74,7 +90,7 @@
                                     </div>
                                     <div class="col-md-1">
                                         <span>
-                                            @forum.TotalPosts
+                                            @cat.TotalPosts
                                         </span>
                                         <div>
                                             <small>Posts</small>

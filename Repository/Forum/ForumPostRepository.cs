@@ -32,7 +32,6 @@ namespace Repository.Forum
         {
             var posts = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId), trackChanges)
                 .FilterPosts(forumPostParameters.MinLikes, forumPostParameters.MaxLikes)
-                .Search(forumPostParameters.SearchTerm)
                 .Sort(forumPostParameters.OrderBy)
                 .ToListAsync();
 
@@ -42,7 +41,7 @@ namespace Repository.Forum
             int? forumTopicId, ForumPostParameters forumPostParameters, bool trackChanges)
         {
             var posts = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId), trackChanges)
-                .OrderBy(c => c.PostName)
+                .OrderBy(c => c.Id)
                 .Skip((forumPostParameters.PageNumber - 1) * forumPostParameters.PageSize)
                 .Take(forumPostParameters.PageSize)
                 .ToListAsync();

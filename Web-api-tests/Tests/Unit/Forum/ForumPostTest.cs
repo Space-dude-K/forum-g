@@ -24,14 +24,12 @@ namespace ForumTest.Tests.Unit.Forum
         {
             var dbData = DbContext.ForumPosts
                 .Where(fc => fc.Id.Equals(forumPost.Id)
-                && fc.PostName.Equals(forumPost.PostName)
                 && fc.ForumTopicId.Equals(forumPost.ForumTopicId)
                 ).FirstOrDefaultAsync().Result;
 
             dbData.Should()
                 .Match<ForumPost>((x) =>
                 x.Id == forumPost.Id
-                && x.PostName == forumPost.PostName
                 && x.ForumTopicId == forumPost.ForumTopicId
                 && x.ForumUserId == forumPost.ForumUserId);
         }

@@ -17,6 +17,7 @@ using System.Security.Policy;
 using Entities.DTO.ForumDto.Create;
 using Entities.DTO.UserDto;
 using Entities.Models.Forum;
+using Entities.DTO.ForumDto;
 
 namespace Services
 {
@@ -46,10 +47,22 @@ namespace Services
             {
                 forumHomeViewModel.Categories[i].Forums = await GetForumBases(forumHomeViewModel.Categories[i].Id);
 
+                int postCount = await GetTopicPostCount(forumHomeViewModel.Categories[i].Id);
+                forumHomeViewModel.Categories[i].TotalPosts = postCount;
+
+                int topicCount = await GetTopicCount(forumHomeViewModel.Categories[i].Id);
+                forumHomeViewModel.Categories[i].TotalTopics = topicCount;
+
+                /*
                 for (int j = 0; j < forumHomeViewModel.Categories[i].Forums.Count; j++)
                 {
                     var topics = await GetForumTopics(forumHomeViewModel.Categories[i].Id, forumHomeViewModel.Categories[i].Forums[j].Id);
                     forumHomeViewModel.Categories[i].Forums[j].TopicsCount = topics.Count;
+
+                    
+                    forumHomeViewModel.Categories[i].Forums[j].TotalPosts = postCount;
+
+
 
                     for (int k = 0; k < topics.Count; k++)
                     {
@@ -59,7 +72,7 @@ namespace Services
                             topics[k].Id, 0, 0);
                         forumHomeViewModel.Categories[i].Forums[j].TotalPosts += posts.Count;
                     }
-                }
+                }*/
             }
 
             return forumHomeViewModel;
@@ -81,7 +94,7 @@ namespace Services
             var topics = await GetForumTopics(categoryId, forumId);
             forumHomeViewModel.TopicId = topicId;
             forumHomeViewModel.SubTopicCreatedAt = topics.FirstOrDefault(t => t.Id == topicId).CreatedAt.Value.ToShortDateString();
-            forumHomeViewModel.TotalPosts = await GetTopicPostCount(categoryId, forumId, topicId);
+            forumHomeViewModel.TotalPosts = await GetTopicPostCount(categoryId);
 
             // Default paging to latest topic message.
             if(pageNumber != 1 && forumHomeViewModel.TotalPages > 1)
@@ -200,7 +213,7 @@ namespace Services
 
             return forumViewPostDtos;
         }
-        public async Task<int> GetTopicPostCount(int categoryId, int forumId, int topicId)
+        public async Task<int> GetTopicPostCountViaApiCall(int categoryId, int forumId, int topicId)
         {
             int totalPosts = 0;
 
@@ -223,6 +236,50 @@ namespace Services
             }
 
             return totalPosts;
+        }
+        public async Task<int> GetTopicPostCount(int categoryId)
+        {
+            int totalPosts = 0;
+
+            var tokenResponse =
+                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+
+            string uri = "api/categories/" + categoryId.ToString();
+            var response = await _client.GetAsync(uri + "?&fields=TotalPosts");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                totalPosts = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData).First().TotalPosts;
+                //totalPosts = int.Parse(JsonConvert.DeserializeObject<string>(rawData));
+            }
+
+            return totalPosts;
+        }
+        public async Task<int> GetTopicCount(int categoryId)
+        {
+            int totalTopics = 0;
+
+            var tokenResponse =
+                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+
+            string uri = "api/categories/" + categoryId.ToString();
+            var response = await _client.GetAsync(uri + "?&fields=TotalTopics");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                totalTopics = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData).First().TotalTopics;
+                //totalPosts = int.Parse(JsonConvert.DeserializeObject<string>(rawData));
+            }
+
+            return totalTopics;
         }
         public async Task<ForumUserDto> GetForumUser(int userId)
         {
@@ -247,6 +304,80 @@ namespace Services
         }
 
         // COUNTERS
+        public async Task<bool> IncreasePostCounter(int categoryId)
+        {
+            bool result = false;
+
+            var tokenResponse =
+                await authenticationService.
+                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+
+
+            string uri = "api/categories/" + categoryId.ToString();
+            var response = await _client.GetAsync(uri + "?&fields=TotalPosts");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                int totalPosts = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData).First().TotalPosts;
+
+                totalPosts++;
+
+                var jsonPatchObject = new JsonPatchDocument<ForumViewCategoryDto>();
+                jsonPatchObject.Replace(fc => fc.TotalPosts, totalPosts);
+
+                var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
+                var responseAfterUpdate = await _client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+
+                if (responseAfterUpdate.IsSuccessStatusCode)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+        public async Task<bool> IncreaseTopicCounter(int categoryId)
+        {
+            bool result = false;
+
+            var tokenResponse =
+                await authenticationService.
+                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+
+
+            string uri = "api/categories/" + categoryId.ToString();
+            var response = await _client.GetAsync(uri + "?&fields=TotalTopics");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                int totalTopics = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData).First().TotalTopics;
+
+                totalTopics++;
+
+                var jsonPatchObject = new JsonPatchDocument<ForumViewCategoryDto>();
+                jsonPatchObject.Replace(fc => fc.TotalTopics, totalTopics);
+
+                var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
+                var responseAfterUpdate = await _client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+
+                if (responseAfterUpdate.IsSuccessStatusCode)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
         public async Task<bool> IncreaseViewCounterForForumBase(int categoryId, int forumId)
         {
             bool result = false;
