@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Entities.DTO.ForumDto.ForumView;
 using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Services;
+using System.Diagnostics;
+using System.Net;
 
 namespace Forum.Controllers
 {
@@ -46,15 +49,20 @@ namespace Forum.Controllers
         }
         [HttpGet]
         [Route("categories/{categoryId}/forums/{forumId}/topics/{topicId}/{pageId}", Name = "TopicPosts")]
-        public async Task<IActionResult> TopicPosts(int categoryId, int forumId, int topicId, int pageId)
+        public async Task<IActionResult> TopicPosts(int categoryId, int forumId, int topicId, int pageId = 0)
         {
-            pageId = pageId == 0 ? 1 : pageId;
             int maxiumPostsPerPage = 4;
+
+
             var model = await _forumService.GetTopicPostsForModel(categoryId, forumId, topicId, pageId, maxiumPostsPerPage);
+
+           
+            
             int currentDataSliceIndex = maxiumPostsPerPage * (pageId - 1);
             //model.Posts = model.Posts.Skip(currentDataSliceIndex).Take(maxiumPostsPerPage).ToList();
 
             await _forumService.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
+
 
             return View("~/Views/Forum/ForumTopic.cshtml", model);
         }
