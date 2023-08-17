@@ -92,7 +92,7 @@ namespace Forum.Extensions
             services.AddHttpCacheHeaders(
             (expirationOpt) =>
             {
-                expirationOpt.MaxAge = 65;
+                expirationOpt.MaxAge = 1;
                 expirationOpt.CacheLocation = CacheLocation.Private;
             },
             (validationOpt) =>

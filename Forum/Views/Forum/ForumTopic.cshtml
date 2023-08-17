@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "ForumTopic";
 }
+
 <script src="~/lib/tinymce/tinymce.min.js"></script>
 <script>
     tinymce.init({
@@ -66,8 +67,10 @@
                     data: { categoryId: categoryId, forumId: forumId, topicId: topicId, totalPages: totalPages, postText: postText },
                     url: "@Url.Action("CreateForumPost", "ForumPostCreation")"
                 })
-                .done(function (r) {
-                    window.location.href = r.redirectToUrl + "?c=" + (new Date()).valueOf();
+                .done(function (r) 
+                {
+                    window.location.href = r.redirectToUrl;
+                    //window.location.href = r.redirectToUrl + "?c=" + (new Date()).valueOf();
                 })
                 .fail(function (jqXHR, exception) {
                     var msg = '';
@@ -93,6 +96,31 @@
                 .always(function () {
                     console.log("CreatePost - complete.");
                 });;
+        }
+    }
+</script>
+<script>
+    function DeleteForumPost(categoryId, forumId, topicId, postId) 
+    {
+        if (confirm("Вы действительно хотите удалить это сообщение?")) 
+        {
+            if (postId == 0) 
+            {
+                console.log('Сообщение с заданным id не найдено.');
+                alert('Сообщение с заданным id не найдено.');
+            }
+            else 
+            {
+                $.ajax(
+                    {
+                        type: "POST",
+                        data: { categoryId: categoryId, forumId: forumId, topicId: topicId, postId: postId },
+                        url: "@Url.Action("DeletePost", "ForumHome")"
+                    }).done(function (r) 
+                    {
+                        window.location.href = r.redirectToUrl;
+                    });
+            }
         }
     }
 </script>
@@ -140,14 +168,14 @@
                             <p>@post.CreatedAt</p>
                         </div>
 
-                        @*@if (post.IsUserHasAccess)
+                        @if (true)
                         {
-                            <div class="d-flex justify-content-center mb-16 mr-1">
+                            <div class="d-flex justify-content-center mb-4 mr-1">
                                 <button type="button" class="btn btn-light mr-0 ml-1" onclick="EnableEditModeForumPost(@post.Id)" title="Редактировать сообщение"><img src="~/images/icons/bootstrap-icons-1.5.0/pencil.svg" width="12" height="12" /></button>
                                 <button type="button" class="btn btn-light mr-0 ml-1" onclick="SaveChangesForumPost(@post.Id)" title="Сохранить изменения"><img src="~/images/icons/bootstrap-icons-1.5.0/save.svg" width="12" height="12" /></button>
-                                <button type="button" class="btn btn-light mr-1 ml-1" onclick="DeleteForumPost(@post.Id)" title="Удалить сообщение"><img src="~/images/icons/bootstrap-icons-1.5.0/recycle.svg" width="12" height="12" /></button>
+                                <button type="button" class="btn btn-light mr-1 ml-1" onclick="DeleteForumPost(@Context.Request.RouteValues["categoryId"], @Context.Request.RouteValues["forumId"], @Context.Request.RouteValues["topicId"], @post.Id)" title="Удалить сообщение"><img src="~/images/icons/bootstrap-icons-1.5.0/recycle.svg" width="12" height="12" /></button>
                             </div>
-                        }*@
+                        }
                     </div>
                     <div class="col">
                         <div class="forum-post-body-message-main row border-left" id="forum-post-body-message-main">

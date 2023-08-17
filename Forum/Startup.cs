@@ -96,6 +96,7 @@ namespace Forum
             services.ConfigureVersioning();
 
             // Caching
+            // TODO. Validation
             services.ConfigureResponseCaching();
             services.ConfigureHttpCacheHeaders();
             services.AddHttpContextAccessor();

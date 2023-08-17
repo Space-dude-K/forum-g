@@ -52,19 +52,29 @@ namespace Forum.Controllers
         public async Task<IActionResult> TopicPosts(int categoryId, int forumId, int topicId, int pageId = 0)
         {
             int maxiumPostsPerPage = 4;
-
-
             var model = await _forumService.GetTopicPostsForModel(categoryId, forumId, topicId, pageId, maxiumPostsPerPage);
-
-           
-            
-            int currentDataSliceIndex = maxiumPostsPerPage * (pageId - 1);
-            //model.Posts = model.Posts.Skip(currentDataSliceIndex).Take(maxiumPostsPerPage).ToList();
 
             await _forumService.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
 
-
             return View("~/Views/Forum/ForumTopic.cshtml", model);
+        }
+        public async Task<ActionResult> DeletePost(int categoryId, int forumId, int topicId, int postId)
+        {
+            var res = await _forumService.DeleteForumPost(categoryId, forumId, topicId, postId);
+            int totalPosts = 0;
+
+            if(res)
+            {
+                var resCounter = await _forumService.UpdatePostCounter(categoryId, false);
+                totalPosts = await _forumService.GetTopicPostCount(categoryId);
+            }
+            else
+            {
+                return BadRequest("Cannot delete post with ID " + postId);
+            }
+            
+
+            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = totalPosts }) });
         }
     }
 }

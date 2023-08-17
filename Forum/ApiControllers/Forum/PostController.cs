@@ -14,6 +14,7 @@ using Forum.Utility.ForumLinks;
 using Forum.ModelBinders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Forum.Controllers.Forum
 {
@@ -231,7 +232,8 @@ namespace Forum.Controllers.Forum
 
             var postEntity = _mapper.Map<ForumPost>(post);
             postEntity.CreatedAt = DateTime.Now;
-            // TOOD
+
+            // TODO
             postEntity.ForumUserId = 1;
             _repository.ForumPost.CreatePostForTopic(topicId, postEntity);
             await _repository.SaveAsync();
