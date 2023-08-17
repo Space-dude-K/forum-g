@@ -3,6 +3,7 @@ using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Services;
 
@@ -12,11 +13,13 @@ namespace Forum.Controllers.Forum
     {
         private readonly IMapper _mapper;
         private readonly IForumService _forumService;
+        private IMemoryCache _cache;
 
-        public ForumTopicCreationController(IMapper mapper, IForumService forumService)
+        public ForumTopicCreationController(IMapper mapper, IForumService forumService, IMemoryCache cache)
         {
             _mapper = mapper;
             _forumService = forumService;
+            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
         }
         [HttpGet]
         [Route("categories/{categoryId}/forums/{forumId}/add", Name = "ForumTopicAdd")]

@@ -304,7 +304,7 @@ namespace Services
         }
 
         // COUNTERS
-        public async Task<bool> IncreasePostCounter(int categoryId)
+        public async Task<bool> UpdatePostCounter(int categoryId, bool incresase)
         {
             bool result = false;
 
@@ -325,7 +325,10 @@ namespace Services
                 var rawData = await response.Content.ReadAsStringAsync();
                 int totalPosts = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData).First().TotalPosts;
 
-                totalPosts++;
+                if (incresase)
+                    totalPosts++;
+                else
+                    totalPosts--;
 
                 var jsonPatchObject = new JsonPatchDocument<ForumViewCategoryDto>();
                 jsonPatchObject.Replace(fc => fc.TotalPosts, totalPosts);
@@ -515,6 +518,26 @@ namespace Services
             var jsonContent = JsonConvert.SerializeObject(post);
 
             var response = await _client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+
+            return response.IsSuccessStatusCode;
+        }
+
+        // DELETE
+        public async Task<bool> DeleteForumPost(int categoryId, int forumId, int topicId, int postId)
+        {
+            var tokenResponse =
+                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+            string uri = "api/categories/" + 
+                categoryId.ToString() + "/forums/" + 
+                forumId.ToString() + "/topics/" + 
+                topicId.ToString() + "/posts/" + 
+                postId.ToString();
+
+            var response = await _client.DeleteAsync(uri);
 
             return response.IsSuccessStatusCode;
         }

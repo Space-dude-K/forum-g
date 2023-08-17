@@ -11,13 +11,14 @@ namespace Interfaces.Forum
         Task<bool> CreateForumCategory(ForumCategoryForCreationDto category);
         Task<bool> CreateForumPost(int categoryId, int forumId, int topicId, ForumPostForCreationDto post);
         Task<bool> CreateForumTopic(int categoryId, int forumId, ForumTopicForCreationDto topic);
+        Task<bool> DeleteForumPost(int categoryId, int forumId, int topicId, int postId);
         Task<List<ForumViewCategoryDto>> GetForumCategories();
         Task<ForumHomeViewModel> GetForumCategoriesAndForumBasesForModel();
         Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId);
         Task<int> GetTopicCount(int categoryId);
         Task<int> GetTopicPostCount(int categoryId);
         Task<ForumTopicViewModel> GetTopicPostsForModel(int categoryId, int forumId, int topicId, int pageNumber, int pageSize);
-        Task<bool> IncreasePostCounter(int categoryId);
+        Task<bool> UpdatePostCounter(int categoryId, bool incresase);
         Task<bool> IncreaseViewCounterForForumBase(int categoryId, int forumId);
         Task<bool> IncreaseViewCounterForTopic(int categoryId, int forumId, int topicId);
     }
