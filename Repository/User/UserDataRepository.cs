@@ -31,5 +31,12 @@ namespace Repository.User
 
             return user;
         }
+        public async Task<AppUser> GetUserAsync(int userId, bool trackChanges)
+        {
+            var user = await FindByCondition(u => u.Id.Equals(userId), trackChanges)
+                .SingleOrDefaultAsync();
+
+            return user;
+        }
     }
 }

@@ -303,6 +303,30 @@ namespace Services
 
             return forumUser;
         }
+        public async Task<int> GetPostCounterForUser(int userId)
+        {
+            int totalPosts = 0;
+
+            var tokenResponse =
+                await authenticationService.
+                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+
+
+            string uri = "api/usersf/" + userId.ToString();
+            var response = await _client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                totalPosts = JsonConvert.DeserializeObject<ForumUserDto>(rawData).TotalPostCounter;
+            }
+
+            return totalPosts;
+        }
 
         // COUNTERS
         public async Task<bool> UpdatePostCounter(int topicId, bool incresase)
@@ -374,6 +398,46 @@ namespace Services
 
                 var jsonPatchObject = new JsonPatchDocument<ForumViewCategoryDto>();
                 jsonPatchObject.Replace(fc => fc.TotalTopics, totalTopics);
+
+                var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
+                var responseAfterUpdate = await _client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+
+                if (responseAfterUpdate.IsSuccessStatusCode)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+        public async Task<bool> UpdatePostCounterForUser(int userId, bool incresase)
+        {
+            bool result = false;
+
+            var tokenResponse =
+                await authenticationService.
+                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+
+
+            string uri = "api/usersf/" + userId.ToString();
+            var response = await _client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                int totalPosts = JsonConvert.DeserializeObject<ForumUserDto>(rawData).TotalPostCounter;
+
+                if (incresase)
+                    totalPosts++;
+                else
+                    totalPosts--;
+
+                JsonPatchDocument<ForumUserDto> jsonPatchObject = new();
+                jsonPatchObject.Replace(fc => fc.TotalPostCounter, totalPosts);
 
                 var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
                 var responseAfterUpdate = await _client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));

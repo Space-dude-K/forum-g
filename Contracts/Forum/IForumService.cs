@@ -23,5 +23,7 @@ namespace Interfaces.Forum
         Task<bool> IncreaseViewCounterForTopic(int categoryId, int forumId, int topicId);
         Task<bool> UpdatePost(int categoryId, int forumId, int topicId, int postId, string newText);
         Task<bool> UpdateTopicCounter(int categoryId, bool incresase);
+        Task<bool> UpdatePostCounterForUser(int userId, bool incresase);
+        Task<int> GetPostCounterForUser(int userId);
     }
 }

@@ -163,8 +163,8 @@ namespace Forum.Migrations.Forum
                             AccessFailedCount = 0,
                             BirthDate = "0",
                             Cabinet = "0",
-                            ConcurrencyStamp = "0acfa82b-9d7f-4278-afa6-1fb943541bd5",
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 8, 59, 998, DateTimeKind.Local).AddTicks(7703),
+                            ConcurrencyStamp = "abd2dc87-8eaa-42c9-80de-17bdc645d7cd",
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 592, DateTimeKind.Local).AddTicks(5541),
                             Email = "Admin@admin.by",
                             EmailConfirmed = false,
                             FirstName = "System",
@@ -268,7 +268,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(6533),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(748),
                             ForumCategoryId = 1,
                             ForumSubTitle = "Test forum subtitle 1",
                             ForumTitle = "Test forum title 1",
@@ -278,7 +278,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(6536),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(751),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 2",
                             ForumTitle = "Test forum title 2",
@@ -288,7 +288,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(6537),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(753),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 3",
                             ForumTitle = "Test forum title 3",
@@ -298,7 +298,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(6539),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(754),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 4",
                             ForumTitle = "Test forum title 4",
@@ -308,7 +308,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(6541),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(756),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 5",
                             ForumTitle = "Test forum title 5",
@@ -318,7 +318,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(6542),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(757),
                             ForumCategoryId = 2,
                             ForumSubTitle = "Test forum subtitle 6",
                             ForumTitle = "Test forum title 6",
@@ -369,7 +369,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(1772),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 593, DateTimeKind.Local).AddTicks(7260),
                             ForumUserId = 1,
                             Name = "Test category 1",
                             TotalForums = 1,
@@ -379,7 +379,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(1775),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 593, DateTimeKind.Local).AddTicks(7263),
                             ForumUserId = 1,
                             Name = "Test category 2",
                             TotalForums = 5,
@@ -389,7 +389,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(1777),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 593, DateTimeKind.Local).AddTicks(7265),
                             ForumUserId = 1,
                             Name = "Test category 3",
                             TotalForums = 0,
@@ -399,7 +399,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(1779),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 593, DateTimeKind.Local).AddTicks(7266),
                             ForumUserId = 1,
                             Name = "Test category 4",
                             TotalForums = 0,
@@ -409,7 +409,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(1780),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 593, DateTimeKind.Local).AddTicks(7267),
                             ForumUserId = 1,
                             Name = "Test category 5",
                             TotalForums = 0,
@@ -419,7 +419,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 0, DateTimeKind.Local).AddTicks(1781),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 593, DateTimeKind.Local).AddTicks(7269),
                             ForumUserId = 1,
                             Name = "Test category 6",
                             TotalForums = 0,
@@ -469,7 +469,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(5568),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(6527),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             Likes = 0,
@@ -478,7 +478,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(5573),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(6531),
                             ForumTopicId = 2,
                             ForumUserId = 1,
                             Likes = 0
@@ -486,7 +486,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(5575),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(6532),
                             ForumTopicId = 2,
                             ForumUserId = 1,
                             Likes = 0
@@ -494,7 +494,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(5576),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(6533),
                             ForumTopicId = 2,
                             ForumUserId = 1,
                             Likes = 0
@@ -502,7 +502,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(5577),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(6534),
                             ForumTopicId = 2,
                             ForumUserId = 1,
                             Likes = 0
@@ -510,7 +510,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(5578),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(6535),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             Likes = 0,
@@ -519,7 +519,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(5579),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(6536),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             Likes = 0,
@@ -528,7 +528,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(5580),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(6537),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             Likes = 0,
@@ -537,7 +537,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(5581),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(6539),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             Likes = 0,
@@ -546,7 +546,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(5582),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(6540),
                             ForumTopicId = 1,
                             ForumUserId = 1,
                             Likes = 0,
@@ -595,7 +595,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(3321),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(4758),
                             ForumBaseId = 1,
                             ForumUserId = 1,
                             Name = "Test forum topic 1",
@@ -604,7 +604,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(3326),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(4763),
                             ForumBaseId = 2,
                             ForumUserId = 1,
                             Name = "Test forum topic 2",
@@ -613,7 +613,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(3328),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(4764),
                             ForumBaseId = 2,
                             ForumUserId = 1,
                             Name = "Test forum topic 3",
@@ -622,7 +622,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(3329),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(4766),
                             ForumBaseId = 2,
                             ForumUserId = 1,
                             Name = "Test forum topic 4",
@@ -631,7 +631,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(3330),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(4767),
                             ForumBaseId = 2,
                             ForumUserId = 1,
                             Name = "Test forum topic 5",
@@ -640,7 +640,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(3331),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(4768),
                             ForumBaseId = 1,
                             ForumUserId = 1,
                             Name = "Test forum topic 1a",
@@ -649,7 +649,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(3332),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(4769),
                             ForumBaseId = 1,
                             ForumUserId = 1,
                             Name = "Test forum topic 1b",
@@ -658,7 +658,7 @@ namespace Forum.Migrations.Forum
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 9, 0, 1, DateTimeKind.Local).AddTicks(3333),
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 594, DateTimeKind.Local).AddTicks(4770),
                             ForumBaseId = 1,
                             ForumUserId = 1,
                             Name = "Test forum topic 1c",
@@ -774,7 +774,7 @@ namespace Forum.Migrations.Forum
                         {
                             Id = 1,
                             AppUserId = 1,
-                            CreatedAt = new DateTime(2023, 8, 18, 14, 8, 59, 999, DateTimeKind.Local).AddTicks(6942)
+                            CreatedAt = new DateTime(2023, 8, 18, 23, 57, 59, 593, DateTimeKind.Local).AddTicks(4073)
                         });
                 });
 

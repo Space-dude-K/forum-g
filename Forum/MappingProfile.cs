@@ -5,6 +5,7 @@ using Entities.DTO.ForumDto.ForumView;
 using Entities.DTO.ForumDto.Update;
 using Entities.DTO.UserDto;
 using Entities.DTO.UserDto.Create;
+using Entities.DTO.UserDto.Update;
 using Entities.Models;
 using Entities.Models.Forum;
 using Entities.ViewModels;
@@ -21,6 +22,9 @@ namespace Forum
             // User
             CreateMap<AppUser, ForumUserDto>();
             CreateMap<UserForCreationDto, AppUser>();
+            CreateMap<ForumUser, ForumUserForUpdateDto>();
+            CreateMap<ForumUser, ForumUserForUpdateDto>().ReverseMap();
+            CreateMap<ForumUser, ForumUserDto>();
 
             // Category
             CreateMap<ForumCategory, ForumCategoryDto>();
