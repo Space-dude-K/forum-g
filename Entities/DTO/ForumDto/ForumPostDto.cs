@@ -6,7 +6,6 @@ namespace Entities.DTO.ForumDto
     public class ForumPostDto
     {
         public int Id { get; set; }
-        public string PostName { get; set; }
         public string PostText { get; set; }
         public int Likes { get; set; }
         public DateTime? CreatedAt { get; set; }

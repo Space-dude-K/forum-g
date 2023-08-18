@@ -54,53 +54,6 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 1,
                     PostText = "1111111111111111111111",
-                    Likes = 1,
-                    CreatedAt = DateTime.Now,
-                    ForumTopicId = 1,
-                    ForumUserId = 1
-                },
-                new ForumPost()
-                {
-                    Id = 6,
-                    PostText = "222222222222222222",
-                    Likes = 1,
-                    CreatedAt = DateTime.Now,
-                    ForumTopicId = 1,
-                    ForumUserId = 1
-                },
-                new ForumPost()
-                {
-                    Id = 7,
-                    PostText = "333333333333333",
-                    Likes = 1,
-                    CreatedAt = DateTime.Now,
-                    ForumTopicId = 1,
-                    ForumUserId = 1
-                },
-                new ForumPost()
-                {
-                    Id = 8,
-                    PostText = "44444444444444",
-                    Likes = 1,
-                    CreatedAt = DateTime.Now,
-                    ForumTopicId = 1,
-                    ForumUserId = 1
-                },
-                new ForumPost()
-                {
-                    Id = 9,
-                    PostText = "555555555555555",
-                    Likes = 1,
-                    CreatedAt = DateTime.Now,
-                    ForumTopicId = 1,
-                    ForumUserId = 1
-                },
-                new ForumPost()
-                {
-                    Id = 10,
-                    
-                    PostText = "666666666666666",
-                    Likes = 1,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 1,
                     ForumUserId = 1
@@ -122,7 +75,6 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 4,
-                    Likes = 34,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
                     ForumUserId = 1
@@ -130,9 +82,48 @@ namespace Entities.Configuration.Forum
                 new ForumPost()
                 {
                     Id = 5,
-                    Likes = 65,
                     CreatedAt = DateTime.Now,
                     ForumTopicId = 2,
+                    ForumUserId = 1
+                },
+                new ForumPost()
+                {
+                    Id = 6,
+                    PostText = "222222222222222222",
+                    CreatedAt = DateTime.Now,
+                    ForumTopicId = 1,
+                    ForumUserId = 1
+                },
+                new ForumPost()
+                {
+                    Id = 7,
+                    PostText = "333333333333333",
+                    CreatedAt = DateTime.Now,
+                    ForumTopicId = 1,
+                    ForumUserId = 1
+                },
+                new ForumPost()
+                {
+                    Id = 8,
+                    PostText = "44444444444444",
+                    CreatedAt = DateTime.Now,
+                    ForumTopicId = 1,
+                    ForumUserId = 1
+                },
+                new ForumPost()
+                {
+                    Id = 9,
+                    PostText = "555555555555555",
+                    CreatedAt = DateTime.Now,
+                    ForumTopicId = 1,
+                    ForumUserId = 1
+                },
+                new ForumPost()
+                {
+                    Id = 10,
+                    PostText = "666666666666666",
+                    CreatedAt = DateTime.Now,
+                    ForumTopicId = 1,
                     ForumUserId = 1
                 }
             );

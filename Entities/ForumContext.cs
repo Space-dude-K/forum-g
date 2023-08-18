@@ -30,6 +30,7 @@ namespace Entities
             modelBuilder.ApplyConfiguration(new ForumBaseConfiguration());
             modelBuilder.ApplyConfiguration(new ForumTopicConfiguration());
             modelBuilder.ApplyConfiguration(new ForumPostConfiguration());
+            modelBuilder.ApplyConfiguration(new ForumTopicCounterConfiguration());
 
             modelBuilder.ApplyConfiguration(new AccountConfiguration());
             modelBuilder.ApplyConfiguration(new ForumAccountTypeConfiguration());

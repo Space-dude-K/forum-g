@@ -56,6 +56,11 @@ namespace Entities.Configuration.Forum
                 .WithMany()
                 .HasConstraintName("FK_ForumTopic_ForumUser_Id")
                 .OnDelete(DeleteBehavior.Restrict);
+            builder
+                .HasOne(p => p.ForumTopicCounter)
+                .WithOne(p => p.ForumTopic)
+                .HasForeignKey<ForumTopicCounter>(k => k.ForumTopicId)
+                .HasConstraintName("FK_ForumTopicCounter_ForumTopic_Id");
             #endregion
             #region DbDataSeed
             builder.HasData(
@@ -63,30 +68,6 @@ namespace Entities.Configuration.Forum
                 {
                     Id = 1,
                     Name = "Test forum topic 1",
-                    CreatedAt = DateTime.Now,
-                    ForumBaseId = 1,
-                    ForumUserId = 1
-                },
-                new ForumTopic()
-                {
-                    Id = 6,
-                    Name = "Test forum topic 1a",
-                    CreatedAt = DateTime.Now,
-                    ForumBaseId = 1,
-                    ForumUserId = 1
-                },
-                new ForumTopic()
-                {
-                    Id = 7,
-                    Name = "Test forum topic 1b",
-                    CreatedAt = DateTime.Now,
-                    ForumBaseId = 1,
-                    ForumUserId = 1
-                },
-                new ForumTopic()
-                {
-                    Id = 8,
-                    Name = "Test forum topic 1c",
                     CreatedAt = DateTime.Now,
                     ForumBaseId = 1,
                     ForumUserId = 1
@@ -121,6 +102,30 @@ namespace Entities.Configuration.Forum
                     Name = "Test forum topic 5",
                     CreatedAt = DateTime.Now,
                     ForumBaseId = 2,
+                    ForumUserId = 1
+                },
+                new ForumTopic()
+                {
+                    Id = 6,
+                    Name = "Test forum topic 1a",
+                    CreatedAt = DateTime.Now,
+                    ForumBaseId = 1,
+                    ForumUserId = 1
+                },
+                new ForumTopic()
+                {
+                    Id = 7,
+                    Name = "Test forum topic 1b",
+                    CreatedAt = DateTime.Now,
+                    ForumBaseId = 1,
+                    ForumUserId = 1
+                },
+                new ForumTopic()
+                {
+                    Id = 8,
+                    Name = "Test forum topic 1c",
+                    CreatedAt = DateTime.Now,
+                    ForumBaseId = 1,
                     ForumUserId = 1
                 }
             );

@@ -4,6 +4,7 @@ using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace Forum.Controllers.Forum
 {
@@ -32,8 +33,21 @@ namespace Forum.Controllers.Forum
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            int userId = 0;
             var forumToAdd = _mapper.Map<ForumBaseForCreationDto>(model);
-            await _forumService.CreateForumBase(model.SelectedCategoryId, forumToAdd);
+
+            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
+
+            if (userId > 0)
+            {
+                forumToAdd.ForumUserId = userId;
+                var res = await _forumService.CreateForumBase(model.SelectedCategoryId, forumToAdd);
+                //var resCounter = await _forumService.UpdatePostCounter(categoryId, true);
+            }
+            else
+            {
+                return BadRequest("User ID error.");
+            }
 
             return RedirectToAction("ForumHome", "ForumHome");
         }

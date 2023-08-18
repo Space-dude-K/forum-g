@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Services;
+using System.Security.Claims;
 
 namespace Forum.Controllers.Forum
 {
@@ -33,14 +34,27 @@ namespace Forum.Controllers.Forum
             return View("~/Views/Forum/Add/ForumAddTopic.cshtml");
         }
         [HttpPost]
-        [Route("categories/{categoryId}/forums/{forumId}/add", Name = "ForumTopicCreate")]
+        [Route("categories/{categoryId}/forums/{forumId}/add", Name = "ForumTopicAdd")]
         public async Task<IActionResult> CreateForumTopic(int categoryId, int forumId, ForumTopicCreationView model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            int userId = 0;
             var topicToAdd = _mapper.Map<ForumTopicForCreationDto>(model);
-            var res = await _forumService.CreateForumTopic(categoryId, forumId, topicToAdd);
+
+            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
+
+            if (userId > 0)
+            {
+                topicToAdd.ForumUserId = userId;
+                var res = await _forumService.CreateForumTopic(categoryId, forumId, topicToAdd);
+                var resCounter = await _forumService.UpdateTopicCounter(categoryId, true);
+            }
+            else
+            {
+                return BadRequest("User ID error.");
+            }
 
             return RedirectToAction("ForumTopics", "ForumHome", 
                 new { categoryId = categoryId, forumId = forumId });

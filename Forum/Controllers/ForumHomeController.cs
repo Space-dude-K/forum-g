@@ -76,5 +76,11 @@ namespace Forum.Controllers
 
             return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = totalPosts }) });
         }
+        public async Task<ActionResult> UpdatePost(int categoryId, int forumId, int topicId, int postId, int pageId, string newText)
+        {
+            var res = await _forumService.UpdatePost(categoryId, forumId, topicId, postId, newText);
+
+            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = pageId }) });
+        }
     }
 }

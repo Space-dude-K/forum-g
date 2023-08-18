@@ -82,6 +82,87 @@ namespace Forum.Controllers.Forum
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
         /// <summary>
+        /// Gets counters for topic
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="forumId"></param>
+        /// <returns>The post counter</returns>
+        /// <response code="200">Returns items</response>
+        /// <response code="401">If unauthorized</response>
+        /// <response code="404">If forum not found</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [Route("/api/tcounters/{topicId}")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        public async Task<IActionResult> GetTopicCounter(int topicId)
+        {
+            var topicCountersFromDb = await _repository.ForumTopicCounter.GetPostCounterAsync(topicId, trackChanges: false);
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(topicCountersFromDb.MetaData));
+
+            var topicsDto = _mapper.Map<IEnumerable<ForumTopicCounterDto>>(topicCountersFromDb);
+
+            return Ok(topicsDto);
+        }
+        [HttpPut]
+        [Route("/api/tcounters/{topicId}")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        [ServiceFilter(typeof(ValidateTopicCounter))]
+        public async Task<IActionResult> UpdateTopicCounter(int topicId, [FromBody] ForumTopicCounterForUpdateDto topicCounter)
+        {
+            var topicCounterEntity = HttpContext.Items["topicCounter"] as ForumTopicCounter;
+
+            _mapper.Map(topicCounter, topicCounterEntity);
+            await _repository.SaveAsync();
+
+            return NoContent();
+        }
+        [HttpPatch]
+        [Route("/api/tcounters/{topicId}")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        [ServiceFilter(typeof(ValidateTopicCounter))]
+        public async Task<IActionResult> PatchTopicCounter(int topicId, [FromBody] JsonPatchDocument<ForumTopicCounterForUpdateDto> topicCounterDoc)
+        {
+            if (topicCounterDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+
+            var topicCounterEntity = HttpContext.Items["topicCounter"] as ForumTopicCounter;
+            var topicCounterToPatch = _mapper.Map<ForumTopicCounterForUpdateDto>(topicCounterEntity);
+            topicCounterDoc.ApplyTo(topicCounterToPatch, ModelState);
+
+            TryValidateModel(topicCounterToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+
+            _mapper.Map(topicCounterToPatch, topicCounterEntity);
+            await _repository.SaveAsync();
+
+            return NoContent();
+        }
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [Route("/api/tcounters")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        public async Task<IActionResult> GetTopicCounters()
+        {
+            var topicCountersFromDb = await _repository.ForumTopicCounter.GetPostCountersAsync(trackChanges: false);
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(topicCountersFromDb.MetaData));
+
+            var topicsDto = _mapper.Map<IEnumerable<ForumTopicCounterDto>>(topicCountersFromDb);
+
+            return Ok(topicsDto);
+        }
+        /// <summary>
         /// Gets the topic
         /// </summary>
         /// <param name="categoryId"></param>

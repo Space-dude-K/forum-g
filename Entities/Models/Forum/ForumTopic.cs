@@ -22,5 +22,6 @@ namespace Entities.Models.Forum
         public virtual ForumBase ForumBase { get; set; }
         public int ForumBaseId { get; set; }
         public virtual ICollection<ForumPost> ForumPosts { get; set; }
+        public virtual ForumTopicCounter ForumTopicCounter { get; set; }
     }
 }
