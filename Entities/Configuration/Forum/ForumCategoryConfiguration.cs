@@ -69,14 +69,20 @@ namespace Entities.Configuration.Forum
                     Id = 1,
                     Name = "Test category 1",
                     CreatedAt = DateTime.Now,
-                    ForumUserId = 1
+                    ForumUserId = 1,
+                    TotalForums = 1,
+                    TotalTopics = 4,
+                    TotalPosts = 6
                 },
                 new ForumCategory()
                 {
                     Id = 2,
                     Name = "Test category 2",
                     CreatedAt = DateTime.Now,
-                    ForumUserId = 1
+                    ForumUserId = 1,
+                    TotalForums = 5,
+                    TotalTopics = 4,
+                    TotalPosts = 4
                 },
                 new ForumCategory()
                 {

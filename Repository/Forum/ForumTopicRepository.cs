@@ -37,7 +37,6 @@ namespace Repository.Forum
 
             return PagedList<ForumTopic>.ToPagedList(topics, forumTopicParameters.PageNumber, forumTopicParameters.PageSize);
         }
-
         public async Task<ForumTopic> GetTopicAsync(int forumBaseId, int topicId, bool trackChanges)
         {
             return await FindByCondition(c => c.ForumBaseId.Equals(forumBaseId) && c.Id.Equals(topicId), trackChanges)

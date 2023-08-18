@@ -3,6 +3,7 @@ using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Forum.Controllers.Forum
 {
@@ -27,8 +28,20 @@ namespace Forum.Controllers.Forum
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            int userId = 0;
             var categoryToAdd = _mapper.Map<ForumCategoryForCreationDto>(model);
-            var res = await _forumService.CreateForumCategory(categoryToAdd);
+
+            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
+
+            if (userId > 0)
+            {
+                categoryToAdd.ForumUserId = userId;
+                var res = await _forumService.CreateForumCategory(categoryToAdd);
+            }
+            else
+            {
+                return BadRequest("User ID error.");
+            }
 
             return RedirectToAction("ForumHome", "ForumHome");
         }

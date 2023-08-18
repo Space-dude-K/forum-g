@@ -18,6 +18,7 @@ using Entities.DTO.ForumDto.Create;
 using Entities.DTO.UserDto;
 using Entities.Models.Forum;
 using Entities.DTO.ForumDto;
+using Entities.DTO.ForumDto.Manipulation;
 
 namespace Services
 {
@@ -94,10 +95,10 @@ namespace Services
             var topics = await GetForumTopics(categoryId, forumId);
             forumHomeViewModel.TopicId = topicId;
             forumHomeViewModel.SubTopicCreatedAt = topics.FirstOrDefault(t => t.Id == topicId).CreatedAt.Value.ToShortDateString();
-            forumHomeViewModel.TotalPosts = await GetTopicPostCount(categoryId);
+            forumHomeViewModel.TotalPosts = await GetTopicPostCount(topicId);
 
             // Default paging to latest topic message.
-            if(pageNumber != 1 && forumHomeViewModel.TotalPages > 1)
+            if(pageNumber == 0 && forumHomeViewModel.TotalPages > 1)
             {
                 pageNumber = forumHomeViewModel.TotalPages;
             }
@@ -237,7 +238,7 @@ namespace Services
 
             return totalPosts;
         }
-        public async Task<int> GetTopicPostCount(int categoryId)
+        public async Task<int> GetTopicPostCount(int topicId)
         {
             int totalPosts = 0;
 
@@ -247,14 +248,14 @@ namespace Services
             var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
-            string uri = "api/categories/" + categoryId.ToString();
-            var response = await _client.GetAsync(uri + "?&fields=TotalPosts");
+            string uri = "api" +
+                "/tcounters/" + topicId.ToString();
+            var response = await _client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
                 var rawData = await response.Content.ReadAsStringAsync();
-                totalPosts = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData).First().TotalPosts;
-                //totalPosts = int.Parse(JsonConvert.DeserializeObject<string>(rawData));
+                totalPosts = JsonConvert.DeserializeObject<IEnumerable<ForumTopicCounterDto>>(rawData).First().PostCounter;
             }
 
             return totalPosts;
@@ -304,7 +305,7 @@ namespace Services
         }
 
         // COUNTERS
-        public async Task<bool> UpdatePostCounter(int categoryId, bool incresase)
+        public async Task<bool> UpdatePostCounter(int topicId, bool incresase)
         {
             bool result = false;
 
@@ -317,21 +318,22 @@ namespace Services
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
 
-            string uri = "api/categories/" + categoryId.ToString();
-            var response = await _client.GetAsync(uri + "?&fields=TotalPosts");
+            string uri = "api" +
+                "/tcounters/" + topicId.ToString();
+            var response = await _client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
                 var rawData = await response.Content.ReadAsStringAsync();
-                int totalPosts = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData).First().TotalPosts;
+                int totalPosts = JsonConvert.DeserializeObject<IEnumerable<ForumTopicCounterDto>>(rawData).First().PostCounter;
 
                 if (incresase)
                     totalPosts++;
                 else
                     totalPosts--;
 
-                var jsonPatchObject = new JsonPatchDocument<ForumViewCategoryDto>();
-                jsonPatchObject.Replace(fc => fc.TotalPosts, totalPosts);
+                JsonPatchDocument<ForumTopicCounterDto> jsonPatchObject = new();
+                jsonPatchObject.Replace(fc => fc.PostCounter, totalPosts);
 
                 var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
                 var responseAfterUpdate = await _client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
@@ -344,7 +346,7 @@ namespace Services
 
             return result;
         }
-        public async Task<bool> IncreaseTopicCounter(int categoryId)
+        public async Task<bool> UpdateTopicCounter(int categoryId, bool incresase)
         {
             bool result = false;
 
@@ -365,7 +367,10 @@ namespace Services
                 var rawData = await response.Content.ReadAsStringAsync();
                 int totalTopics = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData).First().TotalTopics;
 
-                totalTopics++;
+                if (incresase)
+                    totalTopics++;
+                else
+                    totalTopics--;
 
                 var jsonPatchObject = new JsonPatchDocument<ForumViewCategoryDto>();
                 jsonPatchObject.Replace(fc => fc.TotalTopics, totalTopics);
@@ -540,6 +545,48 @@ namespace Services
             var response = await _client.DeleteAsync(uri);
 
             return response.IsSuccessStatusCode;
+        }
+
+        // UPDATE
+        public async Task<bool> UpdatePost(int categoryId, int forumId, int topicId, int postId, string newText)
+        {
+            bool result = false;
+
+            var tokenResponse =
+                await authenticationService.
+                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
+            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+
+            string uri = "api/categories/" +
+                categoryId.ToString() + "/forums/" +
+                forumId.ToString() + "/topics/" +
+                topicId.ToString() + "/posts/" +
+                postId.ToString();
+            var response = await _client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                var postDto = JsonConvert.DeserializeObject<IEnumerable<ForumPostDto>>(rawData).First();
+
+                postDto.PostText = newText;
+                postDto.UpdatedAt = DateTime.Now;
+                postDto.ForumUserId = 1;
+
+                var jsonAfterUpdade = JsonConvert.SerializeObject(postDto);
+                var responseAfterUpdate =
+                    await _client.PutAsync(uri, new StringContent(jsonAfterUpdade, Encoding.UTF8, "application/json"));
+
+                if (responseAfterUpdate.IsSuccessStatusCode)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
         }
     }
 }

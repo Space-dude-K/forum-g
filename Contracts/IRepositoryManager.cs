@@ -11,6 +11,7 @@ namespace Interfaces
         IForumCategoryRepository ForumCategory { get; }
         IForumBaseRepository ForumBase { get; }
         IForumTopicRepository ForumTopic { get; }
+        IForumTopicCounterRepository ForumTopicCounter { get; }
         IForumPostRepository ForumPost { get; }
         IPrinterDeviceRepository PrinterDevice { get; }
         IForumUserDataRepository ForumUsers { get; }

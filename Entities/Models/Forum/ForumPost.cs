@@ -8,7 +8,7 @@ namespace Entities.Models.Forum
         [Required(ErrorMessage = "Post title is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the post title is 60 characters.")]
         public string PostText { get; set; }
-        public int? Likes { get; set; }
+        public int? Likes { get; set; } = 0;
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public virtual ForumTopic ForumTopic { get; set; }

@@ -21,6 +21,7 @@ namespace Repository
         private IForumCategoryRepository _forumCategoryRepository;
         private IForumBaseRepository _forumBaseRepository;
         private IForumTopicRepository _forumTopicRepository;
+        private IForumTopicCounterRepository _forumTopicCounterRepository;
         private IForumPostRepository _forumPostRepository;
 
         private IPrinterDeviceRepository _printerDeviceRepository;
@@ -80,7 +81,7 @@ namespace Repository
                 return _forumBaseRepository;
             }
         }
-
+        //
         public IForumTopicRepository ForumTopic
         {
             get
@@ -90,7 +91,15 @@ namespace Repository
                 return _forumTopicRepository;
             }
         }
-
+        public IForumTopicCounterRepository ForumTopicCounter
+        {
+            get
+            {
+                if (_forumTopicCounterRepository == null)
+                    _forumTopicCounterRepository = new ForumTopicCounterRepository(_forumContext);
+                return _forumTopicCounterRepository;
+            }
+        }
         public IForumPostRepository ForumPost
         {
             get

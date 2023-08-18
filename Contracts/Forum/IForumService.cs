@@ -16,10 +16,12 @@ namespace Interfaces.Forum
         Task<ForumHomeViewModel> GetForumCategoriesAndForumBasesForModel();
         Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId);
         Task<int> GetTopicCount(int categoryId);
-        Task<int> GetTopicPostCount(int categoryId);
+        Task<int> GetTopicPostCount(int topicId);
         Task<ForumTopicViewModel> GetTopicPostsForModel(int categoryId, int forumId, int topicId, int pageNumber, int pageSize);
         Task<bool> UpdatePostCounter(int categoryId, bool incresase);
         Task<bool> IncreaseViewCounterForForumBase(int categoryId, int forumId);
         Task<bool> IncreaseViewCounterForTopic(int categoryId, int forumId, int topicId);
+        Task<bool> UpdatePost(int categoryId, int forumId, int topicId, int postId, string newText);
+        Task<bool> UpdateTopicCounter(int categoryId, bool incresase);
     }
 }
