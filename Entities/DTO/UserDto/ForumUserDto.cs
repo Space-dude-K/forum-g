@@ -9,7 +9,7 @@
         public string UserName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public string AvatarImgSrc { get; set; }
+        public string? AvatarImgSrc { get; set; }
         public int TotalPostCounter { get; set; }
         public DateTime? CreatedAt { get; set; }
         public string UserRegistrationDate { get { return CreatedAt.Value.ToShortDateString(); } }

@@ -7,5 +7,6 @@ namespace Interfaces.User
     {
         Task<List<AppUser>> GetAllUsersAsync(UserParameters userParameters, bool trackChanges);
         Task<AppUser> GetUserAsync(string userId, UserParameters userParameters, bool trackChanges);
+        Task<AppUser> GetUserAsync(int userId, bool trackChanges);
     }
 }

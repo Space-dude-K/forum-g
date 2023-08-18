@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using Azure.Core;
+using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.ForumView;
 using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Services;
 using System.Diagnostics;
 using System.Net;
+using System.Security.Claims;
 
 namespace Forum.Controllers
 {
@@ -54,19 +57,46 @@ namespace Forum.Controllers
             int maxiumPostsPerPage = 4;
             var model = await _forumService.GetTopicPostsForModel(categoryId, forumId, topicId, pageId, maxiumPostsPerPage);
 
-            await _forumService.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
+            //model.Posts.Select(async p => p.ForumUser.TotalPostCounter = await _forumService.GetPostCounterForUser(p.Id));
+            //var tasks = await Task.WhenAll(model.Posts.Select(async p => p.ForumUser.TotalPostCounter = await _forumService.GetPostCounterForUser(p.Id)));
+            var tasks = model.Posts.Select(
+                async p => new
+                {
+                    Item = p,
+                    Counter = await _forumService.GetPostCounterForUser(p.ForumUser.Id)
+                });
+            var tuples = await Task.WhenAll(tasks);
+            foreach(var user in model.Posts)
+            {
+                foreach(var item in tuples)
+                {
+                    if(user.ForumUser.Id == item.Item.ForumUser.Id)
+                        user.ForumUser.TotalPostCounter = item.Counter;
+                }
+
+                //user.ForumUser.TotalPostCounter = tuples.FirstOrDefault(t => t.Item.ForumUser.Id == user.ForumUser.Id).Counter;
+            }
+
+            //var m = model.Posts.Select(p => p.ForumUser.TotalPostCounter = tuples.First(i => i.Item.ForumUser.Id == p.ForumUser.Id).Counter);
+
+
+            //await _forumService.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
 
             return View("~/Views/Forum/ForumTopic.cshtml", model);
         }
-        public async Task<ActionResult> DeletePost(int categoryId, int forumId, int topicId, int postId)
+        public async Task<ActionResult> DeletePost(int categoryId, int forumId, int topicId, int postId, ForumTopicViewModel model)
         {
             var res = await _forumService.DeleteForumPost(categoryId, forumId, topicId, postId);
             int totalPosts = 0;
 
-            if(res)
+            int userId = 0;
+            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
+
+            if (res)
             {
                 var resCounter = await _forumService.UpdatePostCounter(categoryId, false);
-                totalPosts = await _forumService.GetTopicPostCount(categoryId);
+                var resUserCounter = await _forumService.UpdatePostCounterForUser(userId, false);
+                model.TotalPosts = await _forumService.GetTopicPostCount(categoryId);
             }
             else
             {
@@ -74,7 +104,7 @@ namespace Forum.Controllers
             }
             
 
-            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = totalPosts }) });
+            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
         }
         public async Task<ActionResult> UpdatePost(int categoryId, int forumId, int topicId, int postId, int pageId, string newText)
         {

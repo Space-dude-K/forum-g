@@ -1,6 +1,8 @@
 ﻿using Entities;
+using Entities.Models;
 using Entities.Models.Forum;
 using Interfaces.User;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository.User
 {
@@ -14,6 +16,13 @@ namespace Repository.User
             ForumUser forumUser = new() { Id = appUserId, AppUserId = appUserId, CreatedAt = DateTime.Now };
 
             Create(forumUser);
+        }
+        public async Task<ForumUser> GetUserAsync(int userId, bool trackChanges)
+        {
+            var user = await FindByCondition(u => u.Id.Equals(userId), trackChanges)
+                .SingleOrDefaultAsync();
+
+            return user;
         }
     }
 }

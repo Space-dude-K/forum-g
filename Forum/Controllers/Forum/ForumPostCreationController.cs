@@ -35,6 +35,8 @@ namespace Forum.Controllers.Forum
                 postToAdd.ForumUserId = userId;
                 var res = await _forumService.CreateForumPost(categoryId, forumId, topicId, postToAdd);
                 var resCounter = await _forumService.UpdatePostCounter(categoryId, true);
+                var resUserCounter = await _forumService.UpdatePostCounterForUser(userId, true);
+
                 model.TotalPosts = await _forumService.GetTopicPostCount(categoryId);
             }
             else
