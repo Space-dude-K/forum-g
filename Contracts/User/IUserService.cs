@@ -1,4 +1,5 @@
-﻿using Entities.ViewModels;
+﻿using Entities.DTO.UserDto;
+using Entities.ViewModels;
 using Forum.ViewModels;
 using System;
 using System.Collections.Generic;

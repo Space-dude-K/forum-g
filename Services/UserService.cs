@@ -3,8 +3,10 @@ using Entities.DTO.UserDto;
 using Entities.ViewModels;
 using Interfaces;
 using Interfaces.User;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
+using Services.Utils;
 using System.Net.Http.Headers;
 
 namespace Services
@@ -20,7 +22,6 @@ namespace Services
         {
             _logger = logger;
             _mapper = mapper;
-            _client = client ?? throw new ArgumentNullException(nameof(client));
         }
         public async Task<List<string>> GetUserRoles()
         {
@@ -47,5 +48,6 @@ namespace Services
 
             return model;
         }
+        
     }
 }

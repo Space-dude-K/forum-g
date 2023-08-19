@@ -285,7 +285,6 @@ namespace Services
         public async Task<ForumUserDto> GetForumUser(int userId)
         {
             ForumUserDto forumUser = new();
-
             var tokenResponse =
                 await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
             var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();

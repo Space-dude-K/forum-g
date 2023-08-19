@@ -209,7 +209,7 @@
 
                 <div class="row border">
                     <div class="col-md-2 text-left border-end">
-                        @Html.ActionLink(@post.ForumUser.FirstAndLastNames, "ForumAccount", "Forum", new { name = @post.ForumUser.FirstAndLastNames }, null)
+                        @Html.ActionLink(@post.ForumUser.FirstAndLastNames, "ForumAccount", "Account", null)
                         <img class="rounded rounded mx-auto d-block mt-3" src="@Url.Content(@post.ForumUser.AvatarImgSrc)" alt="Empty avatar" />
                         <div class="forum-post-body-account-counter ">
                             <p class="m-0 mt-3">Сообщений:</p>
