@@ -57,8 +57,6 @@ namespace Forum.Controllers
             int maxiumPostsPerPage = 4;
             var model = await _forumService.GetTopicPostsForModel(categoryId, forumId, topicId, pageId, maxiumPostsPerPage);
 
-            //model.Posts.Select(async p => p.ForumUser.TotalPostCounter = await _forumService.GetPostCounterForUser(p.Id));
-            //var tasks = await Task.WhenAll(model.Posts.Select(async p => p.ForumUser.TotalPostCounter = await _forumService.GetPostCounterForUser(p.Id)));
             var tasks = model.Posts.Select(
                 async p => new
                 {
@@ -73,14 +71,7 @@ namespace Forum.Controllers
                     if(user.ForumUser.Id == item.Item.ForumUser.Id)
                         user.ForumUser.TotalPostCounter = item.Counter;
                 }
-
-                //user.ForumUser.TotalPostCounter = tuples.FirstOrDefault(t => t.Item.ForumUser.Id == user.ForumUser.Id).Counter;
             }
-
-            //var m = model.Posts.Select(p => p.ForumUser.TotalPostCounter = tuples.First(i => i.Item.ForumUser.Id == p.ForumUser.Id).Counter);
-
-
-            //await _forumService.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
 
             return View("~/Views/Forum/ForumTopic.cshtml", model);
         }
@@ -103,8 +94,8 @@ namespace Forum.Controllers
                 return BadRequest("Cannot delete post with ID " + postId);
             }
             
-
-            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
+            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 
+                new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
         }
         public async Task<ActionResult> UpdatePost(int categoryId, int forumId, int topicId, int postId, int pageId, string newText)
         {

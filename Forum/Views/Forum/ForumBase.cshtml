@@ -20,6 +20,7 @@
                 </div>
 
                 <div class="forum-base-create-panel btn-group-md">
+                    <button type="button" class="btn btn-light" onclick="location.href='@Url.Action("ForumHome")'">Вернуться к списку форумов</button>
                     <button type="button" class="btn btn-light" 
                     onclick="location.href='@Url.RouteUrl("ForumTopicAdd", new {categoryId = @Context.Request.RouteValues["categoryId"], forumId = @Context.Request.RouteValues["forumId"]})'">Создать топик</button>
                 </div>
