@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Interfaces;
+﻿using Interfaces;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using Interfaces.Forum;
@@ -7,44 +6,38 @@ using Services.Utils;
 using Entities.DTO.ForumDto.ForumView;
 using Entities.ViewModels.Forum;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System;
-using Entities.DTO.ForumDto.Update;
 using Microsoft.AspNetCore.JsonPatch;
-using Entities;
-using System.Security.Policy;
 using Entities.DTO.ForumDto.Create;
 using Entities.DTO.UserDto;
-using Entities.Models.Forum;
 using Entities.DTO.ForumDto;
-using Entities.DTO.ForumDto.Manipulation;
 
 namespace Services
 {
     public class ForumService : IForumService
     {
         private readonly HttpClient _client;
-
         private readonly ILoggerManager _logger;
-        private readonly IMapper _mapper;
-        private readonly Interfaces.Forum.IAuthenticationService authenticationService;
 
-        public ForumService(HttpClient client, ILoggerManager logger, IMapper mapper, 
-            Interfaces.Forum.IAuthenticationService authenticationService)
+        public ForumService(HttpClient client, ILoggerManager logger, IAuthenticationService authenticationService)
         {
             _logger = logger;
-            _mapper = mapper;
-            this.authenticationService = authenticationService;
             _client = client ?? throw new ArgumentNullException(nameof(client));
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var tokenResponse = authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" }).Result;
+            var parsedTokenStr = tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr.Result);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
         }
         public async Task<ForumHomeViewModel> GetForumCategoriesAndForumBasesForModel()
         {
-            ForumHomeViewModel forumHomeViewModel = new();
-            forumHomeViewModel.Categories = await GetForumCategories();
-            
-            for(int i = 0; i < forumHomeViewModel.Categories.Count; i++)
+            ForumHomeViewModel forumHomeViewModel = new()
+            {
+                Categories = await GetForumCategories()
+            };
+
+            for (int i = 0; i < forumHomeViewModel.Categories.Count; i++)
             {
                 forumHomeViewModel.Categories[i].Forums = await GetForumBases(forumHomeViewModel.Categories[i].Id);
 
@@ -53,27 +46,6 @@ namespace Services
 
                 int topicCount = await GetTopicCount(forumHomeViewModel.Categories[i].Id);
                 forumHomeViewModel.Categories[i].TotalTopics = topicCount;
-
-                /*
-                for (int j = 0; j < forumHomeViewModel.Categories[i].Forums.Count; j++)
-                {
-                    var topics = await GetForumTopics(forumHomeViewModel.Categories[i].Id, forumHomeViewModel.Categories[i].Forums[j].Id);
-                    forumHomeViewModel.Categories[i].Forums[j].TopicsCount = topics.Count;
-
-                    
-                    forumHomeViewModel.Categories[i].Forums[j].TotalPosts = postCount;
-
-
-
-                    for (int k = 0; k < topics.Count; k++)
-                    {
-                        var posts = await GetTopicPosts(
-                            forumHomeViewModel.Categories[i].Id, 
-                            forumHomeViewModel.Categories[i].Forums[j].Id, 
-                            topics[k].Id, 0, 0);
-                        forumHomeViewModel.Categories[i].Forums[j].TotalPosts += posts.Count;
-                    }
-                }*/
             }
 
             return forumHomeViewModel;
@@ -111,16 +83,11 @@ namespace Services
 
             return forumHomeViewModel;
         }
+
         public async Task<List<ForumViewCategoryDto>> GetForumCategories()
         {
             List<ForumViewCategoryDto> forumViewCategoryDtos = new List<ForumViewCategoryDto>();
 
-            var tokenResponse = 
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
             var response = await _client.GetAsync("api/categories");
             
@@ -129,19 +96,16 @@ namespace Services
                 var rawData = await response.Content.ReadAsStringAsync();
                 forumViewCategoryDtos = JsonConvert.DeserializeObject<IEnumerable<ForumViewCategoryDto>>(rawData).ToList();
             }
+            else
+            {
+                _logger.LogError($"Unable to get categories");
+            }
 
             return forumViewCategoryDtos;
         }
         public async Task<List<ForumViewBaseDto>> GetForumBases(int categoryId)
         {
             List<ForumViewBaseDto> forumViewBaseDtos = new();
-
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
             var response = await _client.GetAsync("api/categories/" + categoryId.ToString() + "/forums");
             
@@ -150,6 +114,10 @@ namespace Services
                 var rawData = await response.Content.ReadAsStringAsync();
                 forumViewBaseDtos = JsonConvert.DeserializeObject<IEnumerable<ForumViewBaseDto>>(rawData).ToList();
             }
+            else
+            {
+                _logger.LogError($"Unable to get forums for category id: {categoryId}");
+            }
 
             return forumViewBaseDtos;
         }
@@ -157,11 +125,6 @@ namespace Services
         {
             List<ForumViewTopicDto> forumViewTopicDtos = new List<ForumViewTopicDto>();
 
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
             var response = await _client.GetAsync("api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics");
 
@@ -170,19 +133,16 @@ namespace Services
                 var rawData = await response.Content.ReadAsStringAsync();
                 forumViewTopicDtos = JsonConvert.DeserializeObject<IEnumerable<ForumViewTopicDto>>(rawData).ToList();
             }
+            else
+            {
+                _logger.LogError($"Unable to get topics for forum id: {forumId}");
+            }
 
             return forumViewTopicDtos;
         }
         public async Task<List<ForumViewPostDto>> GetTopicPosts(int categoryId, int forumId, int topicId, int pageNumber, int pageSize)
         {
             List<ForumViewPostDto> forumViewPostDtos = new();
-
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
-
 
             bool allPosts = pageNumber == 0 && pageSize == 0;
             string uri = string.Empty;
@@ -202,7 +162,6 @@ namespace Services
                 "&pageSize=" + pageSize.ToString();
             }
 
-            
             var response = await _client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
@@ -211,42 +170,16 @@ namespace Services
                 Debug.WriteLine(rawData);
                 forumViewPostDtos = JsonConvert.DeserializeObject<IEnumerable<ForumViewPostDto>>(rawData).ToList();
             }
-
-            return forumViewPostDtos;
-        }
-        public async Task<int> GetTopicPostCountViaApiCall(int categoryId, int forumId, int topicId)
-        {
-            int totalPosts = 0;
-
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
-
-            string uri = uri = "api/categories/" + categoryId.ToString() +
-                "/forums/" + forumId.ToString() +
-                "/topics/" + topicId.ToString() + "/posts/count";
-
-            var response = await _client.GetAsync(uri);
-
-            if (response.IsSuccessStatusCode)
+            else
             {
-                var rawData = await response.Content.ReadAsStringAsync();
-                totalPosts = JsonConvert.DeserializeObject<int>(rawData);
+                _logger.LogError($"Unable to get posts for topic id: {topicId}");
             }
 
-            return totalPosts;
+            return forumViewPostDtos;
         }
         public async Task<int> GetTopicPostCount(int topicId)
         {
             int totalPosts = 0;
-
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
             string uri = "api" +
                 "/tcounters/" + topicId.ToString();
@@ -257,18 +190,16 @@ namespace Services
                 var rawData = await response.Content.ReadAsStringAsync();
                 totalPosts = JsonConvert.DeserializeObject<IEnumerable<ForumTopicCounterDto>>(rawData).First().PostCounter;
             }
+            else
+            {
+                _logger.LogError($"Unable to get topic post counter for topic id: {topicId}");
+            }
 
             return totalPosts;
         }
         public async Task<int> GetTopicCount(int categoryId)
         {
             int totalTopics = 0;
-
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
             string uri = "api/categories/" + categoryId.ToString();
             var response = await _client.GetAsync(uri + "?&fields=TotalTopics");
@@ -279,18 +210,16 @@ namespace Services
                 totalTopics = JsonConvert.DeserializeObject<IEnumerable<ForumCategoryDto>>(rawData).First().TotalTopics;
                 //totalPosts = int.Parse(JsonConvert.DeserializeObject<string>(rawData));
             }
+            else
+            {
+                _logger.LogError($"Unable to get topic counter for category id: {categoryId}");
+            }
 
             return totalTopics;
         }
         public async Task<ForumUserDto> GetForumUser(int userId)
         {
             ForumUserDto forumUser = new();
-
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
             string uri = "api/users/" + userId.ToString();
             var response = await _client.GetAsync(uri);
@@ -300,21 +229,16 @@ namespace Services
                 var rawData = await response.Content.ReadAsStringAsync();
                 forumUser = JsonConvert.DeserializeObject<IEnumerable<ForumUserDto>>(rawData).First();
             }
+            else
+            {
+                _logger.LogError($"Unable to get forum user id: {userId}");
+            }
 
             return forumUser;
         }
         public async Task<int> GetPostCounterForUser(int userId)
         {
             int totalPosts = 0;
-
-            var tokenResponse =
-                await authenticationService.
-                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
-
 
             string uri = "api/usersf/" + userId.ToString();
             var response = await _client.GetAsync(uri);
@@ -324,6 +248,10 @@ namespace Services
                 var rawData = await response.Content.ReadAsStringAsync();
                 totalPosts = JsonConvert.DeserializeObject<ForumUserDto>(rawData).TotalPostCounter;
             }
+            else
+            {
+                _logger.LogError($"Unable to get post counter for user id: {userId}");
+            }
 
             return totalPosts;
         }
@@ -332,15 +260,6 @@ namespace Services
         public async Task<bool> UpdatePostCounter(int topicId, bool incresase)
         {
             bool result = false;
-
-            var tokenResponse =
-                await authenticationService.
-                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
-
 
             string uri = "api" +
                 "/tcounters/" + topicId.ToString();
@@ -366,6 +285,10 @@ namespace Services
                 {
                     result = true;
                 }
+                else
+                {
+                    _logger.LogError($"Unable to update post counter for topic id: {topicId}");
+                }
             }
 
             return result;
@@ -373,15 +296,6 @@ namespace Services
         public async Task<bool> UpdateTopicCounter(int categoryId, bool incresase)
         {
             bool result = false;
-
-            var tokenResponse =
-                await authenticationService.
-                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
-
 
             string uri = "api/categories/" + categoryId.ToString();
             var response = await _client.GetAsync(uri + "?&fields=TotalTopics");
@@ -406,6 +320,10 @@ namespace Services
                 {
                     result = true;
                 }
+                else
+                {
+                    _logger.LogError($"Unable to update topic counter for category id: {categoryId}");
+                }
             }
 
             return result;
@@ -413,15 +331,6 @@ namespace Services
         public async Task<bool> UpdatePostCounterForUser(int userId, bool incresase)
         {
             bool result = false;
-
-            var tokenResponse =
-                await authenticationService.
-                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
-
 
             string uri = "api/usersf/" + userId.ToString();
             var response = await _client.GetAsync(uri);
@@ -446,6 +355,10 @@ namespace Services
                 {
                     result = true;
                 }
+                else
+                {
+                    _logger.LogError($"Unable to update post counter for user id: {userId}");
+                }
             }
 
             return result;
@@ -453,15 +366,6 @@ namespace Services
         public async Task<bool> IncreaseViewCounterForForumBase(int categoryId, int forumId)
         {
             bool result = false;
-
-            var tokenResponse =
-                await authenticationService.
-                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
-
 
             string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString();
             var response = await _client.GetAsync(uri + "?&fields=TotalViews");
@@ -483,6 +387,10 @@ namespace Services
                 {
                     result = true;
                 }
+                else
+                {
+                    _logger.LogError($"Unable to view counter for category id: {categoryId}");
+                }
             }
 
             return result;
@@ -490,14 +398,6 @@ namespace Services
         public async Task<bool> IncreaseViewCounterForTopic(int categoryId, int forumId, int topicId)
         {
             bool result = false;
-
-            var tokenResponse =
-                await authenticationService.
-                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
             string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString();
             var response = await _client.GetAsync(uri + "?&fields=TopicViewCounter");
@@ -520,6 +420,10 @@ namespace Services
                 {
                     result = true;
                 }
+                else
+                {
+                    _logger.LogError($"Unable to view counter for topic id: {topicId}");
+                }
             }
 
             return result;
@@ -528,78 +432,90 @@ namespace Services
         // POST
         public async Task<bool> CreateForumBase(int categoryId, ForumBaseForCreationDto forum)
         {
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
+            bool result = false;
 
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
             string uri = "api/categories/" + categoryId.ToString() + "/forums";
 
             var jsonContent = JsonConvert.SerializeObject(forum);
 
             var response = await _client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                result = true;
+            }
+            else
+            {
+                _logger.LogError($"Unable create forum for category id: {categoryId}");
+            }
+
+            return result;
         }
         public async Task<bool> CreateForumCategory(ForumCategoryForCreationDto category)
         {
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+            bool result = false;
             string uri = "api/categories/";
 
             var jsonContent = JsonConvert.SerializeObject(category);
 
             var response = await _client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                result = true;
+            }
+            else
+            {
+                _logger.LogError($"Unable create category for category id: {category.Name}");
+            }
+
+            return result;
         }
         public async Task<bool> CreateForumTopic(int categoryId, int forumId, ForumTopicForCreationDto topic)
         {
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+            bool result = false;
             string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics";
 
             var jsonContent = JsonConvert.SerializeObject(topic);
 
             var response = await _client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                result = true;
+            }
+            else
+            {
+                _logger.LogError($"Unable create topic for forum id: {forumId}");
+            }
+
+            return result;
         }
         public async Task<bool> CreateForumPost(int categoryId, int forumId, int topicId, ForumPostForCreationDto post)
         {
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+            bool result = false;
             string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString() + "/posts";
 
             var jsonContent = JsonConvert.SerializeObject(post);
 
             var response = await _client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                result = true;
+            }
+            else
+            {
+                _logger.LogError($"Unable create post for topic id: {topicId}");
+            }
+
+            return result;
         }
 
         // DELETE
         public async Task<bool> DeleteForumPost(int categoryId, int forumId, int topicId, int postId)
         {
-            var tokenResponse =
-                await authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+            bool result = false;
             string uri = "api/categories/" + 
                 categoryId.ToString() + "/forums/" + 
                 forumId.ToString() + "/topics/" + 
@@ -608,21 +524,22 @@ namespace Services
 
             var response = await _client.DeleteAsync(uri);
 
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                result = true;
+            }
+            else
+            {
+                _logger.LogError($"Unable delete post for topic id: {topicId}");
+            }
+
+            return result;
         }
 
         // UPDATE
         public async Task<bool> UpdatePost(int categoryId, int forumId, int topicId, int postId, string newText)
         {
             bool result = false;
-
-            var tokenResponse =
-                await authenticationService.
-                Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" });
-            var parsedTokenStr = await tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr);
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
 
             string uri = "api/categories/" +
                 categoryId.ToString() + "/forums/" +
@@ -648,6 +565,10 @@ namespace Services
                 {
                     result = true;
                 }
+            }
+            else
+            {
+                _logger.LogError($"Unable update post with id: {postId}");
             }
 
             return result;

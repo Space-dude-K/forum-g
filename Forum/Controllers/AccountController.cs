@@ -11,6 +11,7 @@ using Entities.Models;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Entities.ViewModels;
+using Entities;
 
 namespace Forum.Controllers
 {
@@ -21,16 +22,18 @@ namespace Forum.Controllers
         private readonly IUserService _userService;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IForumService _forumService;
 
         public AccountController(ILoggerManager logger,
             Interfaces.Forum.IAuthenticationService authenticationService, IUserService userService,
-            UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+            UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IForumService forumService)
         {
             _logger = logger;
             _authenticationService = authenticationService;
             _userService = userService;
             _userManager = userManager;
             _signInManager = signInManager;
+            _forumService = forumService;
         }
         [HttpGet]
         public IActionResult Account(string returnUrl = null)
@@ -123,30 +126,6 @@ namespace Forum.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
         }
-        /*[AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> LoginAsync()
-        {
-            return View();
-        }*/
-        /*[AllowAnonymous]
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
-        {
-            var loginResult = await _authenticationService.Login(model);
-
-            if (loginResult.IsSuccessStatusCode)
-            {
-                TempData["Success"] = "User logined successfully!";
-            }
-            else
-            {
-                var errorsRaw = await loginResult.Content.ReadAsStringAsync();
-                ModelState.AddModelError(string.Empty, errorsRaw);
-            }
-
-            return View(model);
-        }*/
         public async Task<IActionResult> RegisterAsync()
         {
             var dbRoles = await _userService.GetUserRoles();
@@ -166,7 +145,6 @@ namespace Forum.Controllers
 
             return View(model);
         }
-
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -207,49 +185,45 @@ namespace Forum.Controllers
 
             return View(model);
         }
-
-
-        /*[HttpGet]
-        [AllowAnonymous]
-        public IActionResult Login()
+        public async Task<ActionResult> ForumAccount()
         {
+            /*var forumUser = await forumContext.ForumUsers.AsNoTracking()
+                .Include(a => a.ForumAccount)
+                .Include(u => u.ApplicationUser)
+                .Include(u => u.ForumUserCompany)
+                .Include(u => u.ForumUserDivision)
+                .Include(u => u.ForumUserPosition)
+                .Where(u => u.ApplicationUser.NormalizedUserName == name.ToUpper()).FirstOrDefaultAsync();*/
 
-            //var branch = new Branch
-            //{
-            //    branchName = "Regie",
-            //    address = "Naval"
+            int userId = 0;
+            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
+            var forumUser = _forumService.GetForumUser(userId);  
 
-            //};
-            //branchContext.Branch.Add(branch);
-            //branchContext.SaveChanges();
-
-            return View();
-        }
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginViewModel user)
-        {
-            if (ModelState.IsValid)
+            if (forumUser == null)
             {
-                var result = await _signInManager.PasswordSignInAsync(user.Email, user.Password, user.RememberMe, false);
-
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-
-                ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
-
+                _logger.LogError("User with id " + userId + " not found.");
+                return NotFound("User with id " + userId + " not found.");
             }
-            return View(user);
+
+            var appUser = await _userManager.FindByIdAsync(userId.ToString());
+            var roles = await _userManager.GetRolesAsync(appUser);
+
+            ForumAccountViewModel forumAccountViewModel = new ForumAccountViewModel()
+            {
+                FullName = appUser.UserName,
+                UserRole = string.Join(", ", roles),
+                CreatedAt = appUser.CreatedAt.ToString(),
+                LatestLoginOnForum = appUser.LatestLoginOnForum.ToString(),
+                Cabinet = appUser.Cabinet.ToString(),
+                Phone = appUser.PhoneNumber,
+                InPhone = appUser.InternalPhone.ToString(),
+                Position = appUser.Position,
+                Company = appUser.Company,
+                Division = appUser.Division,
+                Login = appUser.NormalizedUserName
+            };
+
+            return View("~/Views/Forum/User/ForumAccount.cshtml", forumAccountViewModel);
         }
-
-        [AllowAnonymous]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-
-            return RedirectToAction("Login");
-        }*/
     }
 }

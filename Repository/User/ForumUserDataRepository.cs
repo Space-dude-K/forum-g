@@ -13,7 +13,7 @@ namespace Repository.User
         }
         public void CreateForumUser(int appUserId)
         {
-            ForumUser forumUser = new() { Id = appUserId, AppUserId = appUserId, CreatedAt = DateTime.Now };
+            ForumUser forumUser = new() { Id = appUserId, AppUserId = appUserId };
 
             Create(forumUser);
         }

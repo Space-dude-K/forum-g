@@ -182,12 +182,12 @@
             <div class="wrapper wrapper-content animated fadeInRight">
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
-                        <h2 class="text-center">Сообщений в подтеме: @Model.TotalPosts</h2>
-                        <div class="forum-sub-title text-center">Автор: @Model.SubTopicAuthor, подтема создана: @Model.SubTopicCreatedAt</div>
+                        <h2 class="text-center">Сообщений в теме: @Model.TotalPosts</h2>
+                        <div class="forum-sub-title text-center">Автор: @Model.SubTopicAuthor, тема создана: @Model.SubTopicCreatedAt</div>
                     </div>
                 </div>
-                <div class="forum-base-create-panel">
-                    @*<button type="button" class="btn btn-light" onclick="location.href='@Url.Action("ForumSubTopics", "Forum", new { forumTopicId = Model.TopicId })'">Вернуться к списку подтем</button>*@
+                <div class="mt-2 mb-2">
+                    <button type="button" class="btn btn-light" onclick="location.href='@Url.RouteUrl("ForumTopics", new { categoryId = @Context.Request.RouteValues["categoryId"], forumId = @Context.Request.RouteValues["forumId"] })'">Вернуться к списку тем</button>
                 </div>
             </div>
         </div>
@@ -209,7 +209,7 @@
 
                 <div class="row border">
                     <div class="col-md-2 text-left border-end">
-                        @Html.ActionLink(@post.ForumUser.FirstAndLastNames, "ForumAccount", "Forum", new { name = @post.ForumUser.FirstAndLastNames }, null)
+                        @Html.ActionLink(@post.ForumUser.FirstAndLastNames, "ForumAccount", "Account", null)
                         <img class="rounded rounded mx-auto d-block mt-3" src="@Url.Content(@post.ForumUser.AvatarImgSrc)" alt="Empty avatar" />
                         <div class="forum-post-body-account-counter ">
                             <p class="m-0 mt-3">Сообщений:</p>

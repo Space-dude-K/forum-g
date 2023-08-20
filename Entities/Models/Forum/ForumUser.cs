@@ -8,7 +8,6 @@ namespace Entities.Models.Forum
         public int Id { get; set; }
         public string SimplifiedName { get; set; }
         public int? Karma { get; set; }
-        public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public virtual ForumAccount ForumAccount { get; set; }
         public int? TotalPostCounter { get; set; }

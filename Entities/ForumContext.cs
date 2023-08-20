@@ -25,7 +25,6 @@ namespace Entities
             modelBuilder.ApplyConfiguration(new ForumUserConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             
-
             modelBuilder.ApplyConfiguration(new ForumCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ForumBaseConfiguration());
             modelBuilder.ApplyConfiguration(new ForumTopicConfiguration());

@@ -1,0 +1,84 @@
+﻿@model ForumAccountViewModel
+
+@{
+    ViewData["Title"] = "ForumAccount";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInRight">
+
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <h2 class="text-center">Пользователь @Model.Login</h2>
+                    </div>
+                </div>
+
+                <div class="ibox-content forum-container">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-addon bg-light">Полное ФИО:</span>
+                        </div>
+                        <input id="forum-account-name" type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@Model.FullName">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-addon bg-light">Роли:</span>
+                        </div>
+                        <input id="forum-account-name" type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@Model.UserRole">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-addon bg-light">Создан:</span>
+                        </div>
+                        <input id="forum-account-name" type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@Model.CreatedAt">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-addon bg-light">Был на форуме:</span>
+                        </div>
+                        <input id="forum-account-name" type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@Model.LatestLoginOnForum">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-addon bg-light">Кабинет:</span>
+                        </div>
+                        <input id="forum-account-name" type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@Model.Cabinet">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-addon bg-light">Телефон:</span>
+                        </div>
+                        <input id="forum-account-name" type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@Model.Phone">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-addon bg-light">Вн. телефон:</span>
+                        </div>
+                        <input id="forum-account-name" type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@Model.InPhone">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-addon bg-light">Должность:</span>
+                        </div>
+                        <input id="forum-account-name" type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@Model.Position">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-addon bg-light">Организация:</span>
+                        </div>
+                        <input id="forum-account-name" type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@Model.Company">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-addon bg-light">Отдел:</span>
+                        </div>
+                        <input id="forum-account-name" type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@Model.Division">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

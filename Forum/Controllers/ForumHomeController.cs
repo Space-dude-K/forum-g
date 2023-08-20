@@ -1,15 +1,7 @@
 ﻿using AutoMapper;
-using Azure.Core;
-using Entities.DTO.ForumDto.Create;
-using Entities.DTO.ForumDto.ForumView;
 using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Services;
-using System.Diagnostics;
-using System.Net;
 using System.Security.Claims;
 
 namespace Forum.Controllers
@@ -29,22 +21,25 @@ namespace Forum.Controllers
         {
             var model = await _forumService.GetForumCategoriesAndForumBasesForModel();
 
+            if(!User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Unauthorized access.");         
+            }
+
             return View("~/Views/Forum/ForumHome.cshtml", model);
         }
         public async Task<IActionResult> RedirectToCreateCategory()
         {
             return View("~/Views/Forum/Add/ForumAddCategory.cshtml");
         }
-        
-        /*public async Task<IActionResult> CreateForumCategory(ForumHomeViewModel model)
-        {
-            var user = _mapper.Map<ForumHomeViewModel>(model-);
-            return View("~/Views/Forum/Add/ForumAddForumBase.cshtml", modelD);
-        }*/
-        
         [Route("categories/{categoryId}/forums/{forumId}/topics", Name = "ForumTopics")]
         public async Task<IActionResult> ForumTopics(int categoryId, int forumId)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Unauthorized access.");
+            }
+
             var model = await _forumService.GetForumTopicsForModel(categoryId, forumId);
             await _forumService.IncreaseViewCounterForForumBase(categoryId, forumId);
 
@@ -55,10 +50,14 @@ namespace Forum.Controllers
         public async Task<IActionResult> TopicPosts(int categoryId, int forumId, int topicId, int pageId = 0)
         {
             int maxiumPostsPerPage = 4;
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Unauthorized access.");
+            }
+
             var model = await _forumService.GetTopicPostsForModel(categoryId, forumId, topicId, pageId, maxiumPostsPerPage);
 
-            //model.Posts.Select(async p => p.ForumUser.TotalPostCounter = await _forumService.GetPostCounterForUser(p.Id));
-            //var tasks = await Task.WhenAll(model.Posts.Select(async p => p.ForumUser.TotalPostCounter = await _forumService.GetPostCounterForUser(p.Id)));
             var tasks = model.Posts.Select(
                 async p => new
                 {
@@ -73,19 +72,17 @@ namespace Forum.Controllers
                     if(user.ForumUser.Id == item.Item.ForumUser.Id)
                         user.ForumUser.TotalPostCounter = item.Counter;
                 }
-
-                //user.ForumUser.TotalPostCounter = tuples.FirstOrDefault(t => t.Item.ForumUser.Id == user.ForumUser.Id).Counter;
             }
-
-            //var m = model.Posts.Select(p => p.ForumUser.TotalPostCounter = tuples.First(i => i.Item.ForumUser.Id == p.ForumUser.Id).Counter);
-
-
-            //await _forumService.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
 
             return View("~/Views/Forum/ForumTopic.cshtml", model);
         }
         public async Task<ActionResult> DeletePost(int categoryId, int forumId, int topicId, int postId, ForumTopicViewModel model)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Unauthorized access.");
+            }
+
             var res = await _forumService.DeleteForumPost(categoryId, forumId, topicId, postId);
             int totalPosts = 0;
 
@@ -103,11 +100,16 @@ namespace Forum.Controllers
                 return BadRequest("Cannot delete post with ID " + postId);
             }
             
-
-            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
+            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 
+                new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
         }
         public async Task<ActionResult> UpdatePost(int categoryId, int forumId, int topicId, int postId, int pageId, string newText)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Unauthorized access.");
+            }
+
             var res = await _forumService.UpdatePost(categoryId, forumId, topicId, postId, newText);
 
             return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = pageId }) });

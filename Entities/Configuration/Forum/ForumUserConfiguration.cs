@@ -27,10 +27,6 @@ namespace Entities.Configuration.Forum
                 .IsRequired(false)
                 .HasDefaultValue(0);
             builder
-                .Property(p => p.CreatedAt)
-                .HasColumnType("Date")
-                .IsRequired(true);
-            builder
                 .Property(p => p.UpdatedAt)
                 .HasColumnType("Date")
                 .IsRequired(false);
@@ -60,7 +56,6 @@ namespace Entities.Configuration.Forum
                 new ForumUser()
                 {
                     Id = 1,
-                    CreatedAt = DateTime.Now,
                     AppUserId = 1
                 }
             );
