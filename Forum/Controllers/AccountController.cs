@@ -213,13 +213,13 @@ namespace Forum.Controllers
                 FullName = appUser.UserName,
                 UserRole = string.Join(", ", roles),
                 CreatedAt = appUser.CreatedAt.ToString(),
-                //LatestLoginOnForum = forumUser.ForumAccount.LatestLoginOnForum,
+                LatestLoginOnForum = appUser.LatestLoginOnForum.ToString(),
                 Cabinet = appUser.Cabinet.ToString(),
                 Phone = appUser.PhoneNumber,
                 InPhone = appUser.InternalPhone.ToString(),
-                //Position = appUser.PositionName,
-                //Company = appUser.CompanyName,
-                //Division = forumUser.ForumUserDivision.DivisionName,
+                Position = appUser.Position,
+                Company = appUser.Company,
+                Division = appUser.Division,
                 Login = appUser.NormalizedUserName
             };
 

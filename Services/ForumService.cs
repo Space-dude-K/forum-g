@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Interfaces;
+﻿using Interfaces;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using Interfaces.Forum;
@@ -20,7 +19,7 @@ namespace Services
         private readonly HttpClient _client;
         private readonly ILoggerManager _logger;
 
-        public ForumService(HttpClient client, ILoggerManager logger, IMapper mapper,
+        public ForumService(HttpClient client, ILoggerManager logger,
             IAuthenticationService authenticationService)
         {
             _logger = logger;
