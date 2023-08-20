@@ -19,8 +19,7 @@ namespace Services
         private readonly HttpClient _client;
         private readonly ILoggerManager _logger;
 
-        public ForumService(HttpClient client, ILoggerManager logger,
-            IAuthenticationService authenticationService)
+        public ForumService(HttpClient client, ILoggerManager logger, IAuthenticationService authenticationService)
         {
             _logger = logger;
             _client = client ?? throw new ArgumentNullException(nameof(client));
@@ -33,10 +32,12 @@ namespace Services
         }
         public async Task<ForumHomeViewModel> GetForumCategoriesAndForumBasesForModel()
         {
-            ForumHomeViewModel forumHomeViewModel = new();
-            forumHomeViewModel.Categories = await GetForumCategories();
-            
-            for(int i = 0; i < forumHomeViewModel.Categories.Count; i++)
+            ForumHomeViewModel forumHomeViewModel = new()
+            {
+                Categories = await GetForumCategories()
+            };
+
+            for (int i = 0; i < forumHomeViewModel.Categories.Count; i++)
             {
                 forumHomeViewModel.Categories[i].Forums = await GetForumBases(forumHomeViewModel.Categories[i].Id);
 
@@ -45,27 +46,6 @@ namespace Services
 
                 int topicCount = await GetTopicCount(forumHomeViewModel.Categories[i].Id);
                 forumHomeViewModel.Categories[i].TotalTopics = topicCount;
-
-                /*
-                for (int j = 0; j < forumHomeViewModel.Categories[i].Forums.Count; j++)
-                {
-                    var topics = await GetForumTopics(forumHomeViewModel.Categories[i].Id, forumHomeViewModel.Categories[i].Forums[j].Id);
-                    forumHomeViewModel.Categories[i].Forums[j].TopicsCount = topics.Count;
-
-                    
-                    forumHomeViewModel.Categories[i].Forums[j].TotalPosts = postCount;
-
-
-
-                    for (int k = 0; k < topics.Count; k++)
-                    {
-                        var posts = await GetTopicPosts(
-                            forumHomeViewModel.Categories[i].Id, 
-                            forumHomeViewModel.Categories[i].Forums[j].Id, 
-                            topics[k].Id, 0, 0);
-                        forumHomeViewModel.Categories[i].Forums[j].TotalPosts += posts.Count;
-                    }
-                }*/
             }
 
             return forumHomeViewModel;
