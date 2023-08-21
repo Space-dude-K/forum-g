@@ -20,6 +20,7 @@ namespace Services
 
         public UserService(HttpClient client, ILoggerManager logger, IMapper mapper)
         {
+            _client = client;
             _logger = logger;
             _mapper = mapper;
         }
