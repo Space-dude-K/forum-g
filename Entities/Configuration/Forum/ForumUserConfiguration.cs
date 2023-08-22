@@ -56,7 +56,8 @@ namespace Entities.Configuration.Forum
                 new ForumUser()
                 {
                     Id = 1,
-                    AppUserId = 1
+                    AppUserId = 1,
+                    TotalPostCounter = 10
                 }
             );
         }
