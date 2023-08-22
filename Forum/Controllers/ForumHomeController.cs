@@ -3,6 +3,7 @@ using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Linq;
 
 namespace Forum.Controllers
 {
@@ -65,13 +66,13 @@ namespace Forum.Controllers
                     Counter = await _forumService.GetPostCounterForUser(p.ForumUser.Id)
                 });
             var tuples = await Task.WhenAll(tasks);
-            foreach(var user in model.Posts)
+
+            foreach (var (user, item) in model.Posts
+                .SelectMany(user => tuples
+                .Where(item => user.ForumUser.Id == item.Item.ForumUser.Id)
+                .Select(item => (user, item))))
             {
-                foreach(var item in tuples)
-                {
-                    if(user.ForumUser.Id == item.Item.ForumUser.Id)
-                        user.ForumUser.TotalPostCounter = item.Counter;
-                }
+                user.ForumUser.TotalPostCounter = item.Counter;
             }
 
             return View("~/Views/Forum/ForumTopic.cshtml", model);
