@@ -1,5 +1,4 @@
-﻿using Entities.DTO.ForumDto;
-using Entities.DTO.ForumDto.Create;
+﻿using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.ForumView;
 using Entities.DTO.UserDto;
 using Entities.ViewModels.Forum;
@@ -25,7 +24,7 @@ namespace Interfaces.Forum
         Task<bool> UpdatePost(int categoryId, int forumId, int topicId, int postId, string newText);
         Task<bool> UpdateTopicCounter(int categoryId, bool incresase);
         Task<bool> UpdatePostCounterForUser(int userId, bool incresase);
-        Task<int> GetPostCounterForUser(int userId);
-        Task<ForumUserDto> GetForumUser(int userId);
+        //Task<int> GetPostCounterForUser(int userId);
+        //Task<ForumUserDto> GetForumUser(int userId);
     }
 }

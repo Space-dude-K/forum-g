@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Entities.Models.Forum;
-using Entities.Models;
 
 namespace Entities.Configuration.Forum
 {
@@ -27,6 +26,10 @@ namespace Entities.Configuration.Forum
                 .IsRequired(false)
                 .HasDefaultValue(0);
             builder
+                .Property(p => p.AvatarImgSrc)
+                .HasColumnType("NVARCHAR")
+                .IsRequired(false);
+            builder
                 .Property(p => p.UpdatedAt)
                 .HasColumnType("Date")
                 .IsRequired(false);
@@ -36,7 +39,6 @@ namespace Entities.Configuration.Forum
                 .IsRequired(true);
 
             builder.Ignore(p => p.SimplifiedName);
-            builder.Ignore(p  => p.AvatarImgSrc);
 
             builder
                 .HasKey(p => p.Id)
@@ -50,8 +52,6 @@ namespace Entities.Configuration.Forum
                 .OnDelete(DeleteBehavior.NoAction);
 
             // Data seed
-
-
             builder.HasData(
                 new ForumUser()
                 {

@@ -12,6 +12,8 @@ using System.Security.Principal;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Entities.ViewModels;
 using Entities;
+using Services;
+using Forum.Extensions;
 
 namespace Forum.Controllers
 {
@@ -23,10 +25,11 @@ namespace Forum.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IForumService _forumService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AccountController(ILoggerManager logger,
             Interfaces.Forum.IAuthenticationService authenticationService, IUserService userService,
-            UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IForumService forumService)
+            UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IForumService forumService, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _authenticationService = authenticationService;
@@ -34,6 +37,7 @@ namespace Forum.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _forumService = forumService;
+            _webHostEnvironment = webHostEnvironment;
         }
         [HttpGet]
         public IActionResult Account(string returnUrl = null)
@@ -197,7 +201,7 @@ namespace Forum.Controllers
 
             int userId = 0;
             int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
-            var forumUser = _forumService.GetForumUser(userId);  
+            var forumUser = _userService.GetForumUser(userId);  
 
             if (forumUser == null)
             {
@@ -220,7 +224,8 @@ namespace Forum.Controllers
                 Position = appUser.Position,
                 Company = appUser.Company,
                 Division = appUser.Division,
-                Login = appUser.NormalizedUserName
+                Login = appUser.NormalizedUserName,
+                AvatarImgSource = forumUser.Result.LoadAvatar(_webHostEnvironment.WebRootPath)
             };
 
             return View("~/Views/Forum/User/ForumAccount.cshtml", forumAccountViewModel);

@@ -11,6 +11,8 @@ namespace Interfaces.User
 {
     public interface IUserService
     {
+        Task<ForumUserDto> GetForumUser(int userId);
+        Task<ForumUserDto> GetForumUserDto(int userId);
         Task<List<string>> GetUserRoles();
         Task<RegisterTableViewModel> GetUsersData();
     }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Services.Utils;
 using System.Net.Http.Headers;
+using Interfaces.Forum;
 
 namespace Services
 {
@@ -17,12 +18,22 @@ namespace Services
 
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly Interfaces.Forum.IAuthenticationService _authenticationService;
 
-        public UserService(HttpClient client, ILoggerManager logger, IMapper mapper)
+        public UserService(HttpClient client, ILoggerManager logger, IMapper mapper, Interfaces.Forum.IAuthenticationService authenticationService)
         {
-            _client = client;
             _logger = logger;
             _mapper = mapper;
+            _authenticationService = authenticationService;
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var tokenResponse = _authenticationService.Login(new LoginViewModel()
+            { UserName = "Admin", Password = "1234567890" }).Result;
+
+            var parsedTokenStr = tokenResponse.Content.ReadAsStringAsync();
+            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr.Result);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
         }
         public async Task<List<string>> GetUserRoles()
         {
@@ -49,6 +60,43 @@ namespace Services
 
             return model;
         }
-        
+        public async Task<ForumUserDto> GetForumUser(int userId)
+        {
+            ForumUserDto forumUser = new();
+
+            string uri = "api/users/" + userId.ToString();
+            var response = await _client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                forumUser = JsonConvert.DeserializeObject<IEnumerable<ForumUserDto>>(rawData).First();
+            }
+            else
+            {
+                _logger.LogError($"Unable to get forum user id: {userId}");
+            }
+
+            return forumUser;
+        }
+        public async Task<ForumUserDto> GetForumUserDto(int userId)
+        {
+            ForumUserDto forumUserDto = new();
+
+            string uri = "api/usersf/" + userId.ToString();
+            var response = await _client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                forumUserDto = JsonConvert.DeserializeObject<ForumUserDto>(rawData);
+            }
+            else
+            {
+                _logger.LogError($"Unable to get post counter for user id: {userId}");
+            }
+
+            return forumUserDto;
+        }
     }
 }
