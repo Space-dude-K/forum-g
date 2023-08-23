@@ -19,7 +19,7 @@ namespace Forum.Controllers.Forum
 {
     [Route("api/categories/{categoryId}/forums")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator, User")]
     public class ForumController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
@@ -286,7 +286,8 @@ namespace Forum.Controllers.Forum
         [ProducesResponseType(401)]
         [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]
-        public async Task<IActionResult> PartiallyUpdateForumForCategory(int categoryId, int forumId, [FromBody] JsonPatchDocument<ForumBaseForUpdateDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateForumForCategory(int categoryId, int forumId, 
+            [FromBody] JsonPatchDocument<ForumBaseForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
             {

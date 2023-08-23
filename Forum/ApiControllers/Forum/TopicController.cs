@@ -19,7 +19,7 @@ namespace Forum.Controllers.Forum
 {
     [Route("api/categories/{categoryId}/forums/{forumId}/topics")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator, User")]
     public class TopicController : ControllerBase
     {
         private readonly IRepositoryManager _repository;

@@ -15,6 +15,7 @@ using Services;
 using Interfaces.User;
 using Forum.Utility.UserLinks;
 using Entities.DTO.UserDto;
+using Forum.ActionsFilters.File;
 
 namespace Forum
 {
@@ -67,6 +68,7 @@ namespace Forum
             services.AddScoped<ValidatePostForTopicExistsAttribute>();
             services.AddScoped<ValidateTopicCounter>();
             services.AddScoped<ValidateUserExistsAttribute>();
+            services.AddScoped<ValidateFileExistsAttribute>();
 
             services.AddScoped<ValidateMediaTypeAttribute>();
 
