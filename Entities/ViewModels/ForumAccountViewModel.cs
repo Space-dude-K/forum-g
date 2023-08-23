@@ -13,5 +13,6 @@
         public string Company { get; set; }
         public string Division { get; set; }
         public string Login { get; set; }
+        public string AvatarImgSource { get; set; }
     }
 }

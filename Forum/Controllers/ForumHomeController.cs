@@ -4,6 +4,8 @@ using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Linq;
+using Interfaces.User;
+using Forum.Extensions;
 
 namespace Forum.Controllers
 {
@@ -11,11 +13,15 @@ namespace Forum.Controllers
     {
         private readonly IForumService _forumService;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
+        private readonly IWebHostEnvironment _env;
 
-        public ForumHomeController(IForumService forumService, IMapper mapper)
+        public ForumHomeController(IForumService forumService, IMapper mapper, IUserService  userService, IWebHostEnvironment env)
         {
             _forumService = forumService;
             _mapper = mapper;
+            _userService = userService;
+            _env = env;
         }
 
         public async Task<IActionResult> ForumHome()
@@ -63,16 +69,18 @@ namespace Forum.Controllers
                 async p => new
                 {
                     Item = p,
-                    Counter = await _forumService.GetPostCounterForUser(p.ForumUser.Id)
+                    Dto = await _userService.GetForumUserDto(p.ForumUser.Id)
                 });
             var tuples = await Task.WhenAll(tasks);
 
+            // TODO. Refactoring
             foreach (var (user, item) in model.Posts
                 .SelectMany(user => tuples
                 .Where(item => user.ForumUser.Id == item.Item.ForumUser.Id)
                 .Select(item => (user, item))))
             {
-                user.ForumUser.TotalPostCounter = item.Counter;
+                user.ForumUser.TotalPostCounter = item.Dto.TotalPostCounter;
+                user.ForumUser.AvatarImgSrc =  item.Dto.LoadAvatar(_env.WebRootPath);
             }
 
             return View("~/Views/Forum/ForumTopic.cshtml", model);
@@ -113,7 +121,8 @@ namespace Forum.Controllers
 
             var res = await _forumService.UpdatePost(categoryId, forumId, topicId, postId, newText);
 
-            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = pageId }) });
+            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 
+                new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = pageId }) });
         }
     }
 }

@@ -14,6 +14,7 @@ using Entities.DTO.ForumDto;
 
 namespace Services
 {
+    // TODO. Refactoring
     public class ForumService : IForumService
     {
         private readonly HttpClient _client;
@@ -25,7 +26,9 @@ namespace Services
             _client = client ?? throw new ArgumentNullException(nameof(client));
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var tokenResponse = authenticationService.Login(new Entities.ViewModels.LoginViewModel() { UserName = "Admin", Password = "1234567890" }).Result;
+            var tokenResponse = authenticationService.Login(new Entities.ViewModels.LoginViewModel() 
+            { UserName = "Admin", Password = "1234567890" }).Result;
+
             var parsedTokenStr = tokenResponse.Content.ReadAsStringAsync();
             var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr.Result);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
@@ -236,25 +239,7 @@ namespace Services
 
             return forumUser;
         }
-        public async Task<int> GetPostCounterForUser(int userId)
-        {
-            int totalPosts = 0;
-
-            string uri = "api/usersf/" + userId.ToString();
-            var response = await _client.GetAsync(uri);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var rawData = await response.Content.ReadAsStringAsync();
-                totalPosts = JsonConvert.DeserializeObject<ForumUserDto>(rawData).TotalPostCounter;
-            }
-            else
-            {
-                _logger.LogError($"Unable to get post counter for user id: {userId}");
-            }
-
-            return totalPosts;
-        }
+        
 
         // COUNTERS
         public async Task<bool> UpdatePostCounter(int topicId, bool incresase)

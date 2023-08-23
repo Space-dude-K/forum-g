@@ -1,16 +1,13 @@
 ﻿using AutoMapper;
-using Entities.DTO.ForumDto.Update;
 using Entities.DTO.UserDto;
 using Entities.DTO.UserDto.Update;
 using Entities.Models;
 using Entities.Models.Forum;
 using Entities.RequestFeatures.User;
 using Forum.ActionsFilters;
-using Forum.ActionsFilters.Forum;
 using Forum.ActionsFilters.User;
 using Forum.Utility.UserLinks;
 using Interfaces;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 

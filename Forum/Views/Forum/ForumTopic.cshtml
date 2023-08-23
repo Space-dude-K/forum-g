@@ -209,15 +209,15 @@
 
                 <div class="row border">
                     <div class="col-md-2 text-left border-end">
-                        @Html.ActionLink(@post.ForumUser.FirstAndLastNames, "ForumAccount", "Account", null)
+                        <p class="d-flex justify-content-center">@Html.ActionLink(@post.ForumUser.FirstAndLastNames, "ForumAccount", "Account", null)</p>
                         <img class="rounded rounded mx-auto d-block mt-3" src="@Url.Content(@post.ForumUser.AvatarImgSrc)" alt="Empty avatar" />
-                        <div class="forum-post-body-account-counter ">
-                            <p class="m-0 mt-3">Сообщений:</p>
-                            <p>@post.ForumUser.TotalPostCounter</p>
+                        <div>
+                            <p class="m-0 mt-3 d-flex justify-content-center">Сообщений:</p>
+                            <p class="d-flex justify-content-center">@post.ForumUser.TotalPostCounter</p>
                         </div>
                         <div class="forum-post-body-account-date">
-                            <p class="m-0">Дата регистрации:</p>
-                            <p>@post.CreatedAt</p>
+                            <p class="m-0 d-flex justify-content-center">Дата регистрации:</p>
+                            <p class="d-flex justify-content-center">@post.CreatedAt</p>
                         </div>
 
                         @if (true)
@@ -231,7 +231,6 @@
                     </div>
                     <div class="col">
                         <div class="forum-post-body-message-main row border-left" id="forum-post-body-message-main">
-                            <!--<textarea class="forum-post-body-message-main-content1" id="forum-post-body-message-main-content-@post.Id" name="input"></textarea> -->
                             <div class="forum-post-body-message-main-content-div mt-2 ml-2" id="forum-post-body-message-main-content-div-@post.Id">@Html.Raw(post.PostText)</div>
                         </div>
 
