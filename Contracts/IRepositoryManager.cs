@@ -1,4 +1,5 @@
-﻿using Interfaces.Forum;
+﻿using Interfaces.File;
+using Interfaces.Forum;
 using Interfaces.Printer;
 using Interfaces.User;
 
@@ -15,6 +16,7 @@ namespace Interfaces
         IForumPostRepository ForumPost { get; }
         IPrinterDeviceRepository PrinterDevice { get; }
         IForumUserDataRepository ForumUsers { get; }
+        IForumFileRepository ForumFile { get; }
 
         Task SaveAsync();
     }

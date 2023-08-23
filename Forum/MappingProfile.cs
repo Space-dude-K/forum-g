@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Entities.DTO.FileDto;
+using Entities.DTO.FileDto.Update;
 using Entities.DTO.ForumDto;
 using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.ForumView;
@@ -7,6 +9,7 @@ using Entities.DTO.UserDto;
 using Entities.DTO.UserDto.Create;
 using Entities.DTO.UserDto.Update;
 using Entities.Models;
+using Entities.Models.File;
 using Entities.Models.Forum;
 using Entities.ViewModels;
 using Entities.ViewModels.Forum;
@@ -25,6 +28,13 @@ namespace Forum
             CreateMap<ForumUser, ForumUserForUpdateDto>();
             CreateMap<ForumUser, ForumUserForUpdateDto>().ReverseMap();
             CreateMap<ForumUser, ForumUserDto>();
+            CreateMap<ForumUserDto, ForumUserPageViewModel>();
+
+            // File
+            CreateMap<ForumFileDto, ForumFile>();
+            CreateMap<ForumFileDto, ForumFile>().ReverseMap();
+            CreateMap<ForumFileForUpdateDto, ForumFile>();
+            CreateMap<ForumFileForUpdateDto, ForumFile>().ReverseMap();
 
             // Category
             CreateMap<ForumCategory, ForumCategoryDto>();

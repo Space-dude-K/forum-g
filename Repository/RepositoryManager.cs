@@ -6,6 +6,8 @@ using Repository.Forum;
 using Repository.Printer;
 using Interfaces.User;
 using Repository.User;
+using Interfaces.File;
+using Repository.File;
 
 namespace Repository
 {
@@ -23,6 +25,8 @@ namespace Repository
         private IForumTopicRepository _forumTopicRepository;
         private IForumTopicCounterRepository _forumTopicCounterRepository;
         private IForumPostRepository _forumPostRepository;
+
+        private IForumFileRepository _forumFileRepository;
 
         private IPrinterDeviceRepository _printerDeviceRepository;
 
@@ -107,6 +111,15 @@ namespace Repository
                 if (_forumPostRepository == null)
                     _forumPostRepository = new ForumPostRepository(_forumContext);
                 return _forumPostRepository;
+            }
+        }
+        public IForumFileRepository ForumFile
+        {
+            get
+            {
+                if (_forumFileRepository == null)
+                    _forumFileRepository = new ForumFileRepository(_forumContext);
+                return _forumFileRepository;
             }
         }
         public IPrinterDeviceRepository PrinterDevice

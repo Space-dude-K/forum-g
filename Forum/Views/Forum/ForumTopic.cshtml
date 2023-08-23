@@ -187,7 +187,9 @@
                     </div>
                 </div>
                 <div class="mt-2 mb-2">
-                    <button type="button" class="btn btn-light" onclick="location.href='@Url.RouteUrl("ForumTopics", new { categoryId = @Context.Request.RouteValues["categoryId"], forumId = @Context.Request.RouteValues["forumId"] })'">Вернуться к списку тем</button>
+                    <button type="button" class="btn btn-light" onclick="location.href='@Url.RouteUrl("ForumTopics", 
+                    new { categoryId = @Context.Request.RouteValues["categoryId"], 
+                    forumId = @Context.Request.RouteValues["forumId"] })'">Вернуться к списку тем</button>
                 </div>
             </div>
         </div>
@@ -223,15 +225,30 @@
                         @if (true)
                         {
                             <div class="d-flex justify-content-center mb-4 mr-1">
-                                <button type="button" class="btn btn-light mr-0 ml-1" onclick="EnableEditModeForumPost(@post.Id)" title="Редактировать сообщение"><img src="~/images/icons/bootstrap-icons-1.5.0/pencil.svg" width="12" height="12" /></button>
-                                <button type="button" class="btn btn-light mr-0 ml-1" onclick="SaveChangesForumPost(@Context.Request.RouteValues["categoryId"], @Context.Request.RouteValues["forumId"], @Context.Request.RouteValues["topicId"], @post.Id, @Context.Request.RouteValues["pageId"])" title="Сохранить изменения"><img src="~/images/icons/bootstrap-icons-1.5.0/save.svg" width="12" height="12" /></button>
-                                <button type="button" class="btn btn-light mr-1 ml-1" onclick="DeleteForumPost(@Context.Request.RouteValues["categoryId"], @Context.Request.RouteValues["forumId"], @Context.Request.RouteValues["topicId"], @post.Id)" title="Удалить сообщение"><img src="~/images/icons/bootstrap-icons-1.5.0/recycle.svg" width="12" height="12" /></button>
+                                <button type="button" class="btn btn-light mr-0 ml-1" 
+                                onclick="EnableEditModeForumPost(@post.Id)" title="Редактировать сообщение"><img 
+                                    src="~/images/icons/bootstrap-icons-1.5.0/pencil.svg" width="12" height="12" /></button>
+
+                                <button type="button" class="btn btn-light mr-0 ml-1" 
+                                onclick="SaveChangesForumPost(@Context.Request.RouteValues["categoryId"], 
+                                @Context.Request.RouteValues["forumId"], 
+                                @Context.Request.RouteValues["topicId"], 
+                                @post.Id, @Context.Request.RouteValues["pageId"])" title="Сохранить изменения"><img 
+                                    src="~/images/icons/bootstrap-icons-1.5.0/save.svg" width="12" height="12" /></button>
+
+                                <button type="button" class="btn btn-light mr-1 ml-1" 
+                                onclick="DeleteForumPost(@Context.Request.RouteValues["categoryId"], 
+                                @Context.Request.RouteValues["forumId"], 
+                                @Context.Request.RouteValues["topicId"], @post.Id)" title="Удалить сообщение"><img 
+                                    src="~/images/icons/bootstrap-icons-1.5.0/recycle.svg" width="12" height="12" /></button>
                             </div>
                         }
                     </div>
                     <div class="col">
                         <div class="forum-post-body-message-main row border-left" id="forum-post-body-message-main">
-                            <div class="forum-post-body-message-main-content-div mt-2 ml-2" id="forum-post-body-message-main-content-div-@post.Id">@Html.Raw(post.PostText)</div>
+                            <div 
+                                class="forum-post-body-message-main-content-div mt-2 ml-2" 
+                                id="forum-post-body-message-main-content-div-@post.Id">@Html.Raw(post.PostText)</div>
                         </div>
 
                         <!--
@@ -248,28 +265,19 @@
             </div>
         </div>
     }
-    @*<div class="row">
-        <div class="col-lg-12">
-            <div class="wrapper wrapper-content animated fadeInRight">
-                <div class="ibox-content m-b-sm justify-content-md-center text-center" id="text-area-tiny-mce-forum-post-container">
-                    <form asp-controller="ForumPostCreationController" asp-action="ForumPostCreate" method="post">
-                        <div class="form-group">
-                            <textarea asp-for="@Model.PostText" id="text-area-tiny-mce-forum-post-add" name="input"> </textarea>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" value="Submit" class="btn-primary mt-2">Создать категорию</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>*@
     <div class="row">
         <div class="col-lg-12">
             <div class="wrapper wrapper-content animated fadeInRight">
                 <div class="ibox-content m-b-sm justify-content-md-center text-center" id="text-area-tiny-mce-forum-post-container">
                     <textarea id="text-area-tiny-mce-forum-post-add" name="input"> </textarea>
-                    <button id="post-add-button" type="button" class="btn btn-light mt-2" onclick="return CreatePost(@Context.Request.RouteValues["categoryId"], @Context.Request.RouteValues["forumId"], @Context.Request.RouteValues["topicId"], @Model.TotalPages)">Отправить сообщение</button>
+                    <button 
+                        id="post-add-button" 
+                        type="button" 
+                        class="btn btn-light mt-2" 
+                        onclick="return CreatePost(@Context.Request.RouteValues["categoryId"], 
+                        @Context.Request.RouteValues["forumId"], 
+                        @Context.Request.RouteValues["topicId"], 
+                        @Model.TotalPages)">Отправить сообщение</button>
                 </div>
             </div>
         </div>
@@ -282,7 +290,15 @@
                     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                         @for (int i = 1; i < @Model.TotalPages + 1; i++)
                         {
-                            <button type="button" class="btn btn-light" onclick="location.href='@Url.RouteUrl("TopicPosts", new { categoryId = @Context.Request.RouteValues["categoryId"], forumId = @Context.Request.RouteValues["forumId"], topicId = @Context.Request.RouteValues["topicId"], pageId = i })'">@i</button>
+                            <button 
+                                type="button" 
+                                class="btn btn-light" 
+                                onclick="location.href='@Url.RouteUrl("TopicPosts", 
+                                new { categoryId = 
+                                    @Context.Request.RouteValues["categoryId"], 
+                                    forumId = @Context.Request.RouteValues["forumId"], 
+                                    topicId = @Context.Request.RouteValues["topicId"], 
+                                    pageId = i })'">@i</button>
                         }
                     </div>
                 </div>

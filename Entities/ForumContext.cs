@@ -1,4 +1,5 @@
 ﻿using Entities.Configuration;
+using Entities.Configuration.File;
 using Entities.Configuration.Forum;
 using Entities.Models;
 using Entities.Models.Forum;
@@ -24,6 +25,8 @@ namespace Entities
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new ForumUserConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
+            modelBuilder.ApplyConfiguration(new ForumFileConfiguration());
             
             modelBuilder.ApplyConfiguration(new ForumCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ForumBaseConfiguration());

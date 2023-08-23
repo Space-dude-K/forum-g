@@ -50,6 +50,12 @@ namespace Entities.Configuration.Forum
                 .HasForeignKey<ForumUser>(p => p.Id)
                 .HasConstraintName("FK_ForumUser_AppUser_Id")
                 .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .HasMany(p => p.ForumFiles)
+                .WithOne(p => p.ForumUser)
+                .HasForeignKey(p => p.ForumUserId)
+                .HasConstraintName("FK_ForumUser_ForumFile_ForumUserId")
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Data seed
             builder.HasData(

@@ -6,6 +6,15 @@ using System.Security.Claims;
 using System.Linq;
 using Interfaces.User;
 using Forum.Extensions;
+using Entities.DTO.ForumDto;
+using Entities.DTO.UserDto;
+using Microsoft.EntityFrameworkCore;
+using System.IO;
+using Entities.Models.File;
+using Entities.DTO.FileDto;
+using Interfaces;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace Forum.Controllers
 {
@@ -15,15 +24,80 @@ namespace Forum.Controllers
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IWebHostEnvironment _env;
+        private readonly ILoggerManager _logger;
 
-        public ForumHomeController(IForumService forumService, IMapper mapper, IUserService  userService, IWebHostEnvironment env)
+        public ForumHomeController(IForumService forumService, 
+            IMapper mapper, IUserService  userService, IWebHostEnvironment env, ILoggerManager logger)
         {
             _forumService = forumService;
             _mapper = mapper;
             _userService = userService;
             _env = env;
+            _logger = logger;
         }
+        [HttpPost]
+        public async Task<IActionResult> LoadFileForUser(IFormFile uploadedFile)
+        {
+            int userId = 0;
+            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
 
+            if(userId == 0) 
+            {
+                return Unauthorized("Unauthorized access.");
+            }
+
+            if (uploadedFile != null)
+            {
+                var fileExt = Path.GetExtension(uploadedFile.FileName);
+                var fileName = User.Identity.Name + "_" + userId.ToString() + fileExt;
+                string filePath = "/images/avatars/" + fileName;
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    await uploadedFile.CopyToAsync(memoryStream);
+                    using (var img = Image.FromStream(memoryStream))
+                    {
+                        var rImg = (Image)img.ResizeImage(120, 96);
+                        rImg.Save(_env.WebRootPath + filePath, ImageFormat.Jpeg);
+                    }
+                }
+
+                ForumFile file = new() { Name = fileName, Path = filePath };
+                var fileToDb = _mapper.Map<ForumFileDto>(file);
+                fileToDb.ForumUserId = userId;
+
+                var fileFromDb = await _forumService.GetForumFileByUserId(userId);
+                if(fileFromDb != null)
+                {
+                    var updateRes = _forumService.UpdateForumFile(fileFromDb.ForumUserId, fileToDb);
+                }
+                else
+                {
+                    var createRes = await _forumService.CreateForumFile(fileToDb);
+                }
+            }
+
+            return RedirectToAction("ForumUserPage", new { id = userId });
+        }
+        public async Task<IActionResult> ForumUserPage(int id)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Unauthorized access.");
+            }
+
+            var user = await _userService.GetForumUser(id);
+
+            if(user == null)
+            {
+                return NotFound($"User with id {id} not found.");
+            }
+
+            var model = _mapper.Map<ForumUserPageViewModel>(user);
+            model.AvatarImgSrc = user.LoadAvatar(_env.WebRootPath);
+
+            return View("~/Views/Forum/User/ForumUserPage.cshtml", model);
+        }
         public async Task<IActionResult> ForumHome()
         {
             var model = await _forumService.GetForumCategoriesAndForumBasesForModel();
@@ -80,7 +154,7 @@ namespace Forum.Controllers
                 .Select(item => (user, item))))
             {
                 user.ForumUser.TotalPostCounter = item.Dto.TotalPostCounter;
-                user.ForumUser.AvatarImgSrc =  item.Dto.LoadAvatar(_env.WebRootPath);
+                user.ForumUser.AvatarImgSrc = user.ForumUser.LoadAvatar(_env.WebRootPath);
             }
 
             return View("~/Views/Forum/ForumTopic.cshtml", model);

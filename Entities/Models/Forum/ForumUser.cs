@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Entities.Models.File;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models.Forum
@@ -14,5 +15,6 @@ namespace Entities.Models.Forum
         public string AvatarImgSrc { get; set; }
         public virtual AppUser AppUser { get; set; }
         public int AppUserId { get; set; }
+        public virtual ICollection<ForumFile> ForumFiles { get; set; }
     }
 }
