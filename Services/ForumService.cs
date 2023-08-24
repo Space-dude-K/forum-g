@@ -242,6 +242,7 @@ namespace Services
         }
         
 
+
         // COUNTERS
         public async Task<bool> UpdatePostCounter(int topicId, bool incresase)
         {
@@ -498,6 +499,7 @@ namespace Services
             return result;
         }
 
+        // FILE
         public async Task<bool> CreateForumFile(ForumFileDto file)
         {
             bool result = false;
@@ -567,6 +569,7 @@ namespace Services
 
             return result;
         }
+
         // DELETE
         public async Task<bool> DeleteForumPost(int categoryId, int forumId, int topicId, int postId)
         {

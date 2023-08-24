@@ -67,8 +67,9 @@ namespace Forum
             services.AddScoped<ValidateTopicForForumExistsAttribute>();
             services.AddScoped<ValidatePostForTopicExistsAttribute>();
             services.AddScoped<ValidateTopicCounter>();
-            services.AddScoped<ValidateUserExistsAttribute>();
+            services.AddScoped<ValidateForumUserExistsAttribute>();
             services.AddScoped<ValidateFileExistsAttribute>();
+            services.AddScoped<ValidateAppUserExistsAttribute>();
 
             services.AddScoped<ValidateMediaTypeAttribute>();
 

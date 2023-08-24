@@ -28,7 +28,5 @@ namespace Interfaces.Forum
         Task<bool> CreateForumFile(ForumFileDto file);
         Task<ForumFileDto> GetForumFileByUserId(int forumUserId);
         Task<bool> UpdateForumFile(int forumFileId, ForumFileDto forumFileDto);
-        //Task<int> GetPostCounterForUser(int userId);
-        //Task<ForumUserDto> GetForumUser(int userId);
     }
 }

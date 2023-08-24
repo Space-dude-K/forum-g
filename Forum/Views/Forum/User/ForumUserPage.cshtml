@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "ForumUserPage";
 }
-
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
@@ -16,8 +15,17 @@
                     </div>
                 </div>
 
-                <div class="ibox-content forum-container">
-                    <form asp-route="ForumTopicCreate" method="post">
+                <div>
+                    <h3 class="text-center">Изменить аватар</h3>
+                    <form asp-action="LoadFileForUser" asp-controller="ForumHome" 
+                    method="post" enctype="multipart/form-data" class="input-group mb-3 justify-content-center">
+                        <input type="file" name="uploadedFile" accept=".jpg" class="custom-file-input btn btn-outline-secondary" /><br>
+                        <input type="submit" value="Загрузить" class="btn btn-outline-secondary" />
+                    </form>
+                </div>
+                
+                <div class="ibox-content">
+                    <form asp-action="UpdateForumUserPage" asp-controller="ForumHome" asp-route-id="@Context.Request.RouteValues["id"]" method="post">
                         <div class="form-group">
                             <label asp-for="@Model.FirstName"></label>
                             <input asp-for="@Model.FirstName" class="form-control" />
@@ -55,15 +63,10 @@
                         </div>
 
                         <div class="text-center">
-                            <button type="submit" value="Submit" class="btn-primary mt-2">Сохранить</button>
+                            <button type="submit" value="Submit" class="btn btn-secondary mt-2">Сохранить</button>
                         </div>
+                    </form>
 
-                    </form>
-                    <h3>Выберите файл для загрузки</h3>
-                    <form asp-action="LoadFileForUser" asp-controller="ForumHome" method="post" enctype="multipart/form-data">
-                        <input type="file" name="uploadedFile" accept=".jpg" /><br>
-                        <input type="submit" value="Загрузить" />
-                    </form>
                 </div>
             </div>
         </div>

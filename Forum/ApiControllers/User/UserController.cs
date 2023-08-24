@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Entities.DTO.ForumDto.Update;
 using Entities.DTO.UserDto;
 using Entities.DTO.UserDto.Update;
 using Entities.Models;
@@ -10,6 +11,7 @@ using Forum.Utility.UserLinks;
 using Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace Forum.ApiControllers.User
 {
@@ -71,10 +73,32 @@ namespace Forum.ApiControllers.User
 
             return Ok(usersDto);
         }
+        [HttpGet("usersa/{userId}")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        public async Task<IActionResult> GetAppUser(int userId)
+        {
+            var usersFromDb = await _repository.Users.GetUserAsync(userId, trackChanges: false);
+            var usersDto = _mapper.Map<AppUser>(usersFromDb);
+
+            return Ok(usersDto);
+        }
+        [HttpPut]
+        [Route("usersa/{userId}")]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        [ServiceFilter(typeof(ValidateAppUserExistsAttribute))]
+        public async Task<IActionResult> UpdateAppUser(int userId, [FromBody] AppUserForUpdateDto appUser)
+        {
+            var appUserFromDb = HttpContext.Items["user"] as AppUser;
+
+            _mapper.Map(appUser, appUserFromDb);
+            await _repository.SaveAsync();
+
+            return NoContent();
+        }
         [HttpPatch]
         [Route("usersf/{userId}")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        [ServiceFilter(typeof(ValidateUserExistsAttribute))]
+        [ServiceFilter(typeof(ValidateForumUserExistsAttribute))]
         public async Task<IActionResult> PatchUser(int userId, [FromBody] JsonPatchDocument<ForumUserForUpdateDto> userDoc)
         {
             if (userDoc == null)

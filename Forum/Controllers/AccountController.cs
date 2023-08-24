@@ -191,14 +191,6 @@ namespace Forum.Controllers
         }
         public async Task<ActionResult> ForumAccount()
         {
-            /*var forumUser = await forumContext.ForumUsers.AsNoTracking()
-                .Include(a => a.ForumAccount)
-                .Include(u => u.ApplicationUser)
-                .Include(u => u.ForumUserCompany)
-                .Include(u => u.ForumUserDivision)
-                .Include(u => u.ForumUserPosition)
-                .Where(u => u.ApplicationUser.NormalizedUserName == name.ToUpper()).FirstOrDefaultAsync();*/
-
             int userId = 0;
             int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
             var forumUser = _userService.GetForumUser(userId);  
