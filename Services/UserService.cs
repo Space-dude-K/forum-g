@@ -38,8 +38,6 @@ namespace Services
         }
         public async Task<List<string>> GetUserRoles()
         {
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
             var response = await _client.GetAsync("api/roles");
             var rawData = await response.Content.ReadAsStringAsync();
             var responseContent = JsonConvert.DeserializeObject<IEnumerable<IdentityRole>>(rawData)
