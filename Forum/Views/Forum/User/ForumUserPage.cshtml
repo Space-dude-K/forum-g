@@ -17,8 +17,8 @@
 
                 <div>
                     <h3 class="text-center">Изменить аватар</h3>
-                    <form asp-action="LoadFileForUser" asp-controller="ForumHome" 
-                    method="post" enctype="multipart/form-data" class="input-group mb-3 justify-content-center">
+                    <form asp-action="UploadFileForUser" asp-controller="File"
+                          method="post" enctype="multipart/form-data" class="input-group mb-3 justify-content-center">
                         <input type="file" name="uploadedFile" accept=".jpg" class="custom-file-input btn btn-outline-secondary" /><br>
                         <input type="submit" value="Загрузить" class="btn btn-outline-secondary" />
                     </form>

@@ -5,11 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Interfaces.User;
 using Forum.Extensions;
-using Entities.Models.File;
-using Entities.DTO.FileDto;
 using Interfaces;
-using System.Drawing.Imaging;
-using System.Drawing;
 using Entities.DTO.UserDto;
 
 namespace Forum.Controllers
@@ -130,50 +126,6 @@ namespace Forum.Controllers
 
             return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 
                 new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = pageId }) });
-        }
-        [HttpPost]
-        public async Task<IActionResult> LoadFileForUser(IFormFile uploadedFile)
-        {
-            int userId = 0;
-            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
-
-            if (userId == 0)
-            {
-                return Unauthorized("Unauthorized access.");
-            }
-
-            if (uploadedFile != null)
-            {
-                var fileExt = Path.GetExtension(uploadedFile.FileName);
-                var fileName = User.Identity.Name + "_" + userId.ToString() + fileExt;
-                string filePath = "/images/avatars/" + fileName;
-
-                using (var memoryStream = new MemoryStream())
-                {
-                    await uploadedFile.CopyToAsync(memoryStream);
-                    using (var img = Image.FromStream(memoryStream))
-                    {
-                        var rImg = (Image)img.ResizeImage(120, 96);
-                        rImg.Save(_env.WebRootPath + filePath, ImageFormat.Jpeg);
-                    }
-                }
-
-                ForumFile file = new() { Name = fileName, Path = filePath };
-                var fileToDb = _mapper.Map<ForumFileDto>(file);
-                fileToDb.ForumUserId = userId;
-
-                var fileFromDb = await _forumService.GetForumFileByUserId(userId);
-                if (fileFromDb != null)
-                {
-                    var updateRes = _forumService.UpdateForumFile(fileFromDb.ForumUserId, fileToDb);
-                }
-                else
-                {
-                    var createRes = await _forumService.CreateForumFile(fileToDb);
-                }
-            }
-
-            return RedirectToAction("ForumUserPage", new { id = userId });
         }
         public async Task<IActionResult> ForumUserPage(int id)
         {

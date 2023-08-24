@@ -241,8 +241,6 @@ namespace Services
             return forumUser;
         }
         
-
-
         // COUNTERS
         public async Task<bool> UpdatePostCounter(int topicId, bool incresase)
         {
