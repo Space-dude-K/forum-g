@@ -30,6 +30,11 @@ namespace Forum
             CreateMap<ForumUser, ForumUserDto>();
             CreateMap<ForumUserDto, ForumUserPageViewModel>();
 
+            // App user
+            CreateMap<AppUser, AppUserForUpdateDto>();
+            CreateMap<AppUser, AppUserForUpdateDto>().ReverseMap();
+            CreateMap<ForumUserPageViewModel, AppUserDto>();
+
             // File
             CreateMap<ForumFileDto, ForumFile>();
             CreateMap<ForumFileDto, ForumFile>().ReverseMap();

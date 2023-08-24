@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Services.Utils;
 using System.Net.Http.Headers;
 using Interfaces.Forum;
+using System.Text;
 
 namespace Services
 {
@@ -97,6 +98,35 @@ namespace Services
             }
 
             return forumUserDto;
+        }
+        public async Task<bool> UpdateAppUser(int userId, AppUserDto appUserDto)
+        {
+            bool result = false;
+
+            string uri = "api/usersa/" + userId.ToString();
+            var response = await _client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                var appUserFromDb = JsonConvert.DeserializeObject<AppUserDto>(rawData);
+                appUserFromDb = appUserDto;
+
+                var jsonAfterUpdade = JsonConvert.SerializeObject(appUserFromDb);
+                var responseAfterUpdate =
+                    await _client.PutAsync(uri, new StringContent(jsonAfterUpdade, Encoding.UTF8, "application/json"));
+
+                if (responseAfterUpdate.IsSuccessStatusCode)
+                {
+                    result = true;
+                }
+            }
+            else
+            {
+                _logger.LogError($"Unable update app user id: {userId}");
+            }
+
+            return result;
         }
     }
 }

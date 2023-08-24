@@ -15,5 +15,6 @@ namespace Interfaces.User
         Task<ForumUserDto> GetForumUserDto(int userId);
         Task<List<string>> GetUserRoles();
         Task<RegisterTableViewModel> GetUsersData();
+        Task<bool> UpdateAppUser(int userId, AppUserDto appUserDto);
     }
 }
