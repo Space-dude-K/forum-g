@@ -148,6 +148,7 @@ namespace Forum.Controllers
 
             return View("~/Views/Forum/User/ForumUserPage.cshtml", model);
         }
+        [HttpCacheIgnore]
         public async Task<IActionResult> UpdateForumUserPage(int id, ForumUserPageViewModel model)
         {
             var user = await _userService.GetForumUser(id);
