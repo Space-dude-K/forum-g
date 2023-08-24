@@ -215,7 +215,8 @@ namespace Forum.Controllers.Forum
             }
 
             var topicDto = _mapper.Map<ForumTopicDto>(topicDb);
-            var links = _topicLinks.TryGenerateLinks(new List<ForumTopicDto>() { topicDto }, categoryId, forumId, forumTopicParameters.Fields, HttpContext);
+            var links = _topicLinks.TryGenerateLinks(new List<ForumTopicDto>() 
+            { topicDto }, categoryId, forumId, forumTopicParameters.Fields, HttpContext);
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
