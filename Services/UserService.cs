@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Entities.DTO.UserDto;
+﻿using Entities.DTO.UserDto;
 using Entities.ViewModels;
 using Interfaces;
 using Interfaces.User;
@@ -16,13 +15,11 @@ namespace Services
         private readonly HttpClient _client;
 
         private readonly ILoggerManager _logger;
-        private readonly IMapper _mapper;
         private readonly Interfaces.Forum.IAuthenticationService _authenticationService;
 
-        public UserService(HttpClient client, ILoggerManager logger, IMapper mapper, Interfaces.Forum.IAuthenticationService authenticationService)
+        public UserService(HttpClient client, ILoggerManager logger, Interfaces.Forum.IAuthenticationService authenticationService)
         {
             _logger = logger;
-            _mapper = mapper;
             _authenticationService = authenticationService;
             _client = client ?? throw new ArgumentNullException(nameof(client));
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

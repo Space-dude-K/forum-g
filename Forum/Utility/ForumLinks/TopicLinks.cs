@@ -15,7 +15,8 @@ namespace Forum.Utility.ForumLinks
             _linkGenerator = linkGenerator;
             _dataShaper = dataShaper;
         }
-        public LinkResponse TryGenerateLinks(IEnumerable<ForumTopicDto> topicsDto, int forumCategoryId, int forumBaseId, string fields, HttpContext httpContext,
+        public LinkResponse TryGenerateLinks(IEnumerable<ForumTopicDto> topicsDto, 
+            int forumCategoryId, int forumBaseId, string fields, HttpContext httpContext,
             IEnumerable<int>? collectionIds = null)
         {
             var shapedTopics = ShapeData(topicsDto, fields);
@@ -65,10 +66,17 @@ namespace Forum.Utility.ForumLinks
         {
             var links = new List<Link>
             {
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "GetTopicForForum", values: new { categoryId, forumId, topicId, fields }), "self", "GET"),
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "UpdateTopicForForum", values: new { categoryId, forumId, topicId }), "update_topic", "PUT"),
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "PartiallyUpdateTopicForForum", values: new { categoryId, forumId, topicId }), "partially_update_topic", "PATCH"),
-                 new Link(_linkGenerator.GetUriByAction(httpContext, "DeleteTopicForForum", values: new { categoryId, forumId, topicId }), "delete_topic", "DELETE"),
+                 new Link(_linkGenerator.GetUriByAction(httpContext, 
+                 "GetTopicForForum", values: new { categoryId, forumId, topicId, fields }), "self", "GET"),
+
+                 new Link(_linkGenerator.GetUriByAction(httpContext, 
+                 "UpdateTopicForForum", values: new { categoryId, forumId, topicId }), "update_topic", "PUT"),
+
+                 new Link(_linkGenerator.GetUriByAction(httpContext, 
+                 "PartiallyUpdateTopicForForum", values: new { categoryId, forumId, topicId }), "partially_update_topic", "PATCH"),
+
+                 new Link(_linkGenerator.GetUriByAction(httpContext, 
+                 "DeleteTopicForForum", values: new { categoryId, forumId, topicId }), "delete_topic", "DELETE"),
              };
 
             return links;
@@ -79,7 +87,8 @@ namespace Forum.Utility.ForumLinks
         {
             if (collectionIds == null)
             {
-                topicsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, "GetTopicsForForum", values: new { forumCategoryId, forumBaseId }), "self", "GET"));
+                topicsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(httpContext, 
+                    "GetTopicsForForum", values: new { forumCategoryId, forumBaseId }), "self", "GET"));
             }
             else
             {
