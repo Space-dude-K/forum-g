@@ -10,6 +10,6 @@ namespace Entities.DTO.ForumDto
     {
         public int Id { get; set; } 
         public int ForumTopicId { get; set; }
-        public int PostCounter { get; set; }
+        public int PostCounter { get; set; } = 0;
     }
 }

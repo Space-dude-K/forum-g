@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entities.DTO.ForumDto.Manipulation
 {
-    public class ForumTopicCounterForManipulationDto
+    public abstract class ForumTopicCounterForManipulationDto
     {
         public int PostCounter { get; set; }
     }

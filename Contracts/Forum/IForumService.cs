@@ -11,7 +11,7 @@ namespace Interfaces.Forum
         Task<bool> CreateForumBase(int categoryId, ForumBaseForCreationDto forum);
         Task<bool> CreateForumCategory(ForumCategoryForCreationDto category);
         Task<bool> CreateForumPost(int categoryId, int forumId, int topicId, ForumPostForCreationDto post);
-        Task<bool> CreateForumTopic(int categoryId, int forumId, ForumTopicForCreationDto topic);
+        Task<int> CreateForumTopic(int categoryId, int forumId, ForumTopicForCreationDto topic);
         Task<bool> DeleteForumPost(int categoryId, int forumId, int topicId, int postId);
         Task<List<ForumViewCategoryDto>> GetForumCategories();
         Task<ForumHomeViewModel> GetForumCategoriesAndForumBasesForModel();
@@ -28,5 +28,6 @@ namespace Interfaces.Forum
         Task<bool> CreateForumFile(ForumFileDto file);
         Task<ForumFileDto> GetForumFileByUserId(int forumUserId);
         Task<bool> UpdateForumFile(int forumFileId, ForumFileDto forumFileDto);
+        Task<bool> CreateTopicPostCounter(int topicId, ForumCounterForCreationDto forumCounterForCreationDto);
     }
 }

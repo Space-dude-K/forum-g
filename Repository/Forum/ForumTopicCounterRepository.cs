@@ -24,12 +24,16 @@ namespace Repository.Forum
 
             return PagedList<ForumTopicCounter>.ToPagedList(topicCounters, 0, 0, true);
         }
-        public async Task<PagedList<ForumTopicCounter>> GetPostCounterAsync(int? forumTopicId, bool trackChanges)
+        public async Task<ForumTopicCounter> GetPostCounterAsync(int? forumTopicId, bool trackChanges)
         {
-            var topicCounters = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId), trackChanges)
-                .ToListAsync();
+            var topicCounter = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId), trackChanges)
+                .SingleOrDefaultAsync();
 
-            return PagedList<ForumTopicCounter>.ToPagedList(topicCounters, 0, 0, true);
+            return topicCounter;
+        }
+        public void CreateTopicCounter(int topicId, ForumTopicCounter forumTopicCounter)
+        {
+            Create(forumTopicCounter);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Forum.ActionsFilters.Forum
             }
             else
             {
-                context.HttpContext.Items.Add("topicCounter", topicCounter.First());
+                context.HttpContext.Items.Add("topicCounter", topicCounter);
                 await next();
             }
         }
