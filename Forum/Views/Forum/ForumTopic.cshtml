@@ -176,6 +176,28 @@
         }
     }
 </script>
+<script>
+    function ForumPostReply(postId, userName, msgDate) 
+    {
+        if (postId == 0) 
+        {
+            console.log('Сообщение с заданным id не найдено.');
+            alert('Сообщение с заданным id не найдено.');
+        }
+        else 
+        {
+            var msgData = document.getElementById("forum-post-body-message-main-content-div-" + postId).innerHTML;
+            var editor = tinyMCE.get("text-area-tiny-mce-forum-post-add");
+            var data = '<blockquote>' 
+            + '<p> В ответ на сообщение № ' 
+            + postId + ' от ' + userName + ' ' + msgDate + '</p><br>' + '<p>' + msgData + '</p></blockquote><br>';
+            var addButton = document.getElementById("post-add-button");
+
+            editor.execCommand("mceInsertContent", true, data);
+            addButton.scrollIntoView();
+        }
+    }
+</script>
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
@@ -204,14 +226,17 @@
                     <div class="forum-post-header-sended col pull-left" id="forum-post-header-sended-@post.Id">
                         <p class="date-sended mb-1">Отправлено: @post.CreatedAt</p>
                     </div>
-                    <div class="col text-center">
-                        @*<button type="button" class="btn btn-light mr-0 ml-1 pull-right" onclick="ForumPostReply(@post.Id, '@post.ForumUser.SimplifiedName', '@post.CreatedAt')" title="Редактировать сообщение">Ответить</button>*@
+                    <div class="col text-center d-flex flex-row-reverse mt-2">
+                        <button type="button" class="btn btn-light "
+                                onclick="ForumPostReply(@post.Id, '@post.ForumUser.FirstAndLastNames', '@post.CreatedAt')" 
+                        title="Ответить">Ответить</button>
                     </div>
                 </div>
 
                 <div class="row border">
                     <div class="col-md-2 text-left border-end">
-                        <p class="d-flex justify-content-center">@Html.ActionLink(@post.ForumUser.FirstAndLastNames, "ForumAccount", "Account", null)</p>
+                        <p class="d-flex justify-content-center">@Html.ActionLink(@post.ForumUser.FirstAndLastNames, 
+                            "ForumAccount", "Account", null)</p>
                         <img class="rounded rounded mx-auto d-block mt-3" src="@Url.Content(@post.ForumUser.AvatarImgSrc)" alt="Empty avatar" />
                         <div>
                             <p class="m-0 mt-3 d-flex justify-content-center">Сообщений:</p>
