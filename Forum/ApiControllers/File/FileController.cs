@@ -5,13 +5,7 @@ using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Entities.DTO.FileDto;
 using Entities.Models.File;
-using Entities.RequestFeatures.Forum;
-using Entities.DTO.ForumDto.Update;
-using Entities.Models.Forum;
-using Forum.ActionsFilters.Forum;
 using Forum.ActionsFilters.File;
-using System.Diagnostics;
-using Entities.DTO.FileDto.Manipulation;
 using Entities.DTO.FileDto.Update;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -34,11 +28,20 @@ namespace Forum.ApiControllers.File
             _mapper = mapper;
             _userDataLinks = userDataLinks;
         }
+        /// <summary>
+        /// Gets the file for user avatar
+        /// </summary>
+        /// <param name="forumUserId"></param>
+        /// <returns>The file</returns>
+        /// <response code="200">User avatar image</response>
+        /// <response code="401">If unauthorized</response>
+        /// <response code="400">If forum user not found</response>
+        /// /// <response code="401">If file doesn't exist</response>
         [HttpGet("file/{forumUserId}", Name = "GetForumFile")]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
-        //[ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetForumFileByUserId(int forumUserId)
         {
             if (forumUserId == 0)
@@ -57,11 +60,8 @@ namespace Forum.ApiControllers.File
         /// <summary>
         /// Writes the file data for the user avatar
         /// </summary>
-        /// <param name="categoryId"></param>
-        /// <param name="forum"></param>
-        /// <returns>A newly created file data</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>
+        /// <param name="file"></param>
+        /// <response code="200">Successfully uploaded</response>
         /// <response code="422">If the model is invalid</response>
         [HttpPost("file", Name = "CreateForumFile")]
         [ProducesResponseType(201)]
@@ -77,12 +77,18 @@ namespace Forum.ApiControllers.File
             }
 
             var fileEntity = _mapper.Map<ForumFile>(file);
-
             _repository.ForumFile.CreateFile(fileEntity);
             await _repository.SaveAsync();
 
             return Ok();
         }
+        /// <summary>
+        /// Updates the file data for the user avatar
+        /// </summary>
+        /// <param name="forumUserId"></param>
+        /// <param name="fileDto"></param>
+        /// <response code="200">Successfully updated</response>
+        /// <response code="422">If the model is invalid</response>
         [HttpPut("file/{forumUserId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
@@ -91,26 +97,14 @@ namespace Forum.ApiControllers.File
         [ServiceFilter(typeof(ValidateFileExistsAttribute))]
         public async Task<IActionResult> UpdateForumFile(int forumUserId, [FromBody] ForumFileForUpdateDto fileDto)
         {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the ForumFileForUpdateDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
             var file = HttpContext.Items["file"] as ForumFile;
-
             _mapper.Map(fileDto, file);
-
-            await _repository.SaveAsync();
-
-            return Ok();
-        }
-        [HttpPut("filef/{forumUserId}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(422)]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
-        [ServiceFilter(typeof(ValidateFileExistsAttribute))]
-        public async Task<IActionResult> UpdateForumFileId(int forumUserId, [FromBody] ForumFileForUpdateDto fileDto)
-        {
-            var file = HttpContext.Items["file"] as ForumFile;
-
-            _mapper.Map(fileDto, file);
-
             await _repository.SaveAsync();
 
             return Ok();

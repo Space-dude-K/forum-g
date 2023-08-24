@@ -12,7 +12,6 @@ using Entities.DTO.ForumDto.Create;
 using Entities.DTO.UserDto;
 using Entities.DTO.ForumDto;
 using Entities.DTO.FileDto;
-using Entities.Models.Forum;
 
 namespace Services
 {

@@ -7,6 +7,7 @@ using Interfaces.User;
 using Forum.Extensions;
 using Interfaces;
 using Entities.DTO.UserDto;
+using Marvin.Cache.Headers;
 
 namespace Forum.Controllers
 {
@@ -127,6 +128,7 @@ namespace Forum.Controllers
             return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 
                 new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = pageId }) });
         }
+        [HttpCacheIgnore]
         public async Task<IActionResult> ForumUserPage(int id)
         {
             if (!User.Identity.IsAuthenticated)
@@ -159,7 +161,7 @@ namespace Forum.Controllers
 
             if (!res)
             {
-                return BadRequest($"Гnable to update app user with id: {id}");
+                return BadRequest($"Unable to update app user with id: {id}");
             }
 
             model.AvatarImgSrc = user.LoadAvatar(_env.WebRootPath);

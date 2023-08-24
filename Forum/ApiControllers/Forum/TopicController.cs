@@ -81,6 +81,15 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
+        /// <summary>
+        /// Creates topic counter
+        /// </summary>
+        /// <param name="topicId"></param>
+        /// <param name="topicCounterDto"></param>
+        /// <returns>The topics list</returns>
+        /// <response code="200">Returns created counter</response>
+        /// <response code="401">If unauthorized</response>
+        /// <response code="404">If forum not found</response>
         [HttpPost]
         [Route("/api/tcounters/{topicId}")]
         [ProducesResponseType(201)]
