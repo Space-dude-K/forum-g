@@ -48,7 +48,9 @@ namespace Forum.Controllers.Forum
             if (userId > 0)
             {
                 topicToAdd.ForumUserId = userId;
-                var res = await _forumService.CreateForumTopic(categoryId, forumId, topicToAdd);
+                var insertedTopicId = await _forumService.CreateForumTopic(categoryId, forumId, topicToAdd);
+                var resCounterCreation = await _forumService.CreateTopicPostCounter(insertedTopicId, 
+                    new ForumCounterForCreationDto() { ForumTopicId = insertedTopicId });
                 var resCounter = await _forumService.UpdateTopicCounter(categoryId, true);
             }
             else

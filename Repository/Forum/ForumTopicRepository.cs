@@ -13,7 +13,6 @@ namespace Repository.Forum
         public ForumTopicRepository(ForumContext forumContext) : base(forumContext)
         {
         }
-
         public void CreateTopicForForum(int forumBaseId, ForumTopic topic)
         {
             // TODO

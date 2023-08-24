@@ -30,7 +30,7 @@ namespace Forum.Controllers
             _logger = logger;
         }
         [HttpPost]
-        public async Task<IActionResult> LoadFileForUser(IFormFile uploadedFile)
+        public async Task<IActionResult> UploadFileForUser(IFormFile uploadedFile)
         {
             int userId = 0;
             int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
@@ -73,7 +73,7 @@ namespace Forum.Controllers
                 }
             }
 
-            return RedirectToAction("ForumUserPage", new { id = userId });
+            return RedirectToAction("ForumUserPage", "ForumHome", new { id = userId });
         }
     }
 }

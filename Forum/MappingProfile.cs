@@ -59,9 +59,11 @@ namespace Forum
             CreateMap<ForumTopicForUpdateDto, ForumTopic>();
             CreateMap<ForumTopicForUpdateDto, ForumTopic>().ReverseMap();
 
+            // Topic counter
             CreateMap<ForumTopicCounter, ForumTopicCounterDto>();
             CreateMap<ForumTopicCounter, ForumTopicCounterForUpdateDto>();
             CreateMap<ForumTopicCounter, ForumTopicCounterForUpdateDto>().ReverseMap();
+            CreateMap<ForumTopicCounter, ForumCounterForCreationDto>().ReverseMap();
 
             // Post
             CreateMap<ForumPost, ForumPostDto>();

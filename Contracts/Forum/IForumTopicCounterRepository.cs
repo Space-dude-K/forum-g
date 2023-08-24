@@ -10,7 +10,8 @@ namespace Interfaces.Forum
 {
     public interface IForumTopicCounterRepository
     {
-        Task<PagedList<ForumTopicCounter>> GetPostCounterAsync(int? forumTopicId, bool trackChanges);
+        void CreateTopicCounter(int topicId, ForumTopicCounter forumTopicCounter);
+        Task<ForumTopicCounter> GetPostCounterAsync(int? forumTopicId, bool trackChanges);
         Task<PagedList<ForumTopicCounter>> GetPostCountersAsync(bool trackChanges);
     }
 }

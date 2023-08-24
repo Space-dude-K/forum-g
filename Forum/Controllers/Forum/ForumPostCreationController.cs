@@ -34,17 +34,19 @@ namespace Forum.Controllers.Forum
             {
                 postToAdd.ForumUserId = userId;
                 var res = await _forumService.CreateForumPost(categoryId, forumId, topicId, postToAdd);
-                var resCounter = await _forumService.UpdatePostCounter(categoryId, true);
+                var resCounter = await _forumService.UpdatePostCounter(topicId, true);
                 var resUserCounter = await _forumService.UpdatePostCounterForUser(userId, true);
 
-                model.TotalPosts = await _forumService.GetTopicPostCount(categoryId);
+                model.TotalPosts = await _forumService.GetTopicPostCount(topicId);
+
             }
             else
             {
                 return BadRequest("User ID error.");
             }
 
-            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
+            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 
+                new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
         }
     }
 }

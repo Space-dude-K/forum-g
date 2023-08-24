@@ -40,9 +40,6 @@ namespace Entities.Configuration.Forum
                 .IsRequired(true);
 
             builder
-                .Ignore(c => c.TotalPosts);
-
-            builder
                 .HasKey(p => p.Id)
                 .HasName("PK_ForumTopic");
             builder
@@ -60,7 +57,8 @@ namespace Entities.Configuration.Forum
                 .HasOne(p => p.ForumTopicCounter)
                 .WithOne(p => p.ForumTopic)
                 .HasForeignKey<ForumTopicCounter>(k => k.ForumTopicId)
-                .HasConstraintName("FK_ForumTopicCounter_ForumTopic_Id");
+                .HasConstraintName("FK_ForumTopic_ForumTopicCounter_Id")
+                .OnDelete(DeleteBehavior.Restrict); ;
             #endregion
             #region DbDataSeed
             builder.HasData(

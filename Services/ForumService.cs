@@ -12,6 +12,7 @@ using Entities.DTO.ForumDto.Create;
 using Entities.DTO.UserDto;
 using Entities.DTO.ForumDto;
 using Entities.DTO.FileDto;
+using Entities.Models.Forum;
 
 namespace Services
 {
@@ -192,7 +193,7 @@ namespace Services
             if (response.IsSuccessStatusCode)
             {
                 var rawData = await response.Content.ReadAsStringAsync();
-                totalPosts = JsonConvert.DeserializeObject<IEnumerable<ForumTopicCounterDto>>(rawData).First().PostCounter;
+                totalPosts = JsonConvert.DeserializeObject<ForumTopicCounterDto>(rawData).PostCounter;
             }
             else
             {
@@ -201,6 +202,7 @@ namespace Services
 
             return totalPosts;
         }
+        
         public async Task<int> GetTopicCount(int categoryId)
         {
             int totalTopics = 0;
@@ -253,7 +255,7 @@ namespace Services
             if (response.IsSuccessStatusCode)
             {
                 var rawData = await response.Content.ReadAsStringAsync();
-                int totalPosts = JsonConvert.DeserializeObject<IEnumerable<ForumTopicCounterDto>>(rawData).First().PostCounter;
+                int totalPosts = JsonConvert.DeserializeObject<ForumTopicCounterDto>(rawData).PostCounter;
 
                 if (incresase)
                     totalPosts++;
@@ -456,9 +458,10 @@ namespace Services
 
             return result;
         }
-        public async Task<bool> CreateForumTopic(int categoryId, int forumId, ForumTopicForCreationDto topic)
+        public async Task<int> CreateForumTopic(int categoryId, int forumId, ForumTopicForCreationDto topic)
         {
             bool result = false;
+            int createdTopicId = 0;
             string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics";
 
             var jsonContent = JsonConvert.SerializeObject(topic);
@@ -468,13 +471,15 @@ namespace Services
             if (response.IsSuccessStatusCode)
             {
                 result = true;
+                var rawData = await response.Content.ReadAsStringAsync();
+                createdTopicId = JsonConvert.DeserializeObject<ForumTopicDto>(rawData).Id;
             }
             else
             {
                 _logger.LogError($"Unable create topic for forum id: {forumId}");
             }
 
-            return result;
+            return createdTopicId;
         }
         public async Task<bool> CreateForumPost(int categoryId, int forumId, int topicId, ForumPostForCreationDto post)
         {
@@ -492,6 +497,27 @@ namespace Services
             else
             {
                 _logger.LogError($"Unable create post for topic id: {topicId}");
+            }
+
+            return result;
+        }
+        public async Task<bool> CreateTopicPostCounter(int topicId, ForumCounterForCreationDto forumCounterForCreationDto)
+        {
+            bool result = false;
+            string uri = "api" +
+                "/tcounters/" + topicId.ToString();
+
+            var jsonContent = JsonConvert.SerializeObject(forumCounterForCreationDto);
+
+            var response = await _client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = true;
+            }
+            else
+            {
+                _logger.LogError($"Unable create topic counter for topic id: {topicId}");
             }
 
             return result;

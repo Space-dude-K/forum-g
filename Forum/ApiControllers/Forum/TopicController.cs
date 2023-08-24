@@ -81,6 +81,20 @@ namespace Forum.Controllers.Forum
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
+        [HttpPost]
+        [Route("/api/tcounters/{topicId}")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> CreateTopicCounter(int topicId, [FromBody] ForumCounterForCreationDto topicCounterDto)
+        {
+            var topicCounterEntity = _mapper.Map<ForumTopicCounter>(topicCounterDto);
+            _repository.ForumTopicCounter.CreateTopicCounter(topicId, topicCounterEntity);
+            await _repository.SaveAsync();
+
+            return Ok(topicCounterEntity);
+        }
         /// <summary>
         /// Gets counters for topic
         /// </summary>
@@ -98,10 +112,7 @@ namespace Forum.Controllers.Forum
         public async Task<IActionResult> GetTopicCounter(int topicId)
         {
             var topicCountersFromDb = await _repository.ForumTopicCounter.GetPostCounterAsync(topicId, trackChanges: false);
-
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(topicCountersFromDb.MetaData));
-
-            var topicsDto = _mapper.Map<IEnumerable<ForumTopicCounterDto>>(topicCountersFromDb);
+            var topicsDto = _mapper.Map<ForumTopicCounterDto>(topicCountersFromDb);
 
             return Ok(topicsDto);
         }
@@ -147,6 +158,7 @@ namespace Forum.Controllers.Forum
 
             return NoContent();
         }
+        [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
@@ -177,7 +189,8 @@ namespace Forum.Controllers.Forum
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        public async Task<IActionResult> GetTopicForForum(int categoryId, int forumId, int topicId, [FromQuery] ForumTopicParameters forumTopicParameters)
+        public async Task<IActionResult> GetTopicForForum(int categoryId, int forumId, int topicId, 
+            [FromQuery] ForumTopicParameters forumTopicParameters)
         {
             var forumDb = await _repository.ForumBase.GetForumFromCategoryAsync(categoryId, forumId, trackChanges: false);
             if (forumDb == null)
