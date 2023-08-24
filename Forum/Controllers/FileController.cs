@@ -12,6 +12,7 @@ using Forum.Extensions;
 
 namespace Forum.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class FileController : Controller
     {
         private readonly IForumService _forumService;

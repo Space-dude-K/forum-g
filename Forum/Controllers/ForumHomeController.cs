@@ -10,6 +10,7 @@ using Entities.DTO.UserDto;
 
 namespace Forum.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ForumHomeController : Controller
     {
         private readonly IForumService _forumService;
@@ -55,7 +56,6 @@ namespace Forum.Controllers
 
             return View("~/Views/Forum/ForumBase.cshtml", model);
         }
-        [HttpGet]
         [Route("categories/{categoryId}/forums/{forumId}/topics/{topicId}/{pageId}", Name = "TopicPosts")]
         public async Task<IActionResult> TopicPosts(int categoryId, int forumId, int topicId, int pageId = 0)
         {

@@ -34,12 +34,6 @@ namespace Forum.ApiControllers.File
             _mapper = mapper;
             _userDataLinks = userDataLinks;
         }
-        [HttpOptions]
-        public IActionResult GetUserOptions()
-        {
-            Response.Headers.Add("Allow", "GET, OPTIONS");
-            return Ok();
-        }
         [HttpGet("file/{forumUserId}", Name = "GetForumFile")]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
