@@ -12,6 +12,8 @@ using Entities.DTO.ForumDto.Create;
 using Entities.DTO.UserDto;
 using Entities.DTO.ForumDto;
 using Entities.DTO.FileDto;
+using Microsoft.Extensions.Logging;
+using Interfaces.User;
 
 namespace Services
 {
@@ -57,8 +59,27 @@ namespace Services
         public async Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId)
         {
             ForumBaseViewModel forumHomeViewModel = new();
-            //forumHomeViewModel.ForumTitle = forumTitle;
             forumHomeViewModel.Topics = await GetForumTopics(categoryId, forumId);
+
+            var tasks = forumHomeViewModel.Topics.Select(
+                async p => new
+                {
+                    Item = p,
+                    Counter = await GetTopicPostCount(p.Id)
+                });
+            var tuples = await Task.WhenAll(tasks);
+
+            // TODO. Refactoring
+            foreach(var t in tuples)
+            {
+                foreach(var topic in forumHomeViewModel.Topics)
+                {
+                    if (t.Item.Id.Equals(topic.Id))
+                    {
+                        topic.TotalPosts = t.Counter;
+                    }
+                }
+            }
 
             return forumHomeViewModel;
         }
@@ -201,7 +222,25 @@ namespace Services
 
             return totalPosts;
         }
-        
+        public async Task<ForumFileDto> GetForumFileByUserId(int forumUserId)
+        {
+            ForumFileDto forumFileDtoFromDb = new();
+
+            string uri = "api/file/" + forumUserId.ToString();
+            var response = await _client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                forumFileDtoFromDb = JsonConvert.DeserializeObject<ForumFileDto>(rawData);
+            }
+            else
+            {
+                _logger.LogInfo($"Missing forum file for user id: {forumUserId}");
+            }
+
+            return forumFileDtoFromDb;
+        }
         public async Task<int> GetTopicCount(int categoryId)
         {
             int totalTopics = 0;
@@ -242,7 +281,7 @@ namespace Services
             return forumUser;
         }
         
-        // COUNTERS
+        // COUNTER UPDATES
         public async Task<bool> UpdatePostCounter(int topicId, bool incresase)
         {
             bool result = false;
@@ -386,7 +425,7 @@ namespace Services
             bool result = false;
 
             string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString();
-            var response = await _client.GetAsync(uri + "?&fields=TopicViewCounter");
+            var response = await _client.GetAsync(uri + "?&fields=TotalViews");
 
             if (response.IsSuccessStatusCode)
             {
@@ -521,8 +560,6 @@ namespace Services
 
             return result;
         }
-
-        // FILE
         public async Task<bool> CreateForumFile(ForumFileDto file)
         {
             bool result = false;
@@ -539,55 +576,6 @@ namespace Services
             else
             {
                 _logger.LogError($"Unable create file for user id: {file.ForumUserId}");
-            }
-
-            return result;
-        }
-        public async Task<ForumFileDto> GetForumFileByUserId(int forumUserId)
-        {
-            ForumFileDto forumFileDtoFromDb  = new();
-
-            string uri = "api/file/" + forumUserId.ToString();
-            var response = await _client.GetAsync(uri);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var rawData = await response.Content.ReadAsStringAsync();
-                forumFileDtoFromDb = JsonConvert.DeserializeObject<ForumFileDto>(rawData);
-            }
-            else
-            {
-                _logger.LogInfo($"Missing forum file for user id: {forumUserId}");
-            }
-
-            return forumFileDtoFromDb;
-        }
-        public async Task<bool> UpdateForumFile(int forumUserId, ForumFileDto forumFileDto)
-        {
-            bool result = false;
-
-            string uri = "api/file/" + forumUserId.ToString();
-            var response = await _client.GetAsync(uri);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var rawData = await response.Content.ReadAsStringAsync();
-                var forumFileDtoFromDb = JsonConvert.DeserializeObject<ForumFileDto>(rawData);
-                forumFileDtoFromDb.Path = forumFileDto.Path;
-                forumFileDtoFromDb.Name = forumFileDto.Name;
-
-                var jsonAfterUpdade = JsonConvert.SerializeObject(forumFileDtoFromDb);
-                var responseAfterUpdate =
-                    await _client.PutAsync(uri, new StringContent(jsonAfterUpdade, Encoding.UTF8, "application/json"));
-
-                if (responseAfterUpdate.IsSuccessStatusCode)
-                {
-                    result = true;
-                }
-            }
-            else
-            {
-                _logger.LogError($"Unable update file with user id: {forumUserId}");
             }
 
             return result;
@@ -650,6 +638,36 @@ namespace Services
             else
             {
                 _logger.LogError($"Unable update post with id: {postId}");
+            }
+
+            return result;
+        }
+        public async Task<bool> UpdateForumFile(int forumUserId, ForumFileDto forumFileDto)
+        {
+            bool result = false;
+
+            string uri = "api/file/" + forumUserId.ToString();
+            var response = await _client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                var forumFileDtoFromDb = JsonConvert.DeserializeObject<ForumFileDto>(rawData);
+                forumFileDtoFromDb.Path = forumFileDto.Path;
+                forumFileDtoFromDb.Name = forumFileDto.Name;
+
+                var jsonAfterUpdade = JsonConvert.SerializeObject(forumFileDtoFromDb);
+                var responseAfterUpdate =
+                    await _client.PutAsync(uri, new StringContent(jsonAfterUpdade, Encoding.UTF8, "application/json"));
+
+                if (responseAfterUpdate.IsSuccessStatusCode)
+                {
+                    result = true;
+                }
+            }
+            else
+            {
+                _logger.LogError($"Unable update file with user id: {forumUserId}");
             }
 
             return result;

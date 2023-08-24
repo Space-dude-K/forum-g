@@ -87,6 +87,8 @@ namespace Forum.Controllers
                 user.ForumUser.AvatarImgSrc = user.ForumUser.LoadAvatar(_env.WebRootPath);
             }
 
+            var updateCounterRes = await _forumService.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
+
             return View("~/Views/Forum/ForumTopic.cshtml", model);
         }
         public async Task<ActionResult> DeletePost(int categoryId, int forumId, int topicId, int postId, ForumTopicViewModel model)
