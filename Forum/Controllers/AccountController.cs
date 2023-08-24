@@ -17,6 +17,7 @@ using Forum.Extensions;
 
 namespace Forum.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class AccountController : Controller
     {
         private readonly ILoggerManager _logger;

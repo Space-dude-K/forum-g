@@ -26,7 +26,6 @@
                         <a class="nav-link text-dark link-success"
                            asp-area="" asp-controller="ForumHome" asp-action="ForumUserPage"
                            asp-route-id="@userManager.FindByNameAsync(@User.Identity.Name).Result.Id">Hello, @User.Identity.Name</a>
-                        @* <div asp class="text-success">Hello, @User.Identity.Name</div> *@
                     }
 
                     @if (SignInManager.IsSignedIn(User))

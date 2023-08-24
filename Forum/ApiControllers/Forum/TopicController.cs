@@ -99,11 +99,11 @@ namespace Forum.Controllers.Forum
         /// Gets counters for topic
         /// </summary>
         /// <param name="categoryId"></param>
-        /// <param name="forumId"></param>
         /// <returns>The post counter</returns>
         /// <response code="200">Returns items</response>
         /// <response code="401">If unauthorized</response>
         /// <response code="404">If forum not found</response>
+        [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]

@@ -10,6 +10,7 @@ using System.Security.Claims;
 
 namespace Forum.Controllers.Forum
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ForumTopicCreationController : Controller
     {
         private readonly IMapper _mapper;
