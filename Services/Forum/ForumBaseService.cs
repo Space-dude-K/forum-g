@@ -73,6 +73,25 @@ namespace Services.Forum
 
             return result;
         }
+        public async Task<ForumViewBaseDto> GetForumBase(int categoryId, int forumBaseId)
+        {
+            ForumViewBaseDto forumViewBaseDto = new();
+
+            var response = await _forumClient.Client.GetAsync("api/categories/" + categoryId.ToString() 
+                + "/forums/" + forumBaseId.ToString());
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                forumViewBaseDto = JsonConvert.DeserializeObject<IEnumerable<ForumViewBaseDto>>(rawData).First();
+            }
+            else
+            {
+                _logger.LogError($"Unable to get forums for category id: {categoryId}");
+            }
+
+            return forumViewBaseDto;
+        }
         public async Task<List<ForumViewBaseDto>> GetForumBases(int categoryId)
         {
             List<ForumViewBaseDto> forumViewBaseDtos = new();
@@ -90,6 +109,26 @@ namespace Services.Forum
             }
 
             return forumViewBaseDtos;
+        }
+        public async Task<bool> DeleteForumBase(int categoryId, int forumId)
+        {
+            bool result = false;
+            string uri = "api/categories/" +
+                categoryId.ToString() + "/forums/" +
+                forumId.ToString();
+
+            var response = await _forumClient.Client.DeleteAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = true;
+            }
+            else
+            {
+                _logger.LogError($"Unable delete forum base id: {forumId}");
+            }
+
+            return result;
         }
     }
 }
