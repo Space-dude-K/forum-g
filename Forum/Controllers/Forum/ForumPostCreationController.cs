@@ -2,6 +2,7 @@
 using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
 using Interfaces.Forum;
+using Interfaces.Forum.ApiServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using System.Security.Claims;
@@ -13,11 +14,13 @@ namespace Forum.Controllers.Forum
     {
         private readonly IMapper _mapper;
         private readonly IForumService _forumService;
+        private readonly IForumPostService _forumPostService;
 
-        public ForumPostCreationController(IMapper mapper, IForumService forumService)
+        public ForumPostCreationController(IMapper mapper, IForumService forumService, IForumPostService forumPostService)
         {
             _mapper = mapper;
             _forumService = forumService;
+            _forumPostService = forumPostService;
         }
         [HttpPost]
         [Route("ForumPostCreation/CreateForumPost")]
@@ -34,11 +37,11 @@ namespace Forum.Controllers.Forum
             if(userId > 0)
             {
                 postToAdd.ForumUserId = userId;
-                var res = await _forumService.CreateForumPost(categoryId, forumId, topicId, postToAdd);
-                var resCounter = await _forumService.UpdatePostCounter(topicId, true);
-                var resUserCounter = await _forumService.UpdatePostCounterForUser(userId, true);
+                var res = await _forumPostService.CreateForumPost(categoryId, forumId, topicId, postToAdd);
+                var resCounter = await _forumPostService.UpdatePostCounter(topicId, true);
+                var resUserCounter = await _forumPostService.UpdatePostCounterForUser(userId, true);
 
-                model.TotalPosts = await _forumService.GetTopicPostCount(topicId);
+                model.TotalPosts = await _forumPostService.GetTopicPostCount(topicId);
 
             }
             else

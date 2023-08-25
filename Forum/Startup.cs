@@ -16,6 +16,8 @@ using Interfaces.User;
 using Forum.Utility.UserLinks;
 using Entities.DTO.UserDto;
 using Forum.ActionsFilters.File;
+using Services.Forum;
+using Interfaces.Forum.ApiServices;
 
 namespace Forum
 {
@@ -82,10 +84,18 @@ namespace Forum
 
             services.AddHttpClient<IAuthenticationService, AuthenticationService>(c =>
                 c.BaseAddress = new Uri(appUrl));
-            services.AddHttpClient<IUserService, UserService>(c =>
+            services.AddHttpClient<IHttpForumService, HttpForumService>(c =>
                 c.BaseAddress = new Uri(appUrl));
-            services.AddHttpClient<IForumService, ForumService>(c =>
-                c.BaseAddress = new Uri(appUrl));
+
+            services.AddScoped<IForumService, ForumService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IForumCategoryService, ForumCategoryService>();
+            services.AddScoped<IForumBaseService, ForumBaseService>();
+            services.AddScoped<IForumTopicService, ForumTopicService>();
+            services.AddScoped<IForumPostService, ForumPostService>();
+
+            services.AddScoped<IForumModelService, ForumModelService>();
+
 
             services.AddCustomMediaTypes();
 

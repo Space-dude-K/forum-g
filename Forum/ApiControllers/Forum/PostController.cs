@@ -14,7 +14,6 @@ using Forum.Utility.ForumLinks;
 using Forum.ModelBinders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Forum.Controllers.Forum
 {
@@ -112,7 +111,9 @@ namespace Forum.Controllers.Forum
                 return NotFound();
             }
 
-            var postsFromDb = await _repository.ForumPost.GetAllPostsFromTopicAsync(topicId, forumPostParameters, false, trackChanges: false);
+            var postsFromDb = forumPostParameters.UserId > 0 ? 
+                await _repository.ForumPost.GetAllPostsFromTopicAsyncFilteredByUserId(topicId, forumPostParameters, false, trackChanges: false) :
+                await _repository.ForumPost.GetAllPostsFromTopicAsync(topicId, forumPostParameters, false, trackChanges: false);
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(postsFromDb.MetaData));
 
@@ -232,12 +233,9 @@ namespace Forum.Controllers.Forum
 
             var postEntity = _mapper.Map<ForumPost>(post);
             postEntity.CreatedAt = DateTime.Now;
-
-            // TODO
-            postEntity.ForumUserId = 1;
+ 
             _repository.ForumPost.CreatePostForTopic(topicId, postEntity);
             await _repository.SaveAsync();
-
             var postToReturn = _mapper.Map<ForumPostDto>(postEntity);
 
             return CreatedAtRoute("GetPostForTopic", new { categoryId, forumId, topicId, postId = postToReturn.Id }, postToReturn);

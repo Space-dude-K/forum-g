@@ -38,8 +38,7 @@ namespace Entities.Configuration.Forum
                 .IsRequired(false);
             builder
                 .Property(p => p.ForumUserId)
-                .HasColumnType("INTEGER")
-                .IsRequired(true);
+                .HasColumnType("INTEGER");
             builder
                 .Property(p => p.TotalViews)
                 .HasColumnType("INTEGER")

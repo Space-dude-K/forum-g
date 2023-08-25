@@ -10,5 +10,6 @@
         public uint MinLikes { get; set; }
         public uint MaxLikes { get; set; } = int.MaxValue;
         public bool ValidLikeRange => MaxLikes > MinLikes;
+        public int UserId { get; set; }
     }
 }

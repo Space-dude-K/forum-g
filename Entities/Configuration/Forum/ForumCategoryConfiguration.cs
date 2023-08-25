@@ -43,8 +43,7 @@ namespace Entities.Configuration.Forum
                 .IsRequired(false);
             builder
                 .Property(p => p.ForumUserId)
-                .HasColumnType("INTEGER")
-                .IsRequired(true);
+                .HasColumnType("INTEGER");
 
             builder
                 .HasKey(p => p.Id)

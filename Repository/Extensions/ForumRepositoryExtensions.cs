@@ -13,6 +13,10 @@ namespace Repository.Extensions
         {
             return posts.Where(e => (e.Likes >= minLikes && e.Likes <= maxLikes));
         }
+        public static IQueryable<ForumPost> FilterPosts(this IQueryable<ForumPost> posts, int userId)
+        {
+            return posts.Where(e => e.ForumUserId == userId);
+        }
         public static IQueryable<ForumTopic> Search(this IQueryable<ForumTopic> topics, string searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))

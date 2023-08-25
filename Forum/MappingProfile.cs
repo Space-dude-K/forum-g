@@ -91,7 +91,8 @@ namespace Forum
                 .ForMember(dest => dest.Name, m => m.MapFrom(src => src.TopicName));
 
             CreateMap<ForumTopicViewModel, ForumPostForCreationDto>()
-                .ForMember(dest => dest.PostText, m => m.MapFrom(src => src.PostText));
+                .ForMember(dest => dest.PostText, m => m.MapFrom(src => src.PostText))
+                .ForMember(dest => dest.ForumTopicId, m => m.MapFrom(src => src.TopicId));
 
 
             /*CreateMap<ForumHomeViewModel, ForumBaseCreationView>()

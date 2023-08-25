@@ -28,8 +28,7 @@ namespace Entities.Configuration.File
                 .IsUnicode(true);
             builder
                 .Property(p => p.ForumUserId)
-               .HasColumnType("INTEGER")
-               .IsRequired(true);
+               .HasColumnType("INTEGER");
 
             builder
                 .HasKey(p => p.Id)

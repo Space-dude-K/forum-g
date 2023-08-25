@@ -2,6 +2,7 @@
 {
     public abstract class ForumPostForManipulationDto
     {
+        public int ForumTopicId { get; set; }
         public int ForumUserId { get; set; }
         public string PostName { get; set; } = "TestName";
         public string PostText { get; set; }

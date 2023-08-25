@@ -18,8 +18,7 @@ namespace Entities.Configuration.Forum
                 .IsRequired(true);
             builder
                 .Property(p => p.ForumUserId)
-                .HasColumnType("INTEGER")
-                .IsRequired(true);
+                .HasColumnType("INTEGER");
             builder
                 .Property(p => p.PostText)
                 .HasColumnType("NVARCHAR")

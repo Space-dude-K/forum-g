@@ -9,6 +9,7 @@ using System.Drawing.Imaging;
 using System.Security.Claims;
 using System.Drawing;
 using Forum.Extensions;
+using Interfaces.Forum.ApiServices;
 
 namespace Forum.Controllers
 {
@@ -20,15 +21,17 @@ namespace Forum.Controllers
         private readonly IUserService _userService;
         private readonly IWebHostEnvironment _env;
         private readonly ILoggerManager _logger;
+        private readonly IForumTopicService _forumTopicService;
 
         public FileController(IForumService forumService,
-            IMapper mapper, IUserService userService, IWebHostEnvironment env, ILoggerManager logger)
+            IMapper mapper, IUserService userService, IWebHostEnvironment env, ILoggerManager logger, IForumTopicService forumTopicService)
         {
             _forumService = forumService;
             _mapper = mapper;
             _userService = userService;
             _env = env;
             _logger = logger;
+            _forumTopicService = forumTopicService;
         }
         [HttpPost]
         public async Task<IActionResult> UploadFileForUser(IFormFile uploadedFile)

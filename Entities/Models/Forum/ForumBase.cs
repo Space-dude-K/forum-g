@@ -21,10 +21,10 @@ namespace Entities.Models.Forum
             }
         }
         public int TotalViews { get; set; }
-        public virtual ForumCategory ForumCategory { get; set; }
-        public int ForumCategoryId { get; set; }
-        public virtual ForumUser ForumUser { get; set; }
-        public int ForumUserId { get; set; }
+        public virtual ForumCategory? ForumCategory { get; set; }
+        public int? ForumCategoryId { get; set; }
+        public virtual ForumUser? ForumUser { get; set; }
+        public int? ForumUserId { get; set; }
         public virtual ICollection<ForumTopic>? ForumTopics { get; set; }
     }
 }

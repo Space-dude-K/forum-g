@@ -11,9 +11,9 @@ namespace Entities.Models.Forum
         public int? Likes { get; set; } = 0;
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public virtual ForumTopic ForumTopic { get; set; }
-        public int ForumTopicId { get; set; }
-        public virtual ForumUser ForumUser { get; set; }
-        public int ForumUserId { get; set; }
+        public virtual ForumTopic? ForumTopic { get; set; }
+        public int? ForumTopicId { get; set; }
+        public virtual ForumUser? ForumUser { get; set; }
+        public int? ForumUserId { get; set; }
     }
 }

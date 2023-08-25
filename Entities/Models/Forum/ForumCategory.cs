@@ -20,8 +20,8 @@ namespace Entities.Models.Forum
         public int TotalForums { get; set; }
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
-        public virtual ForumUser ForumUser { get; set; }
-        public int ForumUserId { get; set; }
+        public virtual ForumUser? ForumUser { get; set; }
+        public int? ForumUserId { get; set; }
         public virtual ICollection<ForumBase> ForumBases { get; set; }
     }
 }
