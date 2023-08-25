@@ -17,6 +17,12 @@ namespace Entities.Configuration.Forum
                 .HasColumnType("INTEGER")
                 .IsRequired(true);
             builder
+                .Property(p => p.TotalPosts)
+                .HasColumnType("INTEGER");
+            builder
+                .Property(p => p.TotalTopics)
+                .HasColumnType("INTEGER");
+            builder
                 .Property(p => p.ForumTitle)
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(256)
@@ -55,12 +61,12 @@ namespace Entities.Configuration.Forum
                 .WithOne(p => p.ForumBase)
                 .HasForeignKey(p => p.ForumBaseId)
                 .HasConstraintName("FK_ForumBase_ForumTopic_ForumBaseId")
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
             builder
                 .HasOne(p => p.ForumUser)
                 .WithMany()
                 .HasConstraintName("FK_ForumBase_ForumUser_Id")
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
             #endregion
             #region DbDataSeed
             builder.HasData(

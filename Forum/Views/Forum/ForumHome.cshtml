@@ -73,7 +73,8 @@
                                         <div class="forum-icon">
                                             <i class="fa fa-shield"></i>
                                         </div>
-                                        <a href=@Url.RouteUrl("ForumTopics", new { categoryId = forum.ForumCategoryId, forumId = forum.Id })>@forum.ForumTitle</a>
+                                        <a href=@Url.RouteUrl("ForumTopics", 
+                                        new { categoryId = forum.ForumCategoryId, forumId = forum.Id })>@forum.ForumTitle</a>
                                         <div class="forum-sub-title">forum-sub-title: @forum.ForumSubTitle</div>
                                     </div>
                                     <div class="col-md-1">
@@ -86,7 +87,7 @@
                                     </div>
                                     <div class="col-md-1">
                                         <span>
-                                            @cat.TotalTopics
+                                            @forum.TopicsCount
                                         </span>
                                         <div>
                                             <small>Topics</small>
@@ -94,7 +95,7 @@
                                     </div>
                                     <div class="col-md-1">
                                         <span>
-                                            @cat.TotalPosts
+                                            @forum.TotalPosts
                                         </span>
                                         <div>
                                             <small>Posts</small>

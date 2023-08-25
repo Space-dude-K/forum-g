@@ -282,7 +282,7 @@ namespace Forum.Extensions
                     Contact = new OpenApiContact
                     {
                         Name = "Space-Dude",
-                        Email = "omgtrent@mail.ru",
+                        Email = "space.dude.work@gmail.com",
                         Url = new Uri("https://github.com/Space-dude-K")
                     },
                     License = new OpenApiLicense

@@ -17,6 +17,10 @@ namespace Repository.Forum
         public ForumTopicCounterRepository(ForumContext forumContext) : base(forumContext)
         {
         }
+        public void DeleteTopicCounter(ForumTopicCounter forumTopicCounter)
+        {
+            Delete(forumTopicCounter);
+        }
         public async Task<PagedList<ForumTopicCounter>> GetPostCountersAsync(bool trackChanges)
         {
             var topicCounters = await FindAll(trackChanges)

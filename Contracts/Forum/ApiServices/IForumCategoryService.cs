@@ -12,5 +12,6 @@ namespace Interfaces.Forum.ApiServices
     {
         Task<bool> CreateForumCategory(ForumCategoryForCreationDto category);
         Task<List<ForumViewCategoryDto>> GetForumCategories();
+        Task<bool> UpdateTotalPostCounterForCategory(int categoryId, bool incresase, int postCountToDelete = 0);
     }
 }

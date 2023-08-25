@@ -89,7 +89,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @* @if(@userManager.FindByNameAsync(@User.Identity.Name).Result.Id.Equals(topic.ForumUserId))
+                             @if(@userManager.FindByNameAsync(@User.Identity.Name).Result.Id.Equals(topic.ForumUserId))
                             {
                                 <div class="col-1 mt-1">
                                     <button type="button" class="btn btn-light rounded"
@@ -99,7 +99,7 @@
                                         Удалить
                                     </button>
                                 </div>
-                            } *@
+                            } 
                         </div>
                     }
                 </div>
