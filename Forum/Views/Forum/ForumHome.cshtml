@@ -1,4 +1,5 @@
 ﻿@using Newtonsoft.Json;
+@inject UserManager<AppUser> userManager;
 @model Entities.ViewModels.Forum.ForumHomeViewModel;
 @{
     ViewData["Title"] = "ForumHome";
@@ -41,7 +42,7 @@
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
                         <h2>Добро пожаловать на форум ГУ</h2>
-                        <label id="lbl_loadingTime">Test</label>
+                        <label class="mb-2" id="lbl_loadingTime">Test</label>
                     </div>
                 </div>
 
@@ -54,22 +55,20 @@
                     new { model = JsonConvert.SerializeObject(@Model) })'">Создать форум</button>
                 </div>
 
-                <div class="ibox-content">
+                <div class="ibox-content container">
 
                     @foreach (var cat in Model.Categories)
                     {
                         <div class="text-end">
                             <h3 class="text-success border-bottom mb-3">@cat.Name</h3>
-                            @*<div >
-                                <samll>Total posts: @cat.TotalPosts</samll>
-                            </div>*@
                         </div>
 
                         @foreach (var forum in cat.Forums)
                         {
+
                             <div class="mb-4">
                                 <div class="row bg-light text-dark rounded">
-                                    <div class="col-md-9">
+                                    <div class="col-8">
                                         <div class="forum-icon">
                                             <i class="fa fa-shield"></i>
                                         </div>
@@ -77,7 +76,7 @@
                                         new { categoryId = forum.ForumCategoryId, forumId = forum.Id })>@forum.ForumTitle</a>
                                         <div class="forum-sub-title">forum-sub-title: @forum.ForumSubTitle</div>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-sm-1">
                                         <span>
                                             @forum.TotalViews
                                         </span>
@@ -85,7 +84,7 @@
                                             <small>Views</small>
                                         </div>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-sm-1">
                                         <span>
                                             @forum.TopicsCount
                                         </span>
@@ -93,7 +92,7 @@
                                             <small>Topics</small>
                                         </div>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-sm-1">
                                         <span>
                                             @forum.TotalPosts
                                         </span>
@@ -101,51 +100,22 @@
                                             <small>Posts</small>
                                         </div>
                                     </div>
+                                    <div class="col-1 mt-1">
+                                        @if (@userManager.FindByNameAsync(@User.Identity.Name).Result.Id.Equals(@forum.ForumUserId))
+                                        {
+                                            <div>
+                                                <button type="button" class="btn btn-light rounded"
+                                                        onclick="location.href='@Url.Action("DeleteForumBase", "ForumHome",
+                                            new {categoryId = cat.Id, forumId = forum.Id})'">
+                                                    Удалить
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
                                     
                                 </div>
                             </div>
                         }
-
-
-
-                        @*@foreach (var forum in cat.ForumBases)
-                    {
-                    <div class="forum-item active">
-                    <div class="row">
-                    <div class="col-md-9">
-                    <div class="forum-icon">
-                    <i class="fa fa-shield"></i>
-                    </div>
-                    <a href=@Url.RouteUrl("ForumTopics", new { forumId = forum.Id }) class="forum-item-title">@forum.ForumTitle</a>
-                    <div class="forum-sub-title">forum-sub-title: @forum.ForumSubTitle</div>
-                    </div>
-                    <div class="col-md-1 forum-info">
-                    <span class="views-number">
-                    1216
-                    </span>
-                    <div>
-                    <small>Views</small>
-                    </div>
-                    </div>
-                    <div class="col-md-1 forum-info">
-                    <span class="views-number">
-                    @forum.ForumTopics.Count()
-                    </span>
-                    <div>
-                    <small>Topics</small>
-                    </div>
-                    </div>
-                    <div class="col-md-1 forum-info">
-                    <span class="views-number">
-                    @forum.TotalPosts
-                    </span>
-                    <div>
-                    <small>Posts</small>
-                    </div>
-                    </div>
-                    </div>
-                    </div>
-                    }*@
                     }
                 </div>
             </div>

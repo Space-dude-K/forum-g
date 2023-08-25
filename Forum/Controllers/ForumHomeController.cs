@@ -54,6 +54,46 @@ namespace Forum.Controllers
 
             return View("~/Views/Forum/ForumHome.cshtml", model);
         }
+        public async Task<ActionResult> DeleteForumBase(int categoryId, int forumId)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return Unauthorized("Unauthorized access.");
+
+            int userId = 0;
+            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
+            var forumUser = _userService.GetForumUser(userId);
+
+            if (forumUser == null)
+                return Unauthorized("Unauthorized access.");
+
+            int userForumPosts = 0;
+            var userTopics = await _forumTopicService.GetForumTopics(categoryId, forumId);
+
+            foreach(var topic in userTopics)
+            {
+                var userTopicPosts = 
+                    await _forumTopicService
+                    .GetTopicPosts(categoryId, forumId, topic.Id, 0, 0, true);
+
+                userForumPosts += userTopicPosts
+                    .Where(p => p.ForumUserId.Equals(userId))
+                    .Count();
+            }
+
+            var res = await _forumBaseService.DeleteForumBase(categoryId, forumId);
+
+            if (res)
+            {
+                var resUserPostCounter = await _forumPostService
+                    .UpdatePostCounterForUser(userId, false, userForumPosts);
+            }
+            else
+            {
+                return BadRequest("Cannot delete forum base with id: " + forumId);
+            }
+
+            return RedirectToAction("ForumHome");
+        }
         public async Task<IActionResult> RedirectToCreateCategory()
         {
             return View("~/Views/Forum/Add/ForumAddCategory.cshtml");

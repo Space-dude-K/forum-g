@@ -11,6 +11,8 @@ namespace Interfaces.Forum.ApiServices
     public interface IForumBaseService
     {
         Task<bool> CreateForumBase(int categoryId, ForumBaseForCreationDto forum);
+        Task<bool> DeleteForumBase(int categoryId, int forumId);
+        Task<ForumViewBaseDto> GetForumBase(int categoryId, int forumBaseId);
         Task<List<ForumViewBaseDto>> GetForumBases(int categoryId);
         Task<bool> IncreaseViewCounterForForumBase(int categoryId, int forumId);
     }

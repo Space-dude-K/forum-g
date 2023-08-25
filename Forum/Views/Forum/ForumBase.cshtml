@@ -89,17 +89,17 @@
                                     </div>
                                 </div>
                             </div>
-                             @if(@userManager.FindByNameAsync(@User.Identity.Name).Result.Id.Equals(topic.ForumUserId))
-                            {
-                                <div class="col-1 mt-1">
-                                    <button type="button" class="btn btn-light rounded"
-                                            onclick="location.href='@Url.Action("DeleteTopic", "ForumHome",
-                                        new {categoryId = @Context.Request.RouteValues["categoryId"],
-                                        forumId = @Context.Request.RouteValues["forumId"], topicId = topic.Id})'">
-                                        Удалить
-                                    </button>
-                                </div>
-                            } 
+                                @if(@userManager.FindByNameAsync(@User.Identity.Name).Result.Id.Equals(topic.ForumUserId))
+                                {
+                                    <div class="col-1 mt-1">
+                                        <button type="button" class="btn btn-light rounded"
+                                                onclick="location.href='@Url.Action("DeleteTopic", "ForumHome",
+                                            new { categoryId = @Context.Request.RouteValues["categoryId"],
+                                            forumId = @Context.Request.RouteValues["forumId"], topicId = topic.Id})'">
+                                            Удалить
+                                        </button>
+                                    </div>
+                                } 
                         </div>
                     }
                 </div>
