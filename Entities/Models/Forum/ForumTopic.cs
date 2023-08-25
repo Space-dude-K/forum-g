@@ -17,11 +17,11 @@ namespace Entities.Models.Forum
         public DateTime? UpdatedAt { get; set; }
         public int TotalPosts { get; set; }
         public int TotalViews { get; set; }
-        public virtual ForumUser ForumUser { get; set; }
-        public int ForumUserId { get; set; }
-        public virtual ForumBase ForumBase { get; set; }
-        public int ForumBaseId { get; set; }
-        public virtual ICollection<ForumPost> ForumPosts { get; set; }
-        public virtual ForumTopicCounter ForumTopicCounter { get; set; }
+        public virtual ForumUser? ForumUser { get; set; }
+        public int? ForumUserId { get; set; }
+        public virtual ForumBase? ForumBase { get; set; }
+        public int? ForumBaseId { get; set; }
+        public virtual ICollection<ForumPost>? ForumPosts { get; set; }
+        public virtual ForumTopicCounter? ForumTopicCounter { get; set; }
     }
 }

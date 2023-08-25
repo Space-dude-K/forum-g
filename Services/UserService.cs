@@ -1,6 +1,7 @@
 ﻿using Entities.DTO.UserDto;
 using Entities.ViewModels;
 using Interfaces;
+using Interfaces.Forum;
 using Interfaces.User;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
@@ -12,28 +13,16 @@ namespace Services
 {
     public class UserService : IUserService
     {
-        private readonly HttpClient _client;
-
+        private readonly IHttpForumService _forumClient;
         private readonly ILoggerManager _logger;
-        private readonly Interfaces.Forum.IAuthenticationService _authenticationService;
-
-        public UserService(HttpClient client, ILoggerManager logger, Interfaces.Forum.IAuthenticationService authenticationService)
+        public UserService(ILoggerManager logger, IHttpForumService forumClient)
         {
             _logger = logger;
-            _authenticationService = authenticationService;
-            _client = client ?? throw new ArgumentNullException(nameof(client));
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var tokenResponse = _authenticationService.Login(new LoginViewModel()
-            { UserName = "Admin", Password = "1234567890" }).Result;
-
-            var parsedTokenStr = tokenResponse.Content.ReadAsStringAsync();
-            var parsedToken = JsonConvert.DeserializeObject<BearerToken>(parsedTokenStr.Result);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", parsedToken.Token);
+            _forumClient = forumClient;
         }
         public async Task<List<string>> GetUserRoles()
         {
-            var response = await _client.GetAsync("api/roles");
+            var response = await _forumClient.Client.GetAsync("api/roles");
             var rawData = await response.Content.ReadAsStringAsync();
             var responseContent = JsonConvert.DeserializeObject<IEnumerable<IdentityRole>>(rawData)
                 .Select(r => r.Name).ToList();
@@ -43,7 +32,7 @@ namespace Services
         // Only for testing
         public async Task<RegisterTableViewModel> GetUsersData()
         {
-            var response = await _client.GetAsync("api/users");
+            var response = await _forumClient.Client.GetAsync("api/users");
             var rawData = await response.Content.ReadAsStringAsync();
             var responseContent = JsonConvert.DeserializeObject<IEnumerable<ForumUserDto>>(rawData).ToList();
 
@@ -59,7 +48,7 @@ namespace Services
             ForumUserDto forumUser = new();
 
             string uri = "api/users/" + userId.ToString();
-            var response = await _client.GetAsync(uri);
+            var response = await _forumClient.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -78,7 +67,7 @@ namespace Services
             ForumUserDto forumUserDto = new();
 
             string uri = "api/usersf/" + userId.ToString();
-            var response = await _client.GetAsync(uri);
+            var response = await _forumClient.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -97,7 +86,7 @@ namespace Services
             bool result = false;
 
             string uri = "api/usersa/" + userId.ToString();
-            var response = await _client.GetAsync(uri);
+            var response = await _forumClient.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -107,7 +96,7 @@ namespace Services
 
                 var jsonAfterUpdade = JsonConvert.SerializeObject(appUserFromDb);
                 var responseAfterUpdate =
-                    await _client.PutAsync(uri, new StringContent(jsonAfterUpdade, Encoding.UTF8, "application/json"));
+                    await _forumClient.Client.PutAsync(uri, new StringContent(jsonAfterUpdade, Encoding.UTF8, "application/json"));
 
                 if (responseAfterUpdate.IsSuccessStatusCode)
                 {

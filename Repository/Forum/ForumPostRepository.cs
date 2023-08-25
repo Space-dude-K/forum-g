@@ -17,8 +17,8 @@ namespace Repository.Forum
         public void CreatePostForTopic(int forumTopicId, ForumPost post)
         {
             // TODO
-            post.ForumUserId = 1;
-            post.ForumTopicId = forumTopicId;
+            /*post.ForumUserId = 1;
+            post.ForumTopicId = forumTopicId;*/
             Create(post);
         }
 
@@ -26,7 +26,16 @@ namespace Repository.Forum
         {
             Delete(post);
         }
+        public async Task<PagedList<ForumPost>> GetAllPostsFromTopicAsyncFilteredByUserId(
+            int? forumTopicId, ForumPostParameters forumPostParameters, bool getAll, bool trackChanges)
+        {
+            var posts = await FindByCondition(f => f.ForumTopicId.Equals(forumTopicId), trackChanges)
+                .FilterPosts(forumPostParameters.UserId)
+                .Sort(forumPostParameters.OrderBy)
+                .ToListAsync();
 
+            return PagedList<ForumPost>.ToPagedList(posts, forumPostParameters.PageNumber, forumPostParameters.PageSize, getAll);
+        }
         public async Task<PagedList<ForumPost>> GetAllPostsFromTopicAsync(
             int? forumTopicId, ForumPostParameters forumPostParameters, bool getAll, bool trackChanges)
         {

@@ -19,7 +19,7 @@ namespace Entities.Configuration.Forum
             builder
                 .Property(p => p.ForumTopicId)
                 .HasColumnType("INTEGER")
-                .IsRequired(true);
+                .IsRequired(false);
             builder
                 .Property(p => p.PostCounter)
                 .HasColumnType("INTEGER")

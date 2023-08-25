@@ -2,6 +2,7 @@
 using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
 using Interfaces.Forum;
+using Interfaces.Forum.ApiServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -12,11 +13,14 @@ namespace Forum.Controllers.Forum
     {
         private readonly IMapper _mapper;
         private readonly IForumService _forumService;
+        private readonly IForumCategoryService _forumCategoryService;
 
-        public ForumCategoryCreationController(IMapper mapper, IForumService forumService)
+        public ForumCategoryCreationController(IMapper mapper, IForumService forumService,
+            IForumCategoryService forumCategoryService)
         {
             _mapper = mapper;
             _forumService = forumService;
+            _forumCategoryService = forumCategoryService;
         }
         [HttpGet]
         public async Task<IActionResult> RedirectToCreateCategory()
@@ -37,7 +41,7 @@ namespace Forum.Controllers.Forum
             if (userId > 0)
             {
                 categoryToAdd.ForumUserId = userId;
-                var res = await _forumService.CreateForumCategory(categoryToAdd);
+                var res = await _forumCategoryService.CreateForumCategory(categoryToAdd);
             }
             else
             {

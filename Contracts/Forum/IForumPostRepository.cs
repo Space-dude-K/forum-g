@@ -14,5 +14,7 @@ namespace Interfaces.Forum
         void DeletePost(ForumPost post);
         Task<ForumPost> GetPostAsync(int forumTopicId, int postId, bool trackChanges);
         Task<IEnumerable<ForumPost>> GetPostsFromTopicByIdsAsync(int topicId, IEnumerable<int> ids, bool trackChanges);
+        Task<PagedList<ForumPost>> GetAllPostsFromTopicAsyncFilteredByUserId(int? forumTopicId, 
+            ForumPostParameters forumPostParameters, bool getAll, bool trackChanges);
     }
 }
