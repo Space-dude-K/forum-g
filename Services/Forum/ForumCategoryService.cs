@@ -1,12 +1,12 @@
 ﻿using Interfaces;
 using Newtonsoft.Json;
-using System.Net.Http.Headers;
 using Interfaces.Forum;
-using Services.Utils;
 using Entities.DTO.ForumDto.ForumView;
 using System.Text;
 using Entities.DTO.ForumDto.Create;
 using Interfaces.Forum.ApiServices;
+using Entities.DTO.ForumDto;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Services.Forum
 {
@@ -18,6 +18,24 @@ namespace Services.Forum
         {
             _logger = logger;
             _forumClient = forumClient;
+        }
+        public async Task<List<ForumViewCategoryDto>> GetForumCategories()
+        {
+            List<ForumViewCategoryDto> forumViewCategoryDtos = new();
+
+            var response = await _forumClient.Client.GetAsync("api/categories");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                forumViewCategoryDtos = JsonConvert.DeserializeObject<IEnumerable<ForumViewCategoryDto>>(rawData).ToList();
+            }
+            else
+            {
+                _logger.LogError($"Unable to get categories");
+            }
+
+            return forumViewCategoryDtos;
         }
         public async Task<bool> CreateForumCategory(ForumCategoryForCreationDto category)
         {
@@ -39,25 +57,46 @@ namespace Services.Forum
 
             return result;
         }
-        public async Task<List<ForumViewCategoryDto>> GetForumCategories()
+        public async Task<bool> UpdateTotalPostCounterForCategory(int categoryId, bool incresase, int postCountToDelete = 0)
         {
-            List<ForumViewCategoryDto> forumViewCategoryDtos = new List<ForumViewCategoryDto>();
+            bool result = false;
 
-
-            var response = await _forumClient.Client.GetAsync("api/categories");
+            string uri = "api/categories/" + categoryId.ToString();
+            var response = await _forumClient.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
                 var rawData = await response.Content.ReadAsStringAsync();
-                forumViewCategoryDtos = JsonConvert.DeserializeObject<IEnumerable<ForumViewCategoryDto>>(rawData).ToList();
-            }
-            else
-            {
-                _logger.LogError($"Unable to get categories");
+                int totalPosts = JsonConvert.DeserializeObject<ICollection<ForumCategoryDto>>(rawData).First().TotalPosts;
+
+                if (incresase)
+                    totalPosts++;
+                else
+                {
+                    if (postCountToDelete > 0)
+                        totalPosts = -postCountToDelete;
+                    else
+                        totalPosts--;
+                }
+
+                JsonPatchDocument<ForumCategoryDto> jsonPatchObject = new();
+                jsonPatchObject.Replace(fc => fc.TotalPosts, totalPosts);
+
+                var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
+                var responseAfterUpdate = await _forumClient.Client.PatchAsync(uri, 
+                    new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+
+                if (responseAfterUpdate.IsSuccessStatusCode)
+                {
+                    result = true;
+                }
+                else
+                {
+                    _logger.LogError($"Unable to update total post counter for category id: {categoryId}");
+                }
             }
 
-            return forumViewCategoryDtos;
+            return result;
         }
     }
-
 }

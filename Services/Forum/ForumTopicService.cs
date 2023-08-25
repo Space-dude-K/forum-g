@@ -1,8 +1,6 @@
 ﻿using Interfaces;
 using Newtonsoft.Json;
-using System.Net.Http.Headers;
 using Interfaces.Forum;
-using Services.Utils;
 using System.Text;
 using Microsoft.AspNetCore.JsonPatch;
 using Entities.DTO.ForumDto.Create;
@@ -79,7 +77,7 @@ namespace Services.Forum
 
             return forumViewPostDtos;
         }
-        public async Task<bool> UpdateTopicCounter(int categoryId, bool incresase)
+        public async Task<bool> UpdateTopicCounter(int categoryId, bool incresase, int postCountToDelete = 0)
         {
             bool result = false;
 
@@ -94,13 +92,19 @@ namespace Services.Forum
                 if (incresase)
                     totalTopics++;
                 else
-                    totalTopics--;
+                {
+                    if (postCountToDelete > 0)
+                        totalTopics = -postCountToDelete;
+                    else
+                        totalTopics--;
+                }
 
                 var jsonPatchObject = new JsonPatchDocument<ForumViewCategoryDto>();
                 jsonPatchObject.Replace(fc => fc.TotalTopics, totalTopics);
 
                 var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
-                var responseAfterUpdate = await _forumClient.Client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+                var responseAfterUpdate = await _forumClient.Client.PatchAsync(uri, 
+                    new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
 
                 if (responseAfterUpdate.IsSuccessStatusCode)
                 {
@@ -228,6 +232,25 @@ namespace Services.Forum
             else
             {
                 _logger.LogError($"Unable create topic counter for topic id: {topicId}");
+            }
+
+            return result;
+        }
+        public async Task<bool> DeleteTopicPostCounter(int topicId)
+        {
+            bool result = false;
+            string uri = "api" +
+                "/tcounters/" + topicId.ToString();
+
+            var response = await _forumClient.Client.DeleteAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = true;
+            }
+            else
+            {
+                _logger.LogError($"Unable delete topic counter for topic id: {topicId}");
             }
 
             return result;

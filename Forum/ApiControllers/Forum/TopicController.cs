@@ -105,6 +105,26 @@ namespace Forum.Controllers.Forum
             return Ok(topicCounterEntity);
         }
         /// <summary>
+        /// Deletes topic counter
+        /// </summary>
+        /// <param name="topicCounterId"></param>
+        /// <param name="topicCounterDto"></param>
+        [HttpDelete]
+        [Route("/api/tcounters/{topicId}")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
+        [ServiceFilter(typeof(ValidateTopicCounter))]
+        public async Task<IActionResult> DeleteTopicCounter(int topicId)
+        {
+            var topicCounter = HttpContext.Items["topicCounter"] as ForumTopicCounter;
+
+            _repository.ForumTopicCounter.DeleteTopicCounter(topicCounter);
+            await _repository.SaveAsync();
+
+            return NoContent();
+        }
+        /// <summary>
         /// Gets counters for topic
         /// </summary>
         /// <param name="categoryId"></param>
@@ -129,7 +149,8 @@ namespace Forum.Controllers.Forum
         [Route("/api/tcounters/{topicId}")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         [ServiceFilter(typeof(ValidateTopicCounter))]
-        public async Task<IActionResult> UpdateTopicCounter(int topicId, [FromBody] ForumTopicCounterForUpdateDto topicCounter)
+        public async Task<IActionResult> UpdateTopicCounter(int topicId, 
+            [FromBody] ForumTopicCounterForUpdateDto topicCounter)
         {
             var topicCounterEntity = HttpContext.Items["topicCounter"] as ForumTopicCounter;
 
@@ -142,7 +163,8 @@ namespace Forum.Controllers.Forum
         [Route("/api/tcounters/{topicId}")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         [ServiceFilter(typeof(ValidateTopicCounter))]
-        public async Task<IActionResult> PatchTopicCounter(int topicId, [FromBody] JsonPatchDocument<ForumTopicCounterForUpdateDto> topicCounterDoc)
+        public async Task<IActionResult> PatchTopicCounter(int topicId, 
+            [FromBody] JsonPatchDocument<ForumTopicCounterForUpdateDto> topicCounterDoc)
         {
             if (topicCounterDoc == null)
             {

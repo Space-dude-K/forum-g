@@ -46,18 +46,18 @@ namespace Entities.Configuration.Forum
                 .WithOne(p => p.ForumTopic)
                 .HasForeignKey(p => p.ForumTopicId)
                 .HasConstraintName("FK_ForumTopic_ForumPost_ForumTopicId")
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
             builder
                 .HasOne(p => p.ForumUser)
                 .WithMany()
                 .HasConstraintName("FK_ForumTopic_ForumUser_Id")
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
             builder
                 .HasOne(p => p.ForumTopicCounter)
                 .WithOne(p => p.ForumTopic)
                 .HasForeignKey<ForumTopicCounter>(k => k.ForumTopicId)
                 .HasConstraintName("FK_ForumTopic_ForumTopicCounter_Id")
-                .OnDelete(DeleteBehavior.Restrict); ;
+                .OnDelete(DeleteBehavior.SetNull); ;
             #endregion
             #region DbDataSeed
             builder.HasData(

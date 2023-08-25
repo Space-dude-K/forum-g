@@ -16,8 +16,7 @@ namespace Entities.Configuration.Forum
                .IsRequired(true);
             builder
                 .Property(p => p.AccountTypeId)
-                .HasColumnType("INTEGER")
-                .IsRequired(true);
+                .HasColumnType("INTEGER");
             builder
                 .Property(p => p.Ip)
                 .HasColumnType("NVARCHAR")
@@ -35,7 +34,7 @@ namespace Entities.Configuration.Forum
                 .WithOne(p => p.ForumAccount)
                 .HasForeignKey<ForumAccount>(p => p.AccountTypeId)
                 .HasConstraintName("FK_ForumAccount_ForumAccountType_Id")
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

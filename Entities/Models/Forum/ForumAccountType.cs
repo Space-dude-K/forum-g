@@ -11,6 +11,6 @@ namespace Entities.Models.Forum
         public int Id { get; set; }
         public string TypeName { get; set; }
 
-        public virtual ForumAccount ForumAccount { get; set; }
+        public virtual ForumAccount? ForumAccount { get; set; }
     }
 }

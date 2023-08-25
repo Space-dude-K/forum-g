@@ -178,7 +178,7 @@ namespace Services.Forum
                 else
                 {
                     if (postCountToDelete > 0)
-                        totalPosts = -postCountToDelete;
+                        totalPosts -= postCountToDelete;
                     else
                         totalPosts--;
                 }

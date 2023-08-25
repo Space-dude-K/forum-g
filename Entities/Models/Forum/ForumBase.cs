@@ -13,13 +13,8 @@ namespace Entities.Models.Forum
         public string ForumSubTitle { get; set; }
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
-        public int TotalPosts
-        {
-            get
-            {
-                return ForumTopics?.Sum(t => t.ForumPosts.Count) ?? 0;
-            }
-        }
+        public int? TotalPosts { get; set; }
+        public int? TotalTopics { get; set; }
         public int TotalViews { get; set; }
         public virtual ForumCategory? ForumCategory { get; set; }
         public int? ForumCategoryId { get; set; }

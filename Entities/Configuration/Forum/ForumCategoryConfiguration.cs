@@ -30,10 +30,6 @@ namespace Entities.Configuration.Forum
                 .HasColumnType("INTEGER")
                 .IsRequired(true);
             builder
-                .Property(p => p.TotalPosts)
-                .HasColumnType("INTEGER")
-                .IsRequired(true);
-            builder
                 .Property(p => p.CreatedAt)
                 .HasColumnType("Date")
                 .IsRequired(false);
@@ -53,12 +49,12 @@ namespace Entities.Configuration.Forum
                 .WithOne(p => p.ForumCategory)
                 .HasForeignKey(p => p.ForumCategoryId)
                 .HasConstraintName("FK_ForumCategory_ForumBase_Id")
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.SetNull);
             builder
                 .HasOne(p => p.ForumUser)
                 .WithMany()
                 .HasConstraintName("FK_ForumCategory_ForumUser_Id")
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
             #endregion
 
             #region DbDataSeed
@@ -70,8 +66,7 @@ namespace Entities.Configuration.Forum
                     CreatedAt = DateTime.Now,
                     ForumUserId = 1,
                     TotalForums = 1,
-                    TotalTopics = 4,
-                    TotalPosts = 6
+                    TotalTopics = 4
                 },
                 new ForumCategory()
                 {
@@ -80,8 +75,7 @@ namespace Entities.Configuration.Forum
                     CreatedAt = DateTime.Now,
                     ForumUserId = 1,
                     TotalForums = 5,
-                    TotalTopics = 4,
-                    TotalPosts = 4
+                    TotalTopics = 4
                 },
                 new ForumCategory()
                 {

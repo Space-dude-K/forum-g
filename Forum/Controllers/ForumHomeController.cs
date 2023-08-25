@@ -25,11 +25,12 @@ namespace Forum.Controllers
         private readonly IForumTopicService _forumTopicService;
         private readonly IForumBaseService _forumBaseService;
         private readonly IForumModelService _forumModelService;
+        private readonly IForumCategoryService _forumCategoryService;
 
         public ForumHomeController(IForumService forumService, 
             IMapper mapper, IUserService  userService, IWebHostEnvironment env, ILoggerManager logger, 
             IForumPostService forumPostService, IForumTopicService forumTopicService, 
-            IForumBaseService forumBaseService, IForumModelService forumModelService)
+            IForumBaseService forumBaseService, IForumModelService forumModelService, IForumCategoryService forumCategoryService)
         {
             _forumService = forumService;
             _mapper = mapper;
@@ -40,6 +41,7 @@ namespace Forum.Controllers
             _forumTopicService = forumTopicService;
             _forumBaseService = forumBaseService;
             _forumModelService = forumModelService;
+            _forumCategoryService = forumCategoryService;
         }
         public async Task<IActionResult> ForumHome()
         {
@@ -74,20 +76,18 @@ namespace Forum.Controllers
             if (!User.Identity.IsAuthenticated)
                 return Unauthorized("Unauthorized access.");
 
-            var postCountToDeleteForTopicCounter = await _forumPostService.GetTopicPostCount(topicId);
-            var res = await _forumTopicService.DeleteForumTopic(categoryId, forumId, topicId);
-
             int userId = 0;
             int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
             var forumUser = _userService.GetForumUser(userId);
 
-            if(forumUser == null)
+            if (forumUser == null)
                 return Unauthorized("Unauthorized access.");
+
+            var userTopicPosts = await _forumTopicService.GetTopicPosts(categoryId, forumId, topicId, 0, 0, true);
+            var res = await _forumTopicService.DeleteForumTopic(categoryId, forumId, topicId);
 
             if (res)
             {
-                var resTopicPostCounter = await _forumPostService.UpdatePostCounter(categoryId, false, postCountToDeleteForTopicCounter);
-                var userTopicPosts = await _forumTopicService.GetTopicPosts(categoryId, forumId, topicId, 0, 0, true);
                 var userTopicPostCounter = userTopicPosts
                     .Where(p => p.ForumUserId.Equals(userId))
                     .Count();

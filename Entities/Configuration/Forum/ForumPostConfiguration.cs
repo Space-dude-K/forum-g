@@ -45,7 +45,7 @@ namespace Entities.Configuration.Forum
                 .HasOne(p => p.ForumUser)
                 .WithMany()
                 .HasConstraintName("FK_ForumPost_ForumUser_Id")
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
             #endregion
             #region DbDataSeed
             builder.HasData(

@@ -32,15 +32,35 @@ namespace Services.Forum
                 Categories = await _forumCategoryService.GetForumCategories()
             };
 
+            // TODO
             for (int i = 0; i < forumHomeViewModel.Categories.Count; i++)
             {
-                forumHomeViewModel.Categories[i].Forums = await _forumBaseService.GetForumBases(forumHomeViewModel.Categories[i].Id);
+                forumHomeViewModel.Categories[i].Forums = 
+                    await _forumBaseService.GetForumBases(forumHomeViewModel.Categories[i].Id);
 
-                int postCount = await _forumPostService.GetTopicPostCount(forumHomeViewModel.Categories[i].Id);
-                forumHomeViewModel.Categories[i].TotalPosts = postCount;
+                for(int k = 0; k < forumHomeViewModel.Categories[i].Forums.Count; k++)
+                {
+                    var topics = await _forumTopicService
+                        .GetForumTopics(forumHomeViewModel.Categories[i].Id,
+                        forumHomeViewModel.Categories[i].Forums[k].Id);
 
-                int topicCount = await _forumTopicService.GetTopicCount(forumHomeViewModel.Categories[i].Id);
-                forumHomeViewModel.Categories[i].TotalTopics = topicCount;
+                    foreach(var topic in topics)
+                    {
+                        forumHomeViewModel.Categories[i].Forums[k].TotalPosts += 
+                            await _forumPostService.GetTopicPostCount(topic.Id);
+                    }
+
+                    forumHomeViewModel.Categories[i].Forums[k].TopicsCount = topics.Count;
+                }
+
+
+
+                //int postCount = await _forumPostService.GetTopicPostCount(forumHomeViewModel.Categories[i].Id);
+
+                //forumHomeViewModel.Categories[i].TotalPosts = postCount;
+
+                //int topicCount = await _forumTopicService.GetTopicCount(forumHomeViewModel.Categories[i].Id);
+                //forumHomeViewModel.Categories[i].TotalTopics = topicCount;
             }
 
             return forumHomeViewModel;

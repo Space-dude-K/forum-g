@@ -9,11 +9,11 @@ namespace Entities.Models.Forum
     public class ForumAccount
     {
         public int Id { get; set; }
-        public int AccountTypeId { get; set; }
+        public int? AccountTypeId { get; set; }
 
         public string Ip { get; set; }
 
-        public virtual ForumUser ForumUser { get; set; }
-        public virtual ForumAccountType ForumAccountType { get; set; }
+        public virtual ForumUser? ForumUser { get; set; }
+        public virtual ForumAccountType? ForumAccountType { get; set; }
     }
 }
