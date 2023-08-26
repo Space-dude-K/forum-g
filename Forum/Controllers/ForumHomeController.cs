@@ -9,7 +9,6 @@ using Interfaces;
 using Entities.DTO.UserDto;
 using Marvin.Cache.Headers;
 using Interfaces.Forum.ApiServices;
-using Services.Forum;
 
 namespace Forum.Controllers
 {
@@ -30,7 +29,8 @@ namespace Forum.Controllers
         public ForumHomeController(IForumService forumService, 
             IMapper mapper, IUserService  userService, IWebHostEnvironment env, ILoggerManager logger, 
             IForumPostService forumPostService, IForumTopicService forumTopicService, 
-            IForumBaseService forumBaseService, IForumModelService forumModelService, IForumCategoryService forumCategoryService)
+            IForumBaseService forumBaseService, IForumModelService forumModelService, 
+            IForumCategoryService forumCategoryService)
         {
             _forumService = forumService;
             _mapper = mapper;
@@ -131,7 +131,8 @@ namespace Forum.Controllers
                 var userTopicPostCounter = userTopicPosts
                     .Where(p => p.ForumUserId.Equals(userId))
                     .Count();
-                var resUserPostCounter = await _forumPostService.UpdatePostCounterForUser(userId, false, userTopicPostCounter);
+                var resUserPostCounter = await _forumPostService
+                    .UpdatePostCounterForUser(userId, false, userTopicPostCounter);
             }
             else
             {
@@ -150,8 +151,10 @@ namespace Forum.Controllers
                 return Unauthorized("Unauthorized access.");
             }
 
-            var model = await _forumModelService.GetTopicPostsForModel(categoryId, forumId, topicId, pageId, maxiumPostsPerPage);
+            var model = await _forumModelService
+                .GetTopicPostsForModel(categoryId, forumId, topicId, pageId, maxiumPostsPerPage);
 
+            // TODO. Refactoring
             var tasks = model.Posts.Select(
                 async p => new
                 {
@@ -160,7 +163,6 @@ namespace Forum.Controllers
                 });
             var tuples = await Task.WhenAll(tasks);
 
-            // TODO. Refactoring
             foreach (var (user, item) in model.Posts
                 .SelectMany(user => tuples
                 .Where(item => user.ForumUser.Id == item.Item.ForumUser.Id)

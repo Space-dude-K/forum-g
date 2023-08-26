@@ -2,6 +2,7 @@
 using Interfaces.Forum;
 using Entities.ViewModels.Forum;
 using Interfaces.Forum.ApiServices;
+using Entities.DTO.ForumDto.ForumView;
 
 namespace Services.Forum
 {
@@ -25,6 +26,25 @@ namespace Services.Forum
             _forumTopicService = forumTopicService;
             _forumPostService = forumPostService;
         }
+        private async Task<List<ForumViewBaseDto>> SetTopicCountForForums
+            (ForumViewCategoryDto category, List<ForumViewBaseDto> forums)
+        {
+            for (int k = 0; k < forums.Count; k++)
+            {
+                var topics = await _forumTopicService
+                    .GetForumTopics(category.Id, category.Forums[k].Id);
+
+                foreach (var topic in topics)
+                {
+                    category.Forums[k].TotalPosts +=
+                        await _forumPostService.GetTopicPostCount(topic.Id);
+                }
+
+                category.Forums[k].TopicsCount = topics.Count;
+            }
+
+            return forums;
+        }
         public async Task<ForumHomeViewModel> GetForumCategoriesAndForumBasesForModel()
         {
             ForumHomeViewModel forumHomeViewModel = new()
@@ -32,35 +52,13 @@ namespace Services.Forum
                 Categories = await _forumCategoryService.GetForumCategories()
             };
 
-            // TODO
             for (int i = 0; i < forumHomeViewModel.Categories.Count; i++)
             {
                 forumHomeViewModel.Categories[i].Forums = 
                     await _forumBaseService.GetForumBases(forumHomeViewModel.Categories[i].Id);
 
-                for(int k = 0; k < forumHomeViewModel.Categories[i].Forums.Count; k++)
-                {
-                    var topics = await _forumTopicService
-                        .GetForumTopics(forumHomeViewModel.Categories[i].Id,
-                        forumHomeViewModel.Categories[i].Forums[k].Id);
-
-                    foreach(var topic in topics)
-                    {
-                        forumHomeViewModel.Categories[i].Forums[k].TotalPosts += 
-                            await _forumPostService.GetTopicPostCount(topic.Id);
-                    }
-
-                    forumHomeViewModel.Categories[i].Forums[k].TopicsCount = topics.Count;
-                }
-
-
-
-                //int postCount = await _forumPostService.GetTopicPostCount(forumHomeViewModel.Categories[i].Id);
-
-                //forumHomeViewModel.Categories[i].TotalPosts = postCount;
-
-                //int topicCount = await _forumTopicService.GetTopicCount(forumHomeViewModel.Categories[i].Id);
-                //forumHomeViewModel.Categories[i].TotalTopics = topicCount;
+                forumHomeViewModel.Categories[i].Forums = await SetTopicCountForForums(
+                    forumHomeViewModel.Categories[i], forumHomeViewModel.Categories[i].Forums);
             }
 
             return forumHomeViewModel;

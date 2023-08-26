@@ -60,7 +60,8 @@ namespace Forum.Controllers.Forum
         [ProducesResponseType(404)]
         [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        public async Task<IActionResult> GetForumsForCategory(int categoryId, [FromQuery] ForumBaseParameters forumBaseParameters)
+        public async Task<IActionResult> GetForumsForCategory(int categoryId, 
+            [FromQuery] ForumBaseParameters forumBaseParameters)
         {
             var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
 
@@ -94,7 +95,8 @@ namespace Forum.Controllers.Forum
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        public async Task<IActionResult> GetForumForCategory(int categoryId, int forumId, [FromQuery] ForumBaseParameters forumBaseParameters)
+        public async Task<IActionResult> GetForumForCategory(int categoryId, int forumId, 
+            [FromQuery] ForumBaseParameters forumBaseParameters)
         {
             var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
@@ -109,7 +111,8 @@ namespace Forum.Controllers.Forum
                 return NotFound();
             }
             var forumDto = _mapper.Map<ForumBaseDto>(forumDb);
-            var links = _forumBaseLinks.TryGenerateLinks(new List<ForumBaseDto>() { forumDto }, categoryId, forumBaseParameters.Fields, HttpContext);
+            var links = _forumBaseLinks.TryGenerateLinks(new List<ForumBaseDto>() { forumDto }, 
+                categoryId, forumBaseParameters.Fields, HttpContext);
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
@@ -129,7 +132,8 @@ namespace Forum.Controllers.Forum
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        public async Task<IActionResult> GetForumCollection(int categoryId, [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids,
+        public async Task<IActionResult> GetForumCollection(int categoryId, 
+            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids,
             [FromQuery] ForumBaseParameters forumBaseParameters)
         {
             if (ids == null)
@@ -165,7 +169,8 @@ namespace Forum.Controllers.Forum
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreateForumForCategory(int categoryId, [FromBody] ForumBaseForCreationDto forum)
+        public async Task<IActionResult> CreateForumForCategory(int categoryId, 
+            [FromBody] ForumBaseForCreationDto forum)
         {
             if (!ModelState.IsValid)
             {
@@ -205,7 +210,8 @@ namespace Forum.Controllers.Forum
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreateForumCollectionForCategory(int categoryId, [FromBody] IEnumerable<ForumBaseForCreationDto> forumCollection)
+        public async Task<IActionResult> CreateForumCollectionForCategory(int categoryId, 
+            [FromBody] IEnumerable<ForumBaseForCreationDto> forumCollection)
         {
             if (forumCollection == null)
             {
@@ -262,7 +268,8 @@ namespace Forum.Controllers.Forum
         [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateForumForCategoryExistsAttribute))]
-        public async Task<IActionResult> UpdateForumForCategory(int categoryId, int forumId, [FromBody] ForumBaseForUpdateDto forum)
+        public async Task<IActionResult> UpdateForumForCategory(int categoryId, int forumId, 
+            [FromBody] ForumBaseForUpdateDto forum)
         {
             var forumEntity = HttpContext.Items["forum"] as ForumBase;
 
