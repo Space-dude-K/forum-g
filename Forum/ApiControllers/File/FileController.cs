@@ -21,7 +21,8 @@ namespace Forum.ApiControllers.File
         private readonly IMapper _mapper;
         private readonly UserDataLinks _userDataLinks;
 
-        public FileController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, UserDataLinks userDataLinks)
+        public FileController(IRepositoryManager repository, 
+            ILoggerManager logger, IMapper mapper, UserDataLinks userDataLinks)
         {
             _repository = repository;
             _logger = logger;

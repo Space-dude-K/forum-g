@@ -84,7 +84,8 @@ namespace Forum.Controllers.Forum
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        public async Task<IActionResult> GetCategory(int categoryId, [FromQuery] ForumCategoryParameters forumCategoryParameters)
+        public async Task<IActionResult> GetCategory(int categoryId, 
+            [FromQuery] ForumCategoryParameters forumCategoryParameters)
         {
             var category = await _repository.ForumCategory.GetCategoryAsync(categoryId, trackChanges: false);
             if (category == null)
@@ -154,6 +155,12 @@ namespace Forum.Controllers.Forum
         {
             var categoryEntity = _mapper.Map<ForumCategory>(category);
 
+            if (categoryEntity == null)
+            {
+                _logger.LogError("ForumCategory entity is null");
+                return BadRequest("ForumCategory entity is null");
+            }
+
             _repository.ForumCategory.CreateCategory(categoryEntity);
             await _repository.SaveAsync();
 
@@ -207,9 +214,13 @@ namespace Forum.Controllers.Forum
         [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
         public async Task<IActionResult> UpdateCategory(int categoryId, [FromBody] ForumCategoryForUpdateDto category)
         {
-            // TODO User id for collection PUT
-
             var categoryEntity = HttpContext.Items["category"] as ForumCategory;
+
+            if (categoryEntity == null)
+            {
+                _logger.LogError("ForumCategory entity is null");
+                return BadRequest("ForumCategory entity is null");
+            }
 
             _mapper.Map(category, categoryEntity);
             await _repository.SaveAsync();
@@ -230,7 +241,8 @@ namespace Forum.Controllers.Forum
         [ProducesResponseType(401)]
         [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
-        public async Task<IActionResult> PartiallyUpdateCategory(int categoryId, [FromBody] JsonPatchDocument<ForumCategoryForUpdateDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateCategory(int categoryId, 
+            [FromBody] JsonPatchDocument<ForumCategoryForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
             {
@@ -273,6 +285,12 @@ namespace Forum.Controllers.Forum
         public async Task<IActionResult> DeleteCategory(int categoryId)
         {
             var category = HttpContext.Items["category"] as ForumCategory;
+
+            if (category == null)
+            {
+                _logger.LogError("ForumCategory entity is null");
+                return BadRequest("ForumCategory entity is null");
+            }
 
             _repository.ForumCategory.DeleteCategory(category);
             await _repository.SaveAsync();

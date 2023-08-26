@@ -112,8 +112,10 @@ namespace Forum.Controllers.Forum
             }
 
             var postsFromDb = forumPostParameters.UserId > 0 ? 
-                await _repository.ForumPost.GetAllPostsFromTopicAsyncFilteredByUserId(topicId, forumPostParameters, false, trackChanges: false) :
-                await _repository.ForumPost.GetAllPostsFromTopicAsync(topicId, forumPostParameters, false, trackChanges: false);
+                await _repository.ForumPost.GetAllPostsFromTopicAsyncFilteredByUserId(topicId, 
+                forumPostParameters, false, trackChanges: false) :
+                await _repository.ForumPost.GetAllPostsFromTopicAsync(topicId, forumPostParameters, 
+                false, trackChanges: false);
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(postsFromDb.MetaData));
 
@@ -157,7 +159,8 @@ namespace Forum.Controllers.Forum
             }
 
             var postDto = _mapper.Map<ForumPostDto>(postDb);
-            var links = _postLinks.TryGenerateLinks(new List<ForumPostDto>() { postDto }, categoryId, forumId, topicId, forumPostParameters.Fields, HttpContext);
+            var links = _postLinks.TryGenerateLinks(new List<ForumPostDto>() { postDto }, 
+                categoryId, forumId, topicId, forumPostParameters.Fields, HttpContext);
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
@@ -215,7 +218,8 @@ namespace Forum.Controllers.Forum
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreatePostForTopic(int categoryId, int forumId, int topicId, [FromBody] ForumPostForCreationDto post)
+        public async Task<IActionResult> CreatePostForTopic(int categoryId, int forumId, int topicId, 
+            [FromBody] ForumPostForCreationDto post)
         {
             if (!ModelState.IsValid)
             {
