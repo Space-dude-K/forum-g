@@ -14,6 +14,8 @@ using Entities.ViewModels;
 using Entities;
 using Services;
 using Forum.Extensions;
+using Forum.ActionsFilters.Consumer.Forum;
+using Entities.DTO.UserDto;
 
 namespace Forum.Controllers
 {
@@ -30,7 +32,8 @@ namespace Forum.Controllers
 
         public AccountController(ILoggerManager logger,
             Interfaces.Forum.IAuthenticationService authenticationService, IUserService userService,
-            UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IForumService forumService, IWebHostEnvironment webHostEnvironment)
+            UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IForumService forumService, 
+            IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _authenticationService = authenticationService;
@@ -63,7 +66,8 @@ namespace Forum.Controllers
             }
 
             var user = await _userManager.FindByNameAsync(userModel.UserName);
-            var result = await _signInManager.PasswordSignInAsync(user, userModel.Password, userModel.RememberMe, true);
+            var result = await _signInManager
+                .PasswordSignInAsync(user, userModel.Password, userModel.RememberMe, true);
 
             _logger.LogInfo($"User {user.Id} is signed in? {result.Succeeded}");
 
@@ -79,18 +83,18 @@ namespace Forum.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(ValidateAppUserExistAttribute))]
         public async Task<IActionResult> Logout(string returnUrl = null)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var appUser = HttpContext.Items["appUser"] as AppUser;
 
-            _logger.LogInfo($"Logout for {user.UserName}");
+            _logger.LogInfo($"Logout for {appUser.UserName}");
             
             await _signInManager.SignOutAsync();
 
-            _logger.LogInfo($"Is {user.UserName} signed? {_signInManager.IsSignedIn(HttpContext.User)}");
+            _logger.LogInfo($"Is {appUser.UserName} signed? {_signInManager.IsSignedIn(HttpContext.User)}");
 
             return RedirectToLocal(returnUrl);
-            //return RedirectToAction(nameof(HomeController.Privacy), "Home");
         }
         /*[HttpPost]
         [ValidateAntiForgeryToken]
@@ -165,7 +169,6 @@ namespace Forum.Controllers
                 else
                 {
                     var errorsRaw = await result.Content.ReadAsStringAsync();
-                    //var errors = JsonConvert.DeserializeObject(errorsRaw);
                     ModelState.AddModelError(string.Empty, errorsRaw);
                 }
             }
@@ -190,22 +193,17 @@ namespace Forum.Controllers
 
             return View(model);
         }
+        [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
+        [ServiceFilter(typeof(ValidateAppUserExistAttribute))]
         public async Task<ActionResult> ForumAccount()
         {
             int userId = 0;
             int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
-            var forumUser = _userService.GetForumUser(userId);  
-
-            if (forumUser == null)
-            {
-                _logger.LogError("User with id " + userId + " not found.");
-                return NotFound("User with id " + userId + " not found.");
-            }
-
-            var appUser = await _userManager.FindByIdAsync(userId.ToString());
+            var forumUser = HttpContext.Items["forumUser"] as ForumUserDto;
+            var appUser = HttpContext.Items["appUser"] as AppUser;
             var roles = await _userManager.GetRolesAsync(appUser);
 
-            ForumAccountViewModel forumAccountViewModel = new ForumAccountViewModel()
+            ForumAccountViewModel forumAccountViewModel = new()
             {
                 FullName = appUser.UserName,
                 UserRole = string.Join(", ", roles),
@@ -218,7 +216,7 @@ namespace Forum.Controllers
                 Company = appUser.Company,
                 Division = appUser.Division,
                 Login = appUser.NormalizedUserName,
-                AvatarImgSource = forumUser.Result.LoadAvatar(_webHostEnvironment.WebRootPath)
+                AvatarImgSource = forumUser.LoadAvatar(_webHostEnvironment.WebRootPath)
             };
 
             return View("~/Views/Forum/User/ForumAccount.cshtml", forumAccountViewModel);

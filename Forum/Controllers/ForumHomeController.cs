@@ -11,6 +11,7 @@ using Marvin.Cache.Headers;
 using Interfaces.Forum.ApiServices;
 using Forum.ActionsFilters.API.Forum;
 using Forum.ActionsFilters.Consumer.Forum;
+using Entities.Models.Forum;
 
 namespace Forum.Controllers
 {
@@ -48,22 +49,22 @@ namespace Forum.Controllers
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
         public async Task<IActionResult> ForumHome()
         {
-            var model = await _forumModelService.GetForumCategoriesAndForumBasesForModel();
+            var model = await _forumModelService
+                .GetForumCategoriesAndForumBasesForModel();
+
             return View("~/Views/Forum/ForumHome.cshtml", model);
         }
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<ActionResult> DeleteForumBase(int categoryId, int forumId)
         {
             int userId = 0;
             int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
-            var forumUser = _userService.GetForumUser(userId);
-
-            if (forumUser == null)
-                return Unauthorized("Unauthorized access.");
 
             int userForumPosts = 0;
             var userTopics = await _forumTopicService.GetForumTopics(categoryId, forumId);
 
+            // TODO
             foreach(var topic in userTopics)
             {
                 var userTopicPosts = 
@@ -104,14 +105,11 @@ namespace Forum.Controllers
             return View("~/Views/Forum/ForumBase.cshtml", model);
         }
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<ActionResult> DeleteTopic(int categoryId, int forumId, int topicId)
         {
             int userId = 0;
             int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
-            var forumUser = _userService.GetForumUser(userId);
-
-            if (forumUser == null)
-                return Unauthorized("Unauthorized access.");
 
             var userTopicPosts = await _forumTopicService.GetTopicPosts(categoryId, forumId, topicId, 0, 0, true);
             var res = await _forumTopicService.DeleteForumTopic(categoryId, forumId, topicId);
@@ -194,15 +192,10 @@ namespace Forum.Controllers
         }
         [HttpCacheIgnore]
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<IActionResult> ForumUserPage(int id)
         {
-            var user = await _userService.GetForumUser(id);
-
-            if (user == null)
-            {
-                return NotFound($"User with id {id} not found.");
-            }
-
+            var user = HttpContext.Items["forumUser"] as ForumUserDto;
             var model = _mapper.Map<ForumUserPageViewModel>(user);
             model.AvatarImgSrc = user.LoadAvatar(_env.WebRootPath);
 
@@ -210,9 +203,10 @@ namespace Forum.Controllers
         }
         [HttpCacheIgnore]
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<IActionResult> UpdateForumUserPage(int id, ForumUserPageViewModel model)
         {
-            var user = await _userService.GetForumUser(id);
+            var user = HttpContext.Items["forumUser"] as ForumUserDto;
             var appUserDto = _mapper.Map<AppUserDto>(model);
             var res = await _userService.UpdateAppUser(id, appUserDto);
 

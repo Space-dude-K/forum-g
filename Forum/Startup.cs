@@ -74,7 +74,9 @@ namespace Forum
             services.AddScoped<ValidateAppUserExistsAttribute>();
             services.AddScoped<ValidateMediaTypeAttribute>();
 
-            services.AddScoped<ValidateAuthorizeAttribute>();  
+            services.AddScoped<ValidateAuthorizeAttribute>();
+            services.AddScoped<ValidateForumUserExistAttribute>();
+            services.AddScoped<ValidateAppUserExistAttribute>();
 
             services.AddScoped<IDataShaper<ForumCategoryDto>, DataShaper<ForumCategoryDto>>();
             services.AddScoped<IDataShaper<ForumBaseDto>, DataShaper<ForumBaseDto>>();
