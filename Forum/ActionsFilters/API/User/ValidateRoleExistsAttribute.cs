@@ -6,7 +6,7 @@ using Entities.DTO.UserDto;
 using Entities.DTO.UserDto.Create;
 using Entities.Models;
 
-namespace Forum.ActionsFilters.User
+namespace Forum.ActionsFilters.API.User
 {
     public class ValidateRoleExistsAttribute : IAsyncActionFilter
     {
@@ -23,7 +23,7 @@ namespace Forum.ActionsFilters.User
             var controller = context.RouteData.Values["controller"];
             var userDto = (UserForCreationDto)context.ActionArguments.SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
 
-            if(userDto.Roles.Count > 0)
+            if (userDto.Roles.Count > 0)
             {
                 foreach (var role in userDto.Roles)
                 {

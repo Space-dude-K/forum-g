@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using Forum.ActionsFilters;
 using Forum.Utility.UserLinks;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Entities.DTO.FileDto;
 using Entities.Models.File;
-using Forum.ActionsFilters.File;
 using Entities.DTO.FileDto.Update;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Forum.ActionsFilters.API;
+using Forum.ActionsFilters.API.File;
 
 namespace Forum.ApiControllers.File
 {

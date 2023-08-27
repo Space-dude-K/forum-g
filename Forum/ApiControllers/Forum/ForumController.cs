@@ -5,8 +5,6 @@ using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.Update;
 using Entities.Models.Forum;
 using Entities.RequestFeatures.Forum;
-using Forum.ActionsFilters;
-using Forum.ActionsFilters.Forum;
 using Forum.ModelBinders;
 using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.JsonPatch;
@@ -14,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Forum.ActionsFilters.API;
+using Forum.ActionsFilters.API.Forum;
 
 namespace Forum.Controllers.Forum
 {

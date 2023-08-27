@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Drawing;
 using Forum.Extensions;
 using Interfaces.Forum.ApiServices;
+using Forum.ActionsFilters.Consumer.Forum;
 
 namespace Forum.Controllers
 {
@@ -33,16 +34,12 @@ namespace Forum.Controllers
             _logger = logger;
             _forumTopicService = forumTopicService;
         }
+        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
         [HttpPost]
         public async Task<IActionResult> UploadFileForUser(IFormFile uploadedFile)
         {
             int userId = 0;
             int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
-
-            if (userId == 0 && User.Identity != null)
-            {
-                return Unauthorized("Unauthorized access.");
-            }
 
             if (uploadedFile != null)
             {

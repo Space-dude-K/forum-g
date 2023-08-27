@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.ActionsFilters.Forum
+namespace Forum.ActionsFilters.API.Forum
 {
     public class ValidateTopicCounter : IAsyncActionFilter
     {
@@ -16,7 +16,7 @@ namespace Forum.ActionsFilters.Forum
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var method = context.HttpContext.Request.Method;
-            var trackChanges = (method.Equals("PUT") || method.Equals("PATCH")) ? true : false;
+            var trackChanges = method.Equals("PUT") || method.Equals("PATCH") ? true : false;
             var topicId = (int)context.ActionArguments["topicId"];
             var topicCounter = await _repository.ForumTopicCounter.GetPostCounterAsync(topicId, trackChanges);
 

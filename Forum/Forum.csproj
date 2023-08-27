@@ -31,7 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ActionsFilters\Printer\" />
+    <Folder Include="ActionsFilters\API\Printer\" />
+    <Folder Include="ActionsFilters\Helpers\" />
     <Folder Include="Views\Site\" />
   </ItemGroup>
 

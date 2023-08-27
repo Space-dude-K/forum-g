@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
-namespace Forum.ActionsFilters
+namespace Forum.ActionsFilters.API
 {
     public class ValidateMediaTypeAttribute : IActionFilter
     {

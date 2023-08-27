@@ -2,9 +2,6 @@
 using Interfaces;
 using Interfaces.Forum;
 using Entities.DTO.ForumDto;
-using Forum.ActionsFilters;
-using Forum.ActionsFilters.Forum;
-using Forum.ActionsFilters.User;
 using Forum.Extensions;
 using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -15,9 +12,13 @@ using Services;
 using Interfaces.User;
 using Forum.Utility.UserLinks;
 using Entities.DTO.UserDto;
-using Forum.ActionsFilters.File;
 using Services.Forum;
 using Interfaces.Forum.ApiServices;
+using Forum.ActionsFilters.API;
+using Forum.ActionsFilters.API.Forum;
+using Forum.ActionsFilters.API.User;
+using Forum.ActionsFilters.API.File;
+using Forum.ActionsFilters.Consumer.Forum;
 
 namespace Forum
 {
@@ -62,7 +63,6 @@ namespace Forum
             });
 
             services.AddScoped<ValidateRoleExistsAttribute>();
-
             services.AddScoped<ValidationFilterAttribute>();
             services.AddScoped<ValidateCategoryExistsAttribute>();
             services.AddScoped<ValidateForumForCategoryExistsAttribute>();
@@ -72,8 +72,9 @@ namespace Forum
             services.AddScoped<ValidateForumUserExistsAttribute>();
             services.AddScoped<ValidateFileExistsAttribute>();
             services.AddScoped<ValidateAppUserExistsAttribute>();
-
             services.AddScoped<ValidateMediaTypeAttribute>();
+
+            services.AddScoped<ValidateAuthorizeAttribute>();  
 
             services.AddScoped<IDataShaper<ForumCategoryDto>, DataShaper<ForumCategoryDto>>();
             services.AddScoped<IDataShaper<ForumBaseDto>, DataShaper<ForumBaseDto>>();

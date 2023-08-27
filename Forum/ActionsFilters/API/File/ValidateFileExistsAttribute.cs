@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.ActionsFilters.File
+namespace Forum.ActionsFilters.API.File
 {
     public class ValidateFileExistsAttribute : IAsyncActionFilter
     {
@@ -16,7 +16,7 @@ namespace Forum.ActionsFilters.File
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var method = context.HttpContext.Request.Method;
-            var trackChanges = (method.Equals("PUT") || method.Equals("PATCH")) ? true : false;
+            var trackChanges = method.Equals("PUT") || method.Equals("PATCH") ? true : false;
             var forumUserId = (int)context.ActionArguments["forumUserId"];
             var file = await _repository.ForumFile.GetFileAsync(forumUserId, trackChanges);
 
