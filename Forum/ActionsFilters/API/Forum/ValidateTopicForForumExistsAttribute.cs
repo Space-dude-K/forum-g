@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.ActionsFilters.Forum
+namespace Forum.ActionsFilters.API.Forum
 {
     public class ValidateTopicForForumExistsAttribute : IAsyncActionFilter
     {
@@ -16,7 +16,7 @@ namespace Forum.ActionsFilters.Forum
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var method = context.HttpContext.Request.Method;
-            var trackChanges = (method.Equals("PUT") || method.Equals("PATCH")) ? true : false;
+            var trackChanges = method.Equals("PUT") || method.Equals("PATCH") ? true : false;
             var categoryId = (int)context.ActionArguments["categoryId"];
             var forumId = (int)context.ActionArguments["forumId"];
             var forum = await _repository.ForumBase.GetForumFromCategoryAsync(categoryId, forumId, false);

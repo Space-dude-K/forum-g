@@ -2,11 +2,11 @@
 using Interfaces;
 using Entities.DTO.UserDto;
 using Entities.Models;
-using Forum.ActionsFilters;
-using Forum.ActionsFilters.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Entities.DTO.UserDto.Create;
+using Forum.ActionsFilters.API;
+using Forum.ActionsFilters.API.User;
 
 namespace Forum.Controllers
 {

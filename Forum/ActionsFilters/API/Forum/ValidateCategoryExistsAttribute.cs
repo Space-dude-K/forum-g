@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.ActionsFilters.Forum
+namespace Forum.ActionsFilters.API.Forum
 {
     public class ValidateCategoryExistsAttribute : IAsyncActionFilter
     {
