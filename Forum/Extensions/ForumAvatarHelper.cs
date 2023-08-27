@@ -7,7 +7,7 @@ namespace Forum.Extensions
 {
     public static class ForumAvatarHelper
     {
-        public static string LoadAvatar(this ForumUserDto forumUserDto, string webRootPath)
+        public static string LoadAvatar(this ForumUserDto? forumUserDto, string webRootPath)
         {
             string imageName = forumUserDto.UserName.Trim() + "_" + forumUserDto.Id + ".jpg";
             string filePath = Path.Combine(webRootPath, "images", "avatars", imageName);

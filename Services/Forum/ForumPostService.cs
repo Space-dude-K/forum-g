@@ -131,6 +131,11 @@ namespace Services.Forum
             if (response.IsSuccessStatusCode)
             {
                 var rawData = await response.Content.ReadAsStringAsync();
+
+                // Nothing to update. Post deleted.
+                if (string.IsNullOrEmpty(rawData))
+                    return true;
+
                 int totalPosts = JsonConvert.DeserializeObject<ForumTopicCounterDto>(rawData).PostCounter;
 
                 if (incresase)
