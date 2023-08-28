@@ -5,17 +5,15 @@ using Entities.DTO.ForumDto.ForumView;
 
 namespace Services.Forum
 {
+    // TODO. Move to repository
     public class ForumModelService : IForumModelService
     {
         private readonly ILoggerManager _logger;
-        private readonly IForumService _forumService;
         private readonly IRepositoryApiManager _repositoryApiManager;
 
-        public ForumModelService(ILoggerManager logger, IForumService forumService, 
-            IRepositoryApiManager repositoryApiManager)
+        public ForumModelService(ILoggerManager logger,IRepositoryApiManager repositoryApiManager)
         {
             _logger = logger;
-            _forumService = forumService;
             _repositoryApiManager = repositoryApiManager;
         }
         private async Task<List<ForumViewBaseDto>> SetTopicCountForForums
@@ -87,7 +85,7 @@ namespace Services.Forum
             int forumId, int topicId, int pageNumber, int pageSize)
         {
             ForumTopicViewModel forumHomeViewModel = new();
-            var topicAuthor = await _forumService.GetForumUser(topicId);
+            var topicAuthor = await _repositoryApiManager.ForumUserApis.GetForumUser(topicId);
             forumHomeViewModel.SubTopicAuthor = topicAuthor.FirstAndLastNames;
 
             var topics = await _repositoryApiManager.TopicApis.GetForumTopics(categoryId, forumId);
@@ -104,7 +102,8 @@ namespace Services.Forum
             forumHomeViewModel.Posts = await _repositoryApiManager
                 .TopicApis.GetTopicPosts(categoryId, forumId, topicId, pageNumber, pageSize);
 
-            var postUserTask = forumHomeViewModel.Posts.Select(async p => p.ForumUser = await _forumService.GetForumUser(p.ForumUserId));
+            var postUserTask = forumHomeViewModel.Posts.Select(async p => p.ForumUser = 
+            await _repositoryApiManager.ForumUserApis.GetForumUser(p.ForumUserId));
 
             await Task.WhenAll(postUserTask);
 

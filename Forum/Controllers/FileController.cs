@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Interfaces.Forum;
-using Interfaces.User;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Entities.DTO.FileDto;
@@ -8,7 +6,6 @@ using Entities.Models.File;
 using System.Drawing.Imaging;
 using System.Drawing;
 using Forum.Extensions;
-using Interfaces.Forum.ApiServices;
 using Forum.ActionsFilters.Consumer.Forum;
 
 namespace Forum.Controllers
@@ -16,19 +13,17 @@ namespace Forum.Controllers
     [ApiExplorerSettings(IgnoreApi = true)]
     public class FileController : Controller
     {
-        private readonly IForumService _forumService;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
         private readonly ILoggerManager _logger;
+        private readonly IRepositoryApiManager _repositoryApiManager;
 
-        public FileController(IForumService forumService,
-            IMapper mapper, IUserService userService, IWebHostEnvironment env, 
-            ILoggerManager logger, IForumTopicService forumTopicService)
+        public FileController(IMapper mapper, IWebHostEnvironment env, ILoggerManager logger, IRepositoryApiManager repositoryApiManager)
         {
-            _forumService = forumService;
             _mapper = mapper;
             _env = env;
             _logger = logger;
+            _repositoryApiManager = repositoryApiManager;
         }
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
         [HttpPost]
@@ -56,15 +51,15 @@ namespace Forum.Controllers
                 var fileToDb = _mapper.Map<ForumFileDto>(file);
                 fileToDb.ForumUserId = userId;
 
-                var fileFromDb = await _forumService.GetForumFileByUserId(userId);
+                var fileFromDb = await _repositoryApiManager.FileApis.GetForumFileByUserId(userId);
                 if (fileFromDb != null)
                 {
-                    var updateRes = _forumService.UpdateForumFile(fileFromDb.ForumUserId, fileToDb);
+                    var updateRes = _repositoryApiManager.FileApis.UpdateForumFile(fileFromDb.ForumUserId, fileToDb);
                     _logger.LogInfo($"Updating file status for user id: {userId} -> {updateRes}");
                 }
                 else
                 {
-                    var createRes = await _forumService.CreateForumFile(fileToDb);
+                    var createRes = await _repositoryApiManager.FileApis.CreateForumFile(fileToDb);
                     _logger.LogInfo($"Creating file status for user id: {userId} -> {createRes}");
                 }
             }

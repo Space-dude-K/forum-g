@@ -13,12 +13,6 @@ using Interfaces.User;
 using Forum.Utility.UserLinks;
 using Entities.DTO.UserDto;
 using Services.Forum;
-using Interfaces.Forum.ApiServices;
-using Forum.ActionsFilters.API;
-using Forum.ActionsFilters.API.Forum;
-using Forum.ActionsFilters.API.User;
-using Forum.ActionsFilters.API.File;
-using Forum.ActionsFilters.Consumer.Forum;
 
 namespace Forum
 {
@@ -79,8 +73,6 @@ namespace Forum
             services.AddHttpClient<IHttpForumService, HttpForumService>(c =>
                 c.BaseAddress = new Uri(appUrl));
 
-            services.AddScoped<IForumService, ForumService>();
-            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IForumModelService, ForumModelService>();
 
@@ -113,9 +105,6 @@ namespace Forum
             services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
 
             // Authentication and autorization
-            //services.AddAuthentication().AddCookie(Microsoft.AspNetCore.Identity.Application)
-            //services.ConfigureIdentityCookieAndJWT(Configuration);
-
             services.ConfigureIdentity();
             services.ConfigureCookie();
             services.ConfigureJWT(Configuration);

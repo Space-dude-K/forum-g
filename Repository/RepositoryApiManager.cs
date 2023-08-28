@@ -15,6 +15,10 @@ namespace Repository
         private IForumTopicApiRepository _topicApis;
         private IForumPostApiRepository _postApis;
 
+        private IForumFileApiRepository _fileApis;
+
+        private IForumUserApiRepository _forumUserApis;
+
         public RepositoryApiManager(ILoggerManager logger, IHttpForumService httpForumService)
         {
             _logger = logger;
@@ -58,6 +62,26 @@ namespace Repository
                     _postApis = new ForumPostApiRepository(_logger, _httpForumService);
 
                 return _postApis;
+            }
+        }
+        public IForumFileApiRepository FileApis
+        {
+            get
+            {
+                if (_fileApis == null)
+                    _fileApis = new ForumFileApiRepository(_logger, _httpForumService);
+
+                return _fileApis;
+            }
+        }
+        public IForumUserApiRepository ForumUserApis
+        {
+            get
+            {
+                if (_forumUserApis == null)
+                    _forumUserApis = new ForumUserApiRepository(_logger, _httpForumService);
+
+                return _forumUserApis;
             }
         }
     }

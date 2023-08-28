@@ -1,29 +1,25 @@
-﻿using Interfaces;
-using Newtonsoft.Json;
+﻿using Entities.DTO.FileDto;
+using Entities.Models.File;
+using Interfaces;
 using Interfaces.Forum;
+using Interfaces.Forum.API;
+using Newtonsoft.Json;
 using System.Text;
-using Entities.DTO.UserDto;
-using Entities.DTO.FileDto;
 
-namespace Services.Forum
+namespace Repository.API.Forum
 {
-    // TODO. Refactoring
-    public class ForumService : IForumService
+    public class ForumFileApiRepository : RepositoryApi<ForumFile, ILoggerManager, IHttpForumService>, IForumFileApiRepository
     {
-        private readonly IHttpForumService _forumClient;
-        private readonly ILoggerManager _logger;
-        public ForumService(ILoggerManager logger, IHttpForumService forumClient)
+        public ForumFileApiRepository(ILoggerManager logger, IHttpForumService httpClient) : base(logger, httpClient)
         {
-            _logger = logger;
-            _forumClient = forumClient;
-        }
 
+        }
         public async Task<ForumFileDto> GetForumFileByUserId(int forumUserId)
         {
             ForumFileDto forumFileDtoFromDb = new();
 
             string uri = "api/file/" + forumUserId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri);
+            var response = await _httpForumService.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -37,26 +33,6 @@ namespace Services.Forum
 
             return forumFileDtoFromDb;
         }
-        public async Task<ForumUserDto> GetForumUser(int userId)
-        {
-            ForumUserDto forumUser = new();
-
-            string uri = "api/users/" + userId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var rawData = await response.Content.ReadAsStringAsync();
-                forumUser = JsonConvert.DeserializeObject<IEnumerable<ForumUserDto>>(rawData).First();
-            }
-            else
-            {
-                _logger.LogError($"Unable to get forum user id: {userId}");
-            }
-
-            return forumUser;
-        }
-        
         public async Task<bool> CreateForumFile(ForumFileDto file)
         {
             bool result = false;
@@ -64,7 +40,7 @@ namespace Services.Forum
 
             var jsonContent = JsonConvert.SerializeObject(file);
 
-            var response = await _forumClient.Client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+            var response = await _httpForumService.Client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
@@ -82,7 +58,7 @@ namespace Services.Forum
             bool result = false;
 
             string uri = "api/file/" + forumUserId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri);
+            var response = await _httpForumService.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -93,7 +69,7 @@ namespace Services.Forum
 
                 var jsonAfterUpdade = JsonConvert.SerializeObject(forumFileDtoFromDb);
                 var responseAfterUpdate =
-                    await _forumClient.Client.PutAsync(uri, new StringContent(jsonAfterUpdade, Encoding.UTF8, "application/json"));
+                    await _httpForumService.Client.PutAsync(uri, new StringContent(jsonAfterUpdade, Encoding.UTF8, "application/json"));
 
                 if (responseAfterUpdate.IsSuccessStatusCode)
                 {

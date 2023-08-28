@@ -27,6 +27,7 @@ namespace Repository.API.Forum
 
             if (response.IsSuccessStatusCode)
             {
+
                 var rawData = await response.Content.ReadAsStringAsync();
                 totalPosts = JsonConvert.DeserializeObject<ForumTopicCounterDto>(rawData).PostCounter;
             }

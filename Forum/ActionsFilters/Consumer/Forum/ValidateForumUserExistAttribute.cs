@@ -8,11 +8,11 @@ namespace Forum.ActionsFilters.Consumer.Forum
 {
     public class ValidateForumUserExistAttribute : IAsyncActionFilter
     {
-        private readonly IUserService _userService;
+        private readonly IRepositoryApiManager _repositoryApiManager;
         private readonly ILoggerManager _logger;
-        public ValidateForumUserExistAttribute(IUserService userService, ILoggerManager logger)
+        public ValidateForumUserExistAttribute(IRepositoryApiManager repositoryApiManager, ILoggerManager logger)
         {
-            _userService = userService;
+            _repositoryApiManager = repositoryApiManager;
             _logger = logger;
         }
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -20,7 +20,7 @@ namespace Forum.ActionsFilters.Consumer.Forum
             var user = context.HttpContext.User;
             int userId = 0;
             int.TryParse(user.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
-            var forumUser = await _userService.GetForumUser(userId);
+            var forumUser = await _repositoryApiManager.ForumUserApis.GetForumUser(userId);
 
             if (forumUser == null)
             {
