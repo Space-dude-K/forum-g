@@ -2,38 +2,28 @@
 using Entities.ViewModels.Forum;
 using Interfaces.Forum;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Interfaces.User;
 using Forum.Extensions;
 using Interfaces;
 using Entities.DTO.UserDto;
 using Marvin.Cache.Headers;
-using Interfaces.Forum.ApiServices;
-using Forum.ActionsFilters.API.Forum;
 using Forum.ActionsFilters.Consumer.Forum;
-using Entities.Models.Forum;
-using Repository;
 
 namespace Forum.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ForumHomeController : Controller
     {
-        private readonly IForumService _forumService;
         private readonly IMapper _mapper;
-        private readonly IUserService _userService;
         private readonly IWebHostEnvironment _env;
         private readonly ILoggerManager _logger;
         private readonly IForumModelService _forumModelService;
         private readonly IRepositoryApiManager _repositoryApiManager;
 
-        public ForumHomeController(IForumService forumService, 
-            IMapper mapper, IUserService  userService, IWebHostEnvironment env, ILoggerManager logger,
+        public ForumHomeController(IMapper mapper, IWebHostEnvironment env, ILoggerManager logger,
             IForumModelService forumModelService, IRepositoryApiManager repositoryApiManager)
         {
-            _forumService = forumService;
             _mapper = mapper;
-            _userService = userService;
             _env = env;
             _logger = logger;
             _forumModelService = forumModelService;
@@ -132,7 +122,7 @@ namespace Forum.Controllers
                 async p => new
                 {
                     Item = p,
-                    Dto = await _userService.GetForumUserDto(p.ForumUser.Id)
+                    Dto = await _repositoryApiManager.ForumUserApis.GetForumUserDto(p.ForumUser.Id)
                 });
             var tuples = await Task.WhenAll(tasks);
 
@@ -198,7 +188,7 @@ namespace Forum.Controllers
         {
             var user = HttpContext.Items["forumUser"] as ForumUserDto;
             var appUserDto = _mapper.Map<AppUserDto>(model);
-            var res = await _userService.UpdateAppUser(id, appUserDto);
+            var res = await _repositoryApiManager.ForumUserApis.UpdateAppUser(id, appUserDto);
 
             if (!res)
             {

@@ -14,5 +14,7 @@ namespace Interfaces
         IForumCategoryApiRepository CategoryApis { get; }
         IForumTopicApiRepository TopicApis { get; }
         IForumPostApiRepository PostApis { get; }
+        IForumFileApiRepository FileApis { get; }
+        IForumUserApiRepository ForumUserApis { get; }
     }
 }

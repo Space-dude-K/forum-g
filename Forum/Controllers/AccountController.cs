@@ -1,8 +1,6 @@
 ﻿using Interfaces;
 using Forum.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Interfaces.Forum;
-using Interfaces.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -19,24 +17,22 @@ namespace Forum.Controllers
     {
         private readonly ILoggerManager _logger;
         private readonly Interfaces.Forum.IAuthenticationService _authenticationService;
-        private readonly IUserService _userService;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly IForumService _forumService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IRepositoryApiManager _repositoryApiManager;
 
         public AccountController(ILoggerManager logger,
-            Interfaces.Forum.IAuthenticationService authenticationService, IUserService userService,
-            UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IForumService forumService, 
-            IWebHostEnvironment webHostEnvironment)
+            Interfaces.Forum.IAuthenticationService authenticationService,
+            UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, 
+            IWebHostEnvironment webHostEnvironment, IRepositoryApiManager repositoryApiManager)
         {
             _logger = logger;
             _authenticationService = authenticationService;
-            _userService = userService;
             _userManager = userManager;
             _signInManager = signInManager;
-            _forumService = forumService;
             _webHostEnvironment = webHostEnvironment;
+            _repositoryApiManager = repositoryApiManager;
         }
         [HttpGet]
         public IActionResult Account(string returnUrl = null)
@@ -132,7 +128,7 @@ namespace Forum.Controllers
         }
         public async Task<IActionResult> RegisterAsync()
         {
-            var dbRoles = await _userService.GetUserRoles();
+            var dbRoles = await _repositoryApiManager.ForumUserApis.GetUserRoles();
 
             if (dbRoles == null || dbRoles.Count == 0)
             {
@@ -140,7 +136,7 @@ namespace Forum.Controllers
                 return NotFound();
             }
 
-            var registerTableViewModel = await _userService.GetUsersData();
+            var registerTableViewModel = await _repositoryApiManager.ForumUserApis.GetUsersData();
             var model = new RegisterViewModel()
             {
                 Roles = dbRoles,
@@ -172,14 +168,14 @@ namespace Forum.Controllers
                 ModelState.AddModelError(string.Empty, "Invalid registration attempt");
             }
 
-            var dbRoles = await _userService.GetUserRoles();
+            var dbRoles = await _repositoryApiManager.ForumUserApis.GetUserRoles();
 
             if (dbRoles == null || dbRoles.Count == 0)
             {
                 _logger.LogError($"Db roles is empty");
                 return NotFound();
             }
-            var registerTableViewModel = await _userService.GetUsersData();
+            var registerTableViewModel = await _repositoryApiManager.ForumUserApis.GetUsersData();
             model = new RegisterViewModel()
             {
                 Roles = dbRoles,
