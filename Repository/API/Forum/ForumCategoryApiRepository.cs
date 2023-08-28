@@ -1,29 +1,27 @@
-﻿using Interfaces;
-using Newtonsoft.Json;
-using Interfaces.Forum;
+﻿using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.ForumView;
-using System.Text;
-using Entities.DTO.ForumDto.Create;
-using Interfaces.Forum.ApiServices;
 using Entities.DTO.ForumDto;
+using Entities.Models.Forum;
+using Interfaces;
+using Interfaces.Forum;
+using Interfaces.Forum.API;
 using Microsoft.AspNetCore.JsonPatch;
+using Newtonsoft.Json;
+using System.Text;
 
-namespace Services.Forum
+namespace Repository.API.Forum
 {
-    public class ForumCategoryService : IForumCategoryService
+    public class ForumCategoryApiRepository : RepositoryApi<ForumCategory, ILoggerManager, IHttpForumService>, IForumCategoryApiRepository
     {
-        private readonly IHttpForumService _forumClient;
-        private readonly ILoggerManager _logger;
-        public ForumCategoryService(ILoggerManager logger, IHttpForumService forumClient)
+        public ForumCategoryApiRepository(ILoggerManager logger, IHttpForumService httpClient) : base(logger, httpClient)
         {
-            _logger = logger;
-            _forumClient = forumClient;
+
         }
         public async Task<List<ForumViewCategoryDto>> GetForumCategories()
         {
             List<ForumViewCategoryDto> forumViewCategoryDtos = new();
 
-            var response = await _forumClient.Client.GetAsync("api/categories");
+            var response = await _httpForumService.Client.GetAsync("api/categories");
 
             if (response.IsSuccessStatusCode)
             {
@@ -44,7 +42,8 @@ namespace Services.Forum
 
             var jsonContent = JsonConvert.SerializeObject(category);
 
-            var response = await _forumClient.Client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+            var response = await _httpForumService.Client
+                .PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
@@ -62,7 +61,7 @@ namespace Services.Forum
             bool result = false;
 
             string uri = "api/categories/" + categoryId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri);
+            var response = await _httpForumService.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -83,7 +82,7 @@ namespace Services.Forum
                 jsonPatchObject.Replace(fc => fc.TotalPosts, totalPosts);
 
                 var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
-                var responseAfterUpdate = await _forumClient.Client.PatchAsync(uri, 
+                var responseAfterUpdate = await _httpForumService.Client.PatchAsync(uri,
                     new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
 
                 if (responseAfterUpdate.IsSuccessStatusCode)

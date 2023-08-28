@@ -2,10 +2,8 @@
 using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
 using Forum.ActionsFilters.Consumer.Forum;
-using Interfaces.Forum;
-using Interfaces.Forum.ApiServices;
+using Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Forum.Controllers.Forum
 {
@@ -13,13 +11,12 @@ namespace Forum.Controllers.Forum
     public class ForumTopicCreationController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IForumTopicService _forumTopicService;
+        private readonly IRepositoryApiManager _repositoryApiManager;
 
-        public ForumTopicCreationController(IMapper mapper, IForumService forumService, IMemoryCache cache, 
-            IForumTopicService forumTopicService)
+        public ForumTopicCreationController(IMapper mapper, IRepositoryApiManager repositoryApiManager)
         {
             _mapper = mapper;
-            _forumTopicService = forumTopicService;
+            _repositoryApiManager = repositoryApiManager;
         }
         [HttpGet]
         [Route("categories/{categoryId}/forums/{forumId}/add", Name = "ForumTopicAdd")]
@@ -41,10 +38,10 @@ namespace Forum.Controllers.Forum
             if (userId > 0)
             {
                 topicToAdd.ForumUserId = userId;
-                var insertedTopicId = await _forumTopicService.CreateForumTopic(categoryId, forumId, topicToAdd);
-                var resCounterCreation = await _forumTopicService.CreateTopicPostCounter(insertedTopicId, 
+                var insertedTopicId = await _repositoryApiManager.TopicApis.CreateForumTopic(categoryId, forumId, topicToAdd);
+                var resCounterCreation = await _repositoryApiManager.TopicApis.CreateTopicPostCounter(insertedTopicId, 
                     new ForumCounterForCreationDto() { ForumTopicId = insertedTopicId });
-                var resCounter = await _forumTopicService.UpdateTopicCounter(categoryId, true);
+                var resCounter = await _repositoryApiManager.TopicApis.UpdateTopicCounter(categoryId, true);
             }
             else
             {

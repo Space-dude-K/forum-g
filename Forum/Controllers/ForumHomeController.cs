@@ -12,6 +12,7 @@ using Interfaces.Forum.ApiServices;
 using Forum.ActionsFilters.API.Forum;
 using Forum.ActionsFilters.Consumer.Forum;
 using Entities.Models.Forum;
+using Repository;
 
 namespace Forum.Controllers
 {
@@ -23,28 +24,20 @@ namespace Forum.Controllers
         private readonly IUserService _userService;
         private readonly IWebHostEnvironment _env;
         private readonly ILoggerManager _logger;
-        private readonly IForumPostService _forumPostService;
-        private readonly IForumTopicService _forumTopicService;
-        private readonly IForumBaseService _forumBaseService;
         private readonly IForumModelService _forumModelService;
-        private readonly IForumCategoryService _forumCategoryService;
+        private readonly IRepositoryApiManager _repositoryApiManager;
 
         public ForumHomeController(IForumService forumService, 
-            IMapper mapper, IUserService  userService, IWebHostEnvironment env, ILoggerManager logger, 
-            IForumPostService forumPostService, IForumTopicService forumTopicService, 
-            IForumBaseService forumBaseService, IForumModelService forumModelService, 
-            IForumCategoryService forumCategoryService)
+            IMapper mapper, IUserService  userService, IWebHostEnvironment env, ILoggerManager logger,
+            IForumModelService forumModelService, IRepositoryApiManager repositoryApiManager)
         {
             _forumService = forumService;
             _mapper = mapper;
             _userService = userService;
             _env = env;
             _logger = logger;
-            _forumPostService = forumPostService;
-            _forumTopicService = forumTopicService;
-            _forumBaseService = forumBaseService;
             _forumModelService = forumModelService;
-            _forumCategoryService = forumCategoryService;
+            _repositoryApiManager = repositoryApiManager;
         }
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
         public async Task<IActionResult> ForumHome()
@@ -60,13 +53,13 @@ namespace Forum.Controllers
         {
             int userId = (int)HttpContext.Items["userId"];
             int userForumPosts = 0;
-            var userTopics = await _forumTopicService.GetForumTopics(categoryId, forumId);
+            var userTopics = await _repositoryApiManager.TopicApis.GetForumTopics(categoryId, forumId);
 
             // TODO
             foreach(var topic in userTopics)
             {
                 var userTopicPosts = 
-                    await _forumTopicService
+                    await _repositoryApiManager.TopicApis
                     .GetTopicPosts(categoryId, forumId, topic.Id, 0, 0, true);
 
                 userForumPosts += userTopicPosts
@@ -74,11 +67,11 @@ namespace Forum.Controllers
                     .Count();
             }
 
-            var res = await _forumBaseService.DeleteForumBase(categoryId, forumId);
+            var res = await _repositoryApiManager.ForumApis.DeleteForumBase(categoryId, forumId);
 
             if (res)
             {
-                var resUserPostCounter = await _forumPostService
+                var resUserPostCounter = await _repositoryApiManager.PostApis
                     .UpdatePostCounterForUser(userId, false, userForumPosts);
             }
             else
@@ -98,7 +91,7 @@ namespace Forum.Controllers
         public async Task<IActionResult> ForumTopics(int categoryId, int forumId)
         {
             var model = await _forumModelService.GetForumTopicsForModel(categoryId, forumId);
-            await _forumBaseService.IncreaseViewCounterForForumBase(categoryId, forumId);
+            await _repositoryApiManager.ForumApis.IncreaseViewCounterForForumBase(categoryId, forumId);
 
             return View("~/Views/Forum/ForumBase.cshtml", model);
         }
@@ -107,16 +100,16 @@ namespace Forum.Controllers
         public async Task<ActionResult> DeleteTopic(int categoryId, int forumId, int topicId)
         {
             int userId = (int)HttpContext.Items["userId"];
-            var userTopicPosts = await _forumTopicService
+            var userTopicPosts = await _repositoryApiManager.TopicApis
                 .GetTopicPosts(categoryId, forumId, topicId, 0, 0, true);
-            var res = await _forumTopicService.DeleteForumTopic(categoryId, forumId, topicId);
+            var res = await _repositoryApiManager.TopicApis.DeleteForumTopic(categoryId, forumId, topicId);
 
             if (res)
             {
                 var userTopicPostCounter = userTopicPosts
                     .Where(p => p.ForumUserId.Equals(userId))
                     .Count();
-                var resUserPostCounter = await _forumPostService
+                var resUserPostCounter = await _repositoryApiManager.PostApis
                     .UpdatePostCounterForUser(userId, false, userTopicPostCounter);
             }
             else
@@ -152,23 +145,23 @@ namespace Forum.Controllers
                 user.ForumUser.AvatarImgSrc = user.ForumUser.LoadAvatar(_env.WebRootPath);
             }
 
-            var updateCounterRes = await _forumTopicService.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
+            var updateCounterRes = await _repositoryApiManager.TopicApis.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
 
             return View("~/Views/Forum/ForumTopic.cshtml", model);
         }
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
         public async Task<ActionResult> DeletePost(int categoryId, int forumId, int topicId, int postId, ForumTopicViewModel model)
         {
-            var res = await _forumPostService.DeleteForumPost(categoryId, forumId, topicId, postId);
+            var res = await _repositoryApiManager.PostApis.DeleteForumPost(categoryId, forumId, topicId, postId);
             int totalPosts = 0;
 
             int userId = (int)HttpContext.Items["userId"];
 
             if (res)
             {
-                var resCounter = await _forumPostService.UpdatePostCounter(categoryId, false);
-                var resUserCounter = await _forumPostService.UpdatePostCounterForUser(userId, false);
-                model.TotalPosts = await _forumPostService.GetTopicPostCount(categoryId);
+                var resCounter = await _repositoryApiManager.PostApis.UpdatePostCounter(categoryId, false);
+                var resUserCounter = await _repositoryApiManager.PostApis.UpdatePostCounterForUser(userId, false);
+                model.TotalPosts = await _repositoryApiManager.PostApis.GetTopicPostCount(categoryId);
             }
             else
             {
@@ -181,7 +174,7 @@ namespace Forum.Controllers
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
         public async Task<ActionResult> UpdatePost(int categoryId, int forumId, int topicId, int postId, int pageId, string newText)
         {
-            var res = await _forumPostService
+            var res = await _repositoryApiManager.PostApis
                 .UpdatePost(categoryId, forumId, topicId, postId, newText);
 
             return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 

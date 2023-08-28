@@ -1,7 +1,6 @@
 ﻿using Interfaces;
 using Interfaces.Forum;
 using Entities.ViewModels.Forum;
-using Interfaces.Forum.ApiServices;
 using Entities.DTO.ForumDto.ForumView;
 
 namespace Services.Forum
@@ -10,34 +9,27 @@ namespace Services.Forum
     {
         private readonly ILoggerManager _logger;
         private readonly IForumService _forumService;
-        private readonly IForumCategoryService _forumCategoryService;
-        private readonly IForumBaseService _forumBaseService;
-        private readonly IForumTopicService _forumTopicService;
-        private readonly IForumPostService _forumPostService;
+        private readonly IRepositoryApiManager _repositoryApiManager;
 
         public ForumModelService(ILoggerManager logger, IForumService forumService, 
-            IForumCategoryService forumCategoryService, IForumBaseService forumBaseService, 
-            IForumTopicService forumTopicService, IForumPostService forumPostService)
+            IRepositoryApiManager repositoryApiManager)
         {
             _logger = logger;
             _forumService = forumService;
-            _forumCategoryService = forumCategoryService;
-            _forumBaseService = forumBaseService;
-            _forumTopicService = forumTopicService;
-            _forumPostService = forumPostService;
+            _repositoryApiManager = repositoryApiManager;
         }
         private async Task<List<ForumViewBaseDto>> SetTopicCountForForums
             (ForumViewCategoryDto category, List<ForumViewBaseDto> forums)
         {
             for (int k = 0; k < forums.Count; k++)
             {
-                var topics = await _forumTopicService
+                var topics = await _repositoryApiManager.TopicApis
                     .GetForumTopics(category.Id, category.Forums[k].Id);
 
                 foreach (var topic in topics)
                 {
                     category.Forums[k].TotalPosts +=
-                        await _forumPostService.GetTopicPostCount(topic.Id);
+                        await _repositoryApiManager.PostApis.GetTopicPostCount(topic.Id);
                 }
 
                 category.Forums[k].TopicsCount = topics.Count;
@@ -49,13 +41,14 @@ namespace Services.Forum
         {
             ForumHomeViewModel forumHomeViewModel = new()
             {
-                Categories = await _forumCategoryService.GetForumCategories()
+                Categories = await _repositoryApiManager.CategoryApis.GetForumCategories()
             };
 
             for (int i = 0; i < forumHomeViewModel.Categories.Count; i++)
             {
-                forumHomeViewModel.Categories[i].Forums = 
-                    await _forumBaseService.GetForumBases(forumHomeViewModel.Categories[i].Id);
+                forumHomeViewModel.Categories[i].Forums =
+                    await _repositoryApiManager.ForumApis.GetForumBases(forumHomeViewModel.Categories[i].Id);
+                    //await _forumBaseService.GetForumBases(forumHomeViewModel.Categories[i].Id);
 
                 forumHomeViewModel.Categories[i].Forums = await SetTopicCountForForums(
                     forumHomeViewModel.Categories[i], forumHomeViewModel.Categories[i].Forums);
@@ -66,13 +59,13 @@ namespace Services.Forum
         public async Task<ForumBaseViewModel> GetForumTopicsForModel(int categoryId, int forumId)
         {
             ForumBaseViewModel forumHomeViewModel = new();
-            forumHomeViewModel.Topics = await _forumTopicService.GetForumTopics(categoryId, forumId);
+            forumHomeViewModel.Topics = await _repositoryApiManager.TopicApis.GetForumTopics(categoryId, forumId);
 
             var tasks = forumHomeViewModel.Topics.Select(
                 async p => new
                 {
                     Item = p,
-                    Counter = await _forumPostService.GetTopicPostCount(p.Id)
+                    Counter = await _repositoryApiManager.PostApis.GetTopicPostCount(p.Id)
                 });
             var tuples = await Task.WhenAll(tasks);
 
@@ -97,10 +90,10 @@ namespace Services.Forum
             var topicAuthor = await _forumService.GetForumUser(topicId);
             forumHomeViewModel.SubTopicAuthor = topicAuthor.FirstAndLastNames;
 
-            var topics = await _forumTopicService.GetForumTopics(categoryId, forumId);
+            var topics = await _repositoryApiManager.TopicApis.GetForumTopics(categoryId, forumId);
             forumHomeViewModel.TopicId = topicId;
             forumHomeViewModel.SubTopicCreatedAt = topics.FirstOrDefault(t => t.Id == topicId).CreatedAt.Value.ToShortDateString();
-            forumHomeViewModel.TotalPosts = await _forumPostService.GetTopicPostCount(topicId);
+            forumHomeViewModel.TotalPosts = await _repositoryApiManager.PostApis.GetTopicPostCount(topicId);
 
             // Default paging to latest topic message.
             if (pageNumber == 0 && forumHomeViewModel.TotalPages > 1)
@@ -108,7 +101,8 @@ namespace Services.Forum
                 pageNumber = forumHomeViewModel.TotalPages;
             }
 
-            forumHomeViewModel.Posts = await _forumTopicService.GetTopicPosts(categoryId, forumId, topicId, pageNumber, pageSize);
+            forumHomeViewModel.Posts = await _repositoryApiManager
+                .TopicApis.GetTopicPosts(categoryId, forumId, topicId, pageNumber, pageSize);
 
             var postUserTask = forumHomeViewModel.Posts.Select(async p => p.ForumUser = await _forumService.GetForumUser(p.ForumUserId));
 

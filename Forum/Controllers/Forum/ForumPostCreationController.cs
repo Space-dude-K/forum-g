@@ -2,8 +2,7 @@
 using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
 using Forum.ActionsFilters.Consumer.Forum;
-using Interfaces.Forum;
-using Interfaces.Forum.ApiServices;
+using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.Controllers.Forum
@@ -12,12 +11,12 @@ namespace Forum.Controllers.Forum
     public class ForumPostCreationController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IForumPostService _forumPostService;
+        private readonly IRepositoryApiManager _repositoryApiManager;
 
-        public ForumPostCreationController(IMapper mapper, IForumService forumService, IForumPostService forumPostService)
+        public ForumPostCreationController(IMapper mapper, IRepositoryApiManager repositoryApiManager)
         {
             _mapper = mapper;
-            _forumPostService = forumPostService;
+            _repositoryApiManager = repositoryApiManager;
         }
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
         [HttpPost]
@@ -33,11 +32,11 @@ namespace Forum.Controllers.Forum
             if(userId > 0)
             {
                 postToAdd.ForumUserId = userId;
-                var res = await _forumPostService.CreateForumPost(categoryId, forumId, topicId, postToAdd);
-                var resCounter = await _forumPostService.UpdatePostCounter(topicId, true);
-                var resUserCounter = await _forumPostService.UpdatePostCounterForUser(userId, true);
+                var res = await _repositoryApiManager.PostApis.CreateForumPost(categoryId, forumId, topicId, postToAdd);
+                var resCounter = await _repositoryApiManager.PostApis.UpdatePostCounter(topicId, true);
+                var resUserCounter = await _repositoryApiManager.PostApis.UpdatePostCounterForUser(userId, true);
 
-                model.TotalPosts = await _forumPostService.GetTopicPostCount(topicId);
+                model.TotalPosts = await _repositoryApiManager.PostApis.GetTopicPostCount(topicId);
 
             }
             else
