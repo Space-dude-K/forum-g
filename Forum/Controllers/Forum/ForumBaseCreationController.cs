@@ -2,8 +2,7 @@
 using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
 using Forum.ActionsFilters.Consumer.Forum;
-using Interfaces.Forum;
-using Interfaces.Forum.ApiServices;
+using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -13,12 +12,12 @@ namespace Forum.Controllers.Forum
     public class ForumBaseCreationController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IForumBaseService _forumBaseService;
+        private readonly IRepositoryApiManager _repositoryApiManager;
 
-        public ForumBaseCreationController(IMapper mapper, IForumService forumService, IForumBaseService forumBaseService)
+        public ForumBaseCreationController(IMapper mapper, IRepositoryApiManager repositoryApiManager)
         {
             _mapper = mapper;
-            _forumBaseService = forumBaseService;
+            _repositoryApiManager = repositoryApiManager;
         }
         [HttpGet]
         public async Task<IActionResult> RedirectToCreateForumBase(string model)
@@ -42,7 +41,7 @@ namespace Forum.Controllers.Forum
             if (userId > 0)
             {
                 forumToAdd.ForumUserId = userId;
-                var res = await _forumBaseService.CreateForumBase(model.SelectedCategoryId, forumToAdd);
+                var res = await _repositoryApiManager.ForumApis.CreateForumBase(model.SelectedCategoryId, forumToAdd);
                 //var resCounter = await _forumService.UpdatePostCounter(categoryId, true);
             }
             else

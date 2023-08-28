@@ -1,34 +1,31 @@
-﻿using Interfaces;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
-using Interfaces.Forum;
-using Services.Utils;
+﻿using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.ForumView;
-using System.Text;
+using Entities.Models.Forum;
+using Interfaces;
+using Interfaces.Forum;
 using Microsoft.AspNetCore.JsonPatch;
-using Entities.DTO.ForumDto.Create;
-using Interfaces.Forum.ApiServices;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System.Text;
 
-namespace Services.Forum
+namespace Repository.API.Forum
 {
-    public class ForumBaseService : IForumBaseService
+    public class ForumBaseApiRepository : RepositoryApi<ForumBase, ILoggerManager, IHttpForumService>, IForumBaseApiRepository
     {
-        private readonly IHttpForumService _forumClient;
-        private readonly ILoggerManager _logger;
-        public ForumBaseService(ILoggerManager logger, IHttpForumService forumClient)
+        public ForumBaseApiRepository(ILoggerManager logger, IHttpForumService httpClient) : base(logger, httpClient)
         {
-            _logger = logger;
-            _forumClient = forumClient;
+
         }
         public async Task<bool> CreateForumBase(int categoryId, ForumBaseForCreationDto forum)
         {
             bool result = false;
-            
+
             string uri = "api/categories/" + categoryId.ToString() + "/forums";
 
             var jsonContent = JsonConvert.SerializeObject(forum);
 
-            var response = await _forumClient.Client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+            var response = await _httpForumService.Client
+                .PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
@@ -46,12 +43,13 @@ namespace Services.Forum
             bool result = false;
 
             string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri + "?&fields=TotalViews");
+            var response = await _httpForumService.Client.GetAsync(uri + "?&fields=TotalViews");
 
             if (response.IsSuccessStatusCode)
             {
                 var rawData = await response.Content.ReadAsStringAsync();
-                int totalViews = JsonConvert.DeserializeObject<IEnumerable<ForumViewBaseDto>>(rawData).First().TotalViews;
+                int totalViews = JsonConvert
+                    .DeserializeObject<IEnumerable<ForumViewBaseDto>>(rawData).First().TotalViews;
 
                 totalViews++;
 
@@ -59,7 +57,8 @@ namespace Services.Forum
                 jsonPatchObject.Replace(fc => fc.TotalViews, totalViews);
 
                 var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
-                var responseAfterUpdate = await _forumClient.Client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+                var responseAfterUpdate = await _httpForumService.Client
+                    .PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
 
                 if (responseAfterUpdate.IsSuccessStatusCode)
                 {
@@ -77,13 +76,15 @@ namespace Services.Forum
         {
             ForumViewBaseDto forumViewBaseDto = new();
 
-            var response = await _forumClient.Client.GetAsync("api/categories/" + categoryId.ToString() 
+            var response = await _httpForumService.Client
+                .GetAsync("api/categories/" + categoryId.ToString()
                 + "/forums/" + forumBaseId.ToString());
 
             if (response.IsSuccessStatusCode)
             {
                 var rawData = await response.Content.ReadAsStringAsync();
-                forumViewBaseDto = JsonConvert.DeserializeObject<IEnumerable<ForumViewBaseDto>>(rawData).First();
+                forumViewBaseDto = JsonConvert
+                    .DeserializeObject<IEnumerable<ForumViewBaseDto>>(rawData).First();
             }
             else
             {
@@ -96,12 +97,14 @@ namespace Services.Forum
         {
             List<ForumViewBaseDto> forumViewBaseDtos = new();
 
-            var response = await _forumClient.Client.GetAsync("api/categories/" + categoryId.ToString() + "/forums");
+            var response = await _httpForumService.Client
+                .GetAsync("api/categories/" + categoryId.ToString() + "/forums");
 
             if (response.IsSuccessStatusCode)
             {
                 var rawData = await response.Content.ReadAsStringAsync();
-                forumViewBaseDtos = JsonConvert.DeserializeObject<IEnumerable<ForumViewBaseDto>>(rawData).ToList();
+                forumViewBaseDtos = JsonConvert
+                    .DeserializeObject<IEnumerable<ForumViewBaseDto>>(rawData).ToList();
             }
             else
             {
@@ -117,7 +120,7 @@ namespace Services.Forum
                 categoryId.ToString() + "/forums/" +
                 forumId.ToString();
 
-            var response = await _forumClient.Client.DeleteAsync(uri);
+            var response = await _httpForumService.Client.DeleteAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {

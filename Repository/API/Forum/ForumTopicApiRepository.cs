@@ -1,31 +1,30 @@
-﻿using Interfaces;
-using Newtonsoft.Json;
-using Interfaces.Forum;
-using System.Text;
-using Microsoft.AspNetCore.JsonPatch;
-using Entities.DTO.ForumDto.Create;
-using Entities.DTO.ForumDto;
+﻿using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto.ForumView;
+using Entities.DTO.ForumDto;
+using Entities.Models.Forum;
+using Interfaces;
+using Interfaces.Forum;
+using Interfaces.Forum.API;
+using Microsoft.AspNetCore.JsonPatch;
+using Newtonsoft.Json;
 using System.Diagnostics;
-using Interfaces.Forum.ApiServices;
+using System.Text;
 
-namespace Services.Forum
+namespace Repository.API.Forum
 {
-    public class ForumTopicService : IForumTopicService
+    public class ForumTopicApiRepository : RepositoryApi<ForumTopic, ILoggerManager, IHttpForumService>, IForumTopicApiRepository
     {
-        private readonly IHttpForumService _forumClient;
-        private readonly ILoggerManager _logger;
-        public ForumTopicService(ILoggerManager logger, IHttpForumService forumClient)
+        public ForumTopicApiRepository(ILoggerManager logger, IHttpForumService httpClient) : base(logger, httpClient)
         {
-            _logger = logger;
-            _forumClient = forumClient;
+
         }
         public async Task<List<ForumViewTopicDto>> GetForumTopics(int categoryId, int forumId)
         {
             List<ForumViewTopicDto> forumViewTopicDtos = new List<ForumViewTopicDto>();
 
 
-            var response = await _forumClient.Client.GetAsync("api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics");
+            var response = await _httpForumService.Client
+                .GetAsync("api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics");
 
             if (response.IsSuccessStatusCode)
             {
@@ -62,7 +61,7 @@ namespace Services.Forum
                 "&pageSize=" + pageSize.ToString();
             }
 
-            var response = await _forumClient.Client.GetAsync(uri);
+            var response = await _httpForumService.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -82,7 +81,7 @@ namespace Services.Forum
             bool result = false;
 
             string uri = "api/categories/" + categoryId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri + "?&fields=TotalTopics");
+            var response = await _httpForumService.Client.GetAsync(uri + "?&fields=TotalTopics");
 
             if (response.IsSuccessStatusCode)
             {
@@ -103,7 +102,7 @@ namespace Services.Forum
                 jsonPatchObject.Replace(fc => fc.TotalTopics, totalTopics);
 
                 var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
-                var responseAfterUpdate = await _forumClient.Client.PatchAsync(uri, 
+                var responseAfterUpdate = await _httpForumService.Client.PatchAsync(uri,
                     new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
 
                 if (responseAfterUpdate.IsSuccessStatusCode)
@@ -123,7 +122,7 @@ namespace Services.Forum
             int totalTopics = 0;
 
             string uri = "api/categories/" + categoryId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri + "?&fields=TotalTopics");
+            var response = await _httpForumService.Client.GetAsync(uri + "?&fields=TotalTopics");
 
             if (response.IsSuccessStatusCode)
             {
@@ -143,7 +142,7 @@ namespace Services.Forum
             bool result = false;
 
             string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri + "?&fields=TotalViews");
+            var response = await _httpForumService.Client.GetAsync(uri + "?&fields=TotalViews");
 
             if (response.IsSuccessStatusCode)
             {
@@ -157,7 +156,8 @@ namespace Services.Forum
 
                 var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
                 var responseAfterUpdate =
-                    await _forumClient.Client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+                    await _httpForumService.Client
+                    .PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
 
                 if (responseAfterUpdate.IsSuccessStatusCode)
                 {
@@ -179,7 +179,8 @@ namespace Services.Forum
 
             var jsonContent = JsonConvert.SerializeObject(topic);
 
-            var response = await _forumClient.Client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+            var response = await _httpForumService.Client
+                .PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
@@ -202,7 +203,7 @@ namespace Services.Forum
                 forumId.ToString() + "/topics/" +
                 topicId.ToString();
 
-            var response = await _forumClient.Client.DeleteAsync(uri);
+            var response = await _httpForumService.Client.DeleteAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -223,7 +224,8 @@ namespace Services.Forum
 
             var jsonContent = JsonConvert.SerializeObject(forumCounterForCreationDto);
 
-            var response = await _forumClient.Client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+            var response = await _httpForumService.Client
+                .PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
@@ -242,7 +244,7 @@ namespace Services.Forum
             string uri = "api" +
                 "/tcounters/" + topicId.ToString();
 
-            var response = await _forumClient.Client.DeleteAsync(uri);
+            var response = await _httpForumService.Client.DeleteAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -256,5 +258,4 @@ namespace Services.Forum
             return result;
         }
     }
-    
 }

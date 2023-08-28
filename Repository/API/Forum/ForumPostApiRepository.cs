@@ -1,34 +1,29 @@
-﻿using Interfaces;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
-using Interfaces.Forum;
-using Services.Utils;
-using System.Text;
-using Microsoft.AspNetCore.JsonPatch;
-using Entities.DTO.ForumDto.Create;
-using Entities.DTO.UserDto;
+﻿using Entities.DTO.ForumDto.Create;
 using Entities.DTO.ForumDto;
-using Interfaces.Forum.ApiServices;
+using Entities.DTO.UserDto;
+using Entities.Models.Forum;
+using Interfaces;
+using Interfaces.Forum;
+using Microsoft.AspNetCore.JsonPatch;
+using Newtonsoft.Json;
+using System.Text;
+using Interfaces.Forum.API;
 
-namespace Services.Forum
+namespace Repository.API.Forum
 {
-    public class ForumPostService : IForumPostService
+    public class ForumPostApiRepository : RepositoryApi<ForumPost, ILoggerManager, IHttpForumService>, IForumPostApiRepository
     {
-        private readonly IHttpForumService _forumClient;
-        private readonly ILoggerManager _logger;
-        public ForumPostService(ILoggerManager logger, IHttpForumService forumClient)
+        public ForumPostApiRepository(ILoggerManager logger, IHttpForumService httpClient) : base(logger, httpClient)
         {
-            _logger = logger;
-            _forumClient = forumClient;
-        }
 
+        }
         public async Task<int> GetTopicPostCount(int topicId)
         {
             int totalPosts = 0;
 
             string uri = "api" +
                 "/tcounters/" + topicId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri);
+            var response = await _httpForumService.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -51,7 +46,7 @@ namespace Services.Forum
                 forumId.ToString() + "/topics/" +
                 topicId.ToString() + "/posts/" +
                 postId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri);
+            var response = await _httpForumService.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -64,7 +59,8 @@ namespace Services.Forum
 
                 var jsonAfterUpdade = JsonConvert.SerializeObject(postDto);
                 var responseAfterUpdate =
-                    await _forumClient.Client.PutAsync(uri, new StringContent(jsonAfterUpdade, Encoding.UTF8, "application/json"));
+                    await _httpForumService.Client
+                    .PutAsync(uri, new StringContent(jsonAfterUpdade, Encoding.UTF8, "application/json"));
 
                 if (responseAfterUpdate.IsSuccessStatusCode)
                 {
@@ -87,7 +83,7 @@ namespace Services.Forum
                 topicId.ToString() + "/posts/" +
                 postId.ToString();
 
-            var response = await _forumClient.Client.DeleteAsync(uri);
+            var response = await _httpForumService.Client.DeleteAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -103,11 +99,13 @@ namespace Services.Forum
         public async Task<bool> CreateForumPost(int categoryId, int forumId, int topicId, ForumPostForCreationDto post)
         {
             bool result = false;
-            string uri = "api/categories/" + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString() + "/posts";
+            string uri = "api/categories/" 
+                + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString() + "/posts";
 
             var jsonContent = JsonConvert.SerializeObject(post);
 
-            var response = await _forumClient.Client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+            var response = await _httpForumService.Client
+                .PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
@@ -126,7 +124,7 @@ namespace Services.Forum
 
             string uri = "api" +
                 "/tcounters/" + topicId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri);
+            var response = await _httpForumService.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -152,7 +150,8 @@ namespace Services.Forum
                 jsonPatchObject.Replace(fc => fc.PostCounter, totalPosts);
 
                 var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
-                var responseAfterUpdate = await _forumClient.Client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+                var responseAfterUpdate = await _httpForumService.Client
+                    .PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
 
                 if (responseAfterUpdate.IsSuccessStatusCode)
                 {
@@ -171,7 +170,7 @@ namespace Services.Forum
             bool result = false;
 
             string uri = "api/usersf/" + userId.ToString();
-            var response = await _forumClient.Client.GetAsync(uri);
+            var response = await _httpForumService.Client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -192,7 +191,8 @@ namespace Services.Forum
                 jsonPatchObject.Replace(fc => fc.TotalPostCounter, totalPosts);
 
                 var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
-                var responseAfterUpdate = await _forumClient.Client.PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+                var responseAfterUpdate = await _httpForumService.Client
+                    .PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
 
                 if (responseAfterUpdate.IsSuccessStatusCode)
                 {

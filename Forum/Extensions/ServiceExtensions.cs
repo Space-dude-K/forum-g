@@ -15,6 +15,11 @@ using System.Text;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Forum.ActionsFilters.API.File;
+using Forum.ActionsFilters.API.Forum;
+using Forum.ActionsFilters.API.User;
+using Forum.ActionsFilters.API;
+using Forum.ActionsFilters.Consumer.Forum;
 
 namespace Forum.Extensions
 {
@@ -52,6 +57,28 @@ namespace Forum.Extensions
         public static void ConfigureRepositoryManager(this IServiceCollection services)
         {
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+        }
+        public static void ConfigureApiRepositoryManager(this IServiceCollection services)
+        {
+            services.AddScoped<IRepositoryApiManager, RepositoryApiManager>();
+        }
+        public static void ConfigureValidationsFilters(this IServiceCollection services)
+        {
+            services.AddScoped<ValidateRoleExistsAttribute>();
+            services.AddScoped<ValidationFilterAttribute>();
+            services.AddScoped<ValidateCategoryExistsAttribute>();
+            services.AddScoped<ValidateForumForCategoryExistsAttribute>();
+            services.AddScoped<ValidateTopicForForumExistsAttribute>();
+            services.AddScoped<ValidatePostForTopicExistsAttribute>();
+            services.AddScoped<ValidateTopicCounter>();
+            services.AddScoped<ValidateForumUserExistsAttribute>();
+            services.AddScoped<ValidateFileExistsAttribute>();
+            services.AddScoped<ValidateAppUserExistsAttribute>();
+            services.AddScoped<ValidateMediaTypeAttribute>();
+
+            services.AddScoped<ValidateAuthorizeAttribute>();
+            services.AddScoped<ValidateForumUserExistAttribute>();
+            services.AddScoped<ValidateAppUserExistAttribute>();
         }
         public static void AddCustomMediaTypes(this IServiceCollection services)
         {

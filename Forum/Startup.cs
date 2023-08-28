@@ -42,7 +42,10 @@ namespace Forum
             services.ConfigureSqlContext(Configuration);
 
             services.AddAutoMapper(typeof(Startup));
+
             services.ConfigureRepositoryManager();
+            services.ConfigureApiRepositoryManager();
+
             services.AddControllers(config =>
             {
                 config.RespectBrowserAcceptHeader = true;
@@ -62,21 +65,7 @@ namespace Forum
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            services.AddScoped<ValidateRoleExistsAttribute>();
-            services.AddScoped<ValidationFilterAttribute>();
-            services.AddScoped<ValidateCategoryExistsAttribute>();
-            services.AddScoped<ValidateForumForCategoryExistsAttribute>();
-            services.AddScoped<ValidateTopicForForumExistsAttribute>();
-            services.AddScoped<ValidatePostForTopicExistsAttribute>();
-            services.AddScoped<ValidateTopicCounter>();
-            services.AddScoped<ValidateForumUserExistsAttribute>();
-            services.AddScoped<ValidateFileExistsAttribute>();
-            services.AddScoped<ValidateAppUserExistsAttribute>();
-            services.AddScoped<ValidateMediaTypeAttribute>();
-
-            services.AddScoped<ValidateAuthorizeAttribute>();
-            services.AddScoped<ValidateForumUserExistAttribute>();
-            services.AddScoped<ValidateAppUserExistAttribute>();
+            services.ConfigureValidationsFilters();
 
             services.AddScoped<IDataShaper<ForumCategoryDto>, DataShaper<ForumCategoryDto>>();
             services.AddScoped<IDataShaper<ForumBaseDto>, DataShaper<ForumBaseDto>>();
@@ -92,10 +81,6 @@ namespace Forum
 
             services.AddScoped<IForumService, ForumService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IForumCategoryService, ForumCategoryService>();
-            services.AddScoped<IForumBaseService, ForumBaseService>();
-            services.AddScoped<IForumTopicService, ForumTopicService>();
-            services.AddScoped<IForumPostService, ForumPostService>();
 
             services.AddScoped<IForumModelService, ForumModelService>();
 
