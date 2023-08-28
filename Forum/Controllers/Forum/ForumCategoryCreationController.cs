@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
+using Forum.ActionsFilters.Consumer.Forum;
 using Interfaces.Forum;
 using Interfaces.Forum.ApiServices;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Forum.Controllers.Forum
 {
@@ -12,14 +12,12 @@ namespace Forum.Controllers.Forum
     public class ForumCategoryCreationController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IForumService _forumService;
         private readonly IForumCategoryService _forumCategoryService;
 
         public ForumCategoryCreationController(IMapper mapper, IForumService forumService,
             IForumCategoryService forumCategoryService)
         {
             _mapper = mapper;
-            _forumService = forumService;
             _forumCategoryService = forumCategoryService;
         }
         [HttpGet]
@@ -27,16 +25,15 @@ namespace Forum.Controllers.Forum
         {
             return View("~/Views/Forum/Add/ForumAddCategory.cshtml");
         }
+        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
         [HttpPost]
         public async Task<IActionResult> RedirectToCreateCategory(ForumCategoryCreationView model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            int userId = 0;
+            int userId = (int)HttpContext.Items["userId"];
             var categoryToAdd = _mapper.Map<ForumCategoryForCreationDto>(model);
-
-            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
 
             if (userId > 0)
             {

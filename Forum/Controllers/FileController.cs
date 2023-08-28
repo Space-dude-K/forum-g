@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Entities.DTO.FileDto;
 using Entities.Models.File;
 using System.Drawing.Imaging;
-using System.Security.Claims;
 using System.Drawing;
 using Forum.Extensions;
 using Interfaces.Forum.ApiServices;
@@ -19,27 +18,23 @@ namespace Forum.Controllers
     {
         private readonly IForumService _forumService;
         private readonly IMapper _mapper;
-        private readonly IUserService _userService;
         private readonly IWebHostEnvironment _env;
         private readonly ILoggerManager _logger;
-        private readonly IForumTopicService _forumTopicService;
 
         public FileController(IForumService forumService,
-            IMapper mapper, IUserService userService, IWebHostEnvironment env, ILoggerManager logger, IForumTopicService forumTopicService)
+            IMapper mapper, IUserService userService, IWebHostEnvironment env, 
+            ILoggerManager logger, IForumTopicService forumTopicService)
         {
             _forumService = forumService;
             _mapper = mapper;
-            _userService = userService;
             _env = env;
             _logger = logger;
-            _forumTopicService = forumTopicService;
         }
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
         [HttpPost]
         public async Task<IActionResult> UploadFileForUser(IFormFile uploadedFile)
         {
-            int userId = 0;
-            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
+            int userId = (int)HttpContext.Items["userId"];
 
             if (uploadedFile != null)
             {

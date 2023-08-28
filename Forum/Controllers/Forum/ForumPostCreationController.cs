@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Entities.DTO.ForumDto.Create;
 using Entities.ViewModels.Forum;
+using Forum.ActionsFilters.Consumer.Forum;
 using Interfaces.Forum;
 using Interfaces.Forum.ApiServices;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using System.Security.Claims;
 
 namespace Forum.Controllers.Forum
 {
@@ -13,15 +12,14 @@ namespace Forum.Controllers.Forum
     public class ForumPostCreationController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IForumService _forumService;
         private readonly IForumPostService _forumPostService;
 
         public ForumPostCreationController(IMapper mapper, IForumService forumService, IForumPostService forumPostService)
         {
             _mapper = mapper;
-            _forumService = forumService;
             _forumPostService = forumPostService;
         }
+        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
         [HttpPost]
         [Route("ForumPostCreation/CreateForumPost")]
         public async Task<IActionResult> CreateForumPost(int categoryId, int forumId, int topicId, int totalPages, ForumTopicViewModel model)
@@ -29,10 +27,8 @@ namespace Forum.Controllers.Forum
             /*if (!ModelState.IsValid)
                 return BadRequest(ModelState);*/
 
-            int userId = 0;
+            int userId = (int)HttpContext.Items["userId"];
             var postToAdd = _mapper.Map<ForumPostForCreationDto>(model);
-
-            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
 
             if(userId > 0)
             {
