@@ -1,6 +1,8 @@
 ﻿using Interfaces;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Entities.Models.Forum;
 
 namespace Forum.ActionsFilters.Consumer.Forum
 {
@@ -14,6 +16,8 @@ namespace Forum.ActionsFilters.Consumer.Forum
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var user = context.HttpContext.User;
+            int userId = 0;
+            int.TryParse(user.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
 
             if (!user.Identity.IsAuthenticated)
             {
@@ -24,6 +28,7 @@ namespace Forum.ActionsFilters.Consumer.Forum
             }
             else
             {
+                context.HttpContext.Items.Add("userId", userId);
                 await next();
             }
         }

@@ -58,9 +58,7 @@ namespace Forum.Controllers
         [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<ActionResult> DeleteForumBase(int categoryId, int forumId)
         {
-            int userId = 0;
-            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
-
+            int userId = (int)HttpContext.Items["userId"];
             int userForumPosts = 0;
             var userTopics = await _forumTopicService.GetForumTopics(categoryId, forumId);
 
@@ -108,10 +106,9 @@ namespace Forum.Controllers
         [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<ActionResult> DeleteTopic(int categoryId, int forumId, int topicId)
         {
-            int userId = 0;
-            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
-
-            var userTopicPosts = await _forumTopicService.GetTopicPosts(categoryId, forumId, topicId, 0, 0, true);
+            int userId = (int)HttpContext.Items["userId"];
+            var userTopicPosts = await _forumTopicService
+                .GetTopicPosts(categoryId, forumId, topicId, 0, 0, true);
             var res = await _forumTopicService.DeleteForumTopic(categoryId, forumId, topicId);
 
             if (res)
@@ -165,8 +162,7 @@ namespace Forum.Controllers
             var res = await _forumPostService.DeleteForumPost(categoryId, forumId, topicId, postId);
             int totalPosts = 0;
 
-            int userId = 0;
-            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
+            int userId = (int)HttpContext.Items["userId"];
 
             if (res)
             {
@@ -185,7 +181,8 @@ namespace Forum.Controllers
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
         public async Task<ActionResult> UpdatePost(int categoryId, int forumId, int topicId, int postId, int pageId, string newText)
         {
-            var res = await _forumPostService.UpdatePost(categoryId, forumId, topicId, postId, newText);
+            var res = await _forumPostService
+                .UpdatePost(categoryId, forumId, topicId, postId, newText);
 
             return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 
                 new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = pageId }) });
