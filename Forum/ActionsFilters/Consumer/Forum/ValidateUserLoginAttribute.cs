@@ -2,8 +2,6 @@
 using Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Entities.ViewModels;
 
 namespace Forum.ActionsFilters.Consumer.Forum

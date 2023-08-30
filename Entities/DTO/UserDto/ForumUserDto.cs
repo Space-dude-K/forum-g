@@ -7,8 +7,8 @@
         public string LastName { get; set; }
         public string FirstAndLastNames { get { return FirstName + " " + LastName; } }
         public string UserName { get; set; }
-        public int Cabinet { get; set; }
-        public int InternalPhone { get; set; }
+        public string Cabinet { get; set; }
+        public string InternalPhone { get; set; }
         public string BirthDate { get; set; }
         public string Company { get; set; }
         public string Division { get; set; }

@@ -17,14 +17,6 @@ namespace Repository.Forum
 
         public void CreateCategory(ForumCategory category)
         {
-            // TODO
-            category.ForumUserId = 1;
-            
-            /*if(category.ForumBases.Any())
-            {
-                category.ForumBases.Select(f => f.ForumUserId = 1).ToList();
-            }*/
-
             Create(category);
         }
         public void DeleteCategory(ForumCategory category)

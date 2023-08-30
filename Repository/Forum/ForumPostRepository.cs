@@ -16,9 +16,6 @@ namespace Repository.Forum
 
         public void CreatePostForTopic(int forumTopicId, ForumPost post)
         {
-            // TODO
-            /*post.ForumUserId = 1;
-            post.ForumTopicId = forumTopicId;*/
             Create(post);
         }
 
