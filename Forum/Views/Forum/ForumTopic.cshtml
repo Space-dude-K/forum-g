@@ -1,4 +1,5 @@
-﻿@model Entities.ViewModels.Forum.ForumTopicViewModel;
+﻿@inject UserManager<AppUser> userManager;
+@model Entities.ViewModels.Forum.ForumTopicViewModel;
 @{
     ViewData["Title"] = "ForumTopic";
 }
@@ -247,25 +248,28 @@
                             <p class="d-flex justify-content-center">@post.CreatedAt</p>
                         </div>
 
-                        @if (true)
+                        @if (@userManager.FindByNameAsync(@User.Identity.Name).Result.Id.Equals(@post.ForumUserId))
                         {
                             <div class="d-flex justify-content-center mb-4 mr-1">
-                                <button type="button" class="btn btn-light mr-0 ml-1" 
-                                onclick="EnableEditModeForumPost(@post.Id)" title="Редактировать сообщение"><img 
-                                    src="~/images/icons/bootstrap-icons-1.5.0/pencil.svg" width="12" height="12" /></button>
+                                <button type="button" class="btn btn-light mr-0 ml-1"
+                                        onclick="EnableEditModeForumPost(@post.Id)" title="Редактировать сообщение">
+                                    <img src="~/images/icons/bootstrap-icons-1.5.0/pencil.svg" width="12" height="12" />
+                                </button>
 
-                                <button type="button" class="btn btn-light mr-0 ml-1" 
-                                onclick="SaveChangesForumPost(@Context.Request.RouteValues["categoryId"], 
-                                @Context.Request.RouteValues["forumId"], 
-                                @Context.Request.RouteValues["topicId"], 
-                                @post.Id, @Context.Request.RouteValues["pageId"])" title="Сохранить изменения"><img 
-                                    src="~/images/icons/bootstrap-icons-1.5.0/save.svg" width="12" height="12" /></button>
+                                <button type="button" class="btn btn-light mr-0 ml-1"
+                                        onclick="SaveChangesForumPost(@Context.Request.RouteValues["categoryId"],
+                                @Context.Request.RouteValues["forumId"],
+                                @Context.Request.RouteValues["topicId"],
+                                @post.Id, @Context.Request.RouteValues["pageId"])" title="Сохранить изменения">
+                                    <img src="~/images/icons/bootstrap-icons-1.5.0/save.svg" width="12" height="12" />
+                                </button>
 
-                                <button type="button" class="btn btn-light mr-1 ml-1" 
-                                onclick="DeleteForumPost(@Context.Request.RouteValues["categoryId"], 
-                                @Context.Request.RouteValues["forumId"], 
-                                @Context.Request.RouteValues["topicId"], @post.Id)" title="Удалить сообщение"><img 
-                                    src="~/images/icons/bootstrap-icons-1.5.0/recycle.svg" width="12" height="12" /></button>
+                                <button type="button" class="btn btn-light mr-1 ml-1"
+                                        onclick="DeleteForumPost(@Context.Request.RouteValues["categoryId"],
+                                @Context.Request.RouteValues["forumId"],
+                                @Context.Request.RouteValues["topicId"], @post.Id)" title="Удалить сообщение">
+                                    <img src="~/images/icons/bootstrap-icons-1.5.0/recycle.svg" width="12" height="12" />
+                                </button>
                             </div>
                         }
                     </div>
