@@ -93,13 +93,6 @@ namespace Forum
             CreateMap<ForumTopicViewModel, ForumPostForCreationDto>()
                 .ForMember(dest => dest.PostText, m => m.MapFrom(src => src.PostText))
                 .ForMember(dest => dest.ForumTopicId, m => m.MapFrom(src => src.TopicId));
-
-
-            /*CreateMap<ForumHomeViewModel, ForumBaseCreationView>()
-                .ForMember(dest => dest.Categories, m => m.MapFrom(src => src.Categories.Select(c => c.Name)));
-            CreateMap<ForumBaseCreationView, ForumBaseForCreationDto>()
-                .ForMember(dest => dest.ForumTitle, m => m.MapFrom(src => src.ForumTitle))
-                .ForMember(dest => dest.ForumSubTitle, m => m.MapFrom(src => src.ForumSubtitle));*/
         }
     }
 }
