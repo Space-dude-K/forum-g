@@ -312,8 +312,7 @@ namespace Forum.Controllers.Forum
 
             var topicEntity = _mapper.Map<ForumTopic>(topic);
             topicEntity.CreatedAt = DateTime.Now;
-            // TODO
-            topicEntity.ForumUserId = 1;
+            topicEntity.ForumBaseId = forumId;
             _repository.ForumTopic.CreateTopicForForum(forumId, topicEntity);
             await _repository.SaveAsync();
 
@@ -349,6 +348,7 @@ namespace Forum.Controllers.Forum
 
             foreach (var topic in topicEntities)
             {
+                topic.ForumBaseId = forumId;
                 _repository.ForumTopic.CreateTopicForForum(forumId, topic);
             }
 

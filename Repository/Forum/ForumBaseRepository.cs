@@ -18,9 +18,6 @@ namespace Repository.Forum
 
         public void CreateForumForCategory(int categoryId, ForumBase forum)
         {
-            // TODO
-            forum.ForumUserId = 1;
-            forum.ForumCategoryId = categoryId;
             Create(forum);
         }
 
