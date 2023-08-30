@@ -49,6 +49,7 @@ namespace Forum.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(ValidateUserLoginAttribute))]
         public async Task<IActionResult> Login(LoginViewModel userModel, string returnUrl = null)
         {
             if (!ModelState.IsValid)
@@ -56,9 +57,19 @@ namespace Forum.Controllers
                 return View(userModel);
             }
 
-            var user = await _userManager.FindByNameAsync(userModel.UserName);
+            /*var user = await _userManager.FindByNameAsync(userModel.UserName);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Invalid UserName or Password");
+                return View(userModel);
+            }*/
+
+
+            var user = HttpContext.Items["loginUser"] as AppUser;
             var result = await _signInManager
                 .PasswordSignInAsync(user, userModel.Password, userModel.RememberMe, true);
+
 
             _logger.LogInfo($"User {user.Id} is signed in? {result.Succeeded}");
 
@@ -87,37 +98,6 @@ namespace Forum.Controllers
 
             return RedirectToLocal(returnUrl);
         }
-        /*[HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel userModel, string returnUrl = null)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(userModel);
-            }
-
-            var user = await _userManager.FindByNameAsync(userModel.UserName);
-            _logger.LogInfo($"Login attempt for user: {user.Id}");
-            if (user != null && await _userManager.CheckPasswordAsync(user, userModel.Password))
-            {
-                var identity = new ClaimsIdentity(IdentityConstants.ApplicationScheme);
-                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
-                identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
-
-                await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme,  new ClaimsPrincipal(identity));
- 
-                //return RedirectToAction(nameof(HomeController.Index), "Home");
-                _logger.LogInfo($"User {user.Id} is authenticated? {identity.IsAuthenticated}");
-
-                return RedirectToLocal(returnUrl);
-            }
-            else
-            {
-                _logger.LogError($"Invalid UserName or Password");
-                ModelState.AddModelError("", "Invalid UserName or Password");
-                return View(userModel);
-            }
-        }*/
         private IActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
@@ -168,14 +148,17 @@ namespace Forum.Controllers
                 ModelState.AddModelError(string.Empty, "Invalid registration attempt");
             }
 
-            var dbRoles = await _repositoryApiManager.ForumUserApis.GetUserRoles();
+            var dbRoles = await _repositoryApiManager.ForumUserApis
+                .GetUserRoles();
 
             if (dbRoles == null || dbRoles.Count == 0)
             {
                 _logger.LogError($"Db roles is empty");
                 return NotFound();
             }
-            var registerTableViewModel = await _repositoryApiManager.ForumUserApis.GetUsersData();
+            var registerTableViewModel = await _repositoryApiManager.ForumUserApis
+                .GetUsersData();
+
             model = new RegisterViewModel()
             {
                 Roles = dbRoles,
