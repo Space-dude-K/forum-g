@@ -44,6 +44,8 @@ namespace Entities.Configuration.Forum
                 .HasKey(p => p.Id)
                 .HasName("PK_ForumUser");
 
+            builder.HasIndex(p => new { p.TotalPostCounter });
+
             builder
                 .HasOne(p => p.AppUser)
                 .WithOne(p => p.ForumUser)

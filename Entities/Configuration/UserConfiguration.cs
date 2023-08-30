@@ -1,13 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Entities.Models;
-using System.Reflection.Emit;
 
 namespace Entities.Configuration
 {
@@ -75,10 +68,7 @@ namespace Entities.Configuration
                 NormalizedEmail = "ADMIN@ADMIN.BY",
                 PhoneNumber = 0.ToString(),
                 PasswordHash = "AQAAAAIAAYagAAAAEJmQy9UwxkODjbb/iQlo7ezznBC5omr0sEhFEoTgafpAxZZRFsyVCFG8NXKSc2SGJA==",
-
-                
                 SecurityStamp = "FGXU4FIM2LMJZFDJD3YCUQEHQRZY4GSS"
-                //ConcurrencyStamp = "b2394a5e-7d96-43c8-b354-c741d3f0733f"
             };
 
             return appUser;

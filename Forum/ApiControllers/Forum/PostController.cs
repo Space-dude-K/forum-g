@@ -201,7 +201,8 @@ namespace Forum.Controllers.Forum
             }
 
             var postsToReturn = _mapper.Map<IEnumerable<ForumPostDto>>(postEntities);
-            var links = _postLinks.TryGenerateLinks(postsToReturn, categoryId, forumId, topicId, forumPostParameters.Fields, HttpContext, ids);
+            var links = _postLinks
+                .TryGenerateLinks(postsToReturn, categoryId, forumId, topicId, forumPostParameters.Fields, HttpContext, ids);
 
             return links.HasLinks ? Ok(links.LinkedEntities) : Ok(links.ShapedEntities);
         }
