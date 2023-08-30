@@ -1,17 +1,13 @@
 ﻿using AspNetCoreRateLimit;
 using Interfaces;
 using Interfaces.Forum;
-using Entities.DTO.ForumDto;
 using Forum.Extensions;
 using Forum.Utility.ForumLinks;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
-using Repository.DataShaping;
 using Services;
-using Interfaces.User;
 using Forum.Utility.UserLinks;
-using Entities.DTO.UserDto;
 using Services.Forum;
 
 namespace Forum
@@ -61,12 +57,7 @@ namespace Forum
 
             services.ConfigureValidationsFilters();
 
-            services.AddScoped<IDataShaper<ForumCategoryDto>, DataShaper<ForumCategoryDto>>();
-            services.AddScoped<IDataShaper<ForumBaseDto>, DataShaper<ForumBaseDto>>();
-            services.AddScoped<IDataShaper<ForumTopicDto>, DataShaper<ForumTopicDto>>();
-            services.AddScoped<IDataShaper<ForumPostDto>, DataShaper<ForumPostDto>>();
-
-            services.AddScoped<IDataShaper<ForumUserDto>, DataShaper<ForumUserDto>>();
+            services.ConfigureDataShapers();
 
             services.AddHttpClient<IAuthenticationService, AuthenticationService>(c =>
                 c.BaseAddress = new Uri(appUrl));
@@ -75,8 +66,6 @@ namespace Forum
 
 
             services.AddScoped<IForumModelService, ForumModelService>();
-
-
             services.AddCustomMediaTypes();
 
             // HATEOAS

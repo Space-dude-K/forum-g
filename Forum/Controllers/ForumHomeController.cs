@@ -7,7 +7,6 @@ using Interfaces;
 using Entities.DTO.UserDto;
 using Marvin.Cache.Headers;
 using Forum.ActionsFilters.Consumer.Forum;
-using Microsoft.AspNetCore.OutputCaching;
 
 namespace Forum.Controllers
 {

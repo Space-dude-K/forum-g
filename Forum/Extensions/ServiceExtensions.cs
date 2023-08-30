@@ -20,6 +20,9 @@ using Forum.ActionsFilters.API.Forum;
 using Forum.ActionsFilters.API.User;
 using Forum.ActionsFilters.API;
 using Forum.ActionsFilters.Consumer.Forum;
+using Entities.DTO.ForumDto;
+using Entities.DTO.UserDto;
+using Repository.DataShaping;
 
 namespace Forum.Extensions
 {
@@ -353,6 +356,14 @@ namespace Forum.Extensions
                     }
                 });
             });
+        }
+        public static void ConfigureDataShapers(this IServiceCollection services)
+        {
+            services.AddScoped<IDataShaper<ForumCategoryDto>, DataShaper<ForumCategoryDto>>();
+            services.AddScoped<IDataShaper<ForumBaseDto>, DataShaper<ForumBaseDto>>();
+            services.AddScoped<IDataShaper<ForumTopicDto>, DataShaper<ForumTopicDto>>();
+            services.AddScoped<IDataShaper<ForumPostDto>, DataShaper<ForumPostDto>>();
+            services.AddScoped<IDataShaper<ForumUserDto>, DataShaper<ForumUserDto>>();
         }
     }
 }
