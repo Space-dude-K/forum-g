@@ -60,30 +60,6 @@ namespace ForumTest
                 }
             });
         }
-        private TokenValidationParameters CreateTokenValidationParameters()
-        {
-            TokenValidationParameters tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = MockJwtToken.SecurityKey,
-
-                SignatureValidator = delegate (string token, TokenValidationParameters parameters)
-                {
-                    JwtSecurityToken jwt = new JwtSecurityToken(token);
-
-                    return jwt;
-                },
-                RequireExpirationTime = true,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero,
-                RequireSignedTokens = false,
-            };
-
-            return tokenValidationParameters;
-        }
     }
     public class FakePolicyEvaluator : IPolicyEvaluator
     {

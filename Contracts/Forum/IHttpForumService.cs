@@ -1,4 +1,6 @@
-﻿namespace Interfaces.Forum
+﻿using Forum.ViewModels;
+
+namespace Interfaces.Forum
 {
     public interface IHttpForumService
     {

@@ -23,6 +23,8 @@ using Forum.ActionsFilters.Consumer.Forum;
 using Entities.DTO.ForumDto;
 using Entities.DTO.UserDto;
 using Repository.DataShaping;
+using Forum.Utility.ForumLinks;
+using Forum.Utility.UserLinks;
 
 namespace Forum.Extensions
 {
@@ -84,6 +86,8 @@ namespace Forum.Extensions
             services.AddScoped<ValidateAppUserExistAttribute>();
 
             services.AddScoped<ValidateUserLoginAttribute>();
+            services.AddScoped<ValidateUserRolesExistAttribute>();
+            services.AddScoped<ValidateUserRegisteredAttribute>();
         }
         public static void AddCustomMediaTypes(this IServiceCollection services)
         {
@@ -377,5 +381,4 @@ namespace Forum.Extensions
             services.AddScoped<UserDataLinks>();
         }
     }
-}
 }
