@@ -24,17 +24,6 @@ namespace ForumTest
         {
             var builder = new WebHostBuilder().UseStartup<Startup>();
             builder.UseEnvironment("Development");
-            /*builder.ConfigureTestServices(s =>
-            {
-                var contextDescriptor = s.FirstOrDefault(descriptor => descriptor.ServiceType == typeof(ForumContext));
-                s.Remove(contextDescriptor);
-                s.AddDbContext<ForumContext>(opts =>
-                opts.UseSqlServer(inMemoryConnectionString, b => b.MigrationsAssembly("Forum")));
-                s.AddLogging(builder => builder
-                .AddDebug()
-                .AddFilter(level => level >= LogLevel.Trace)
-                );
-            });*/
 
             output.WriteLine("Sql conn: " + builder.GetSetting("sqlConnection"));
 

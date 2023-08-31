@@ -5,10 +5,7 @@ using Entities.DTO.UserDto;
 using Forum.ViewModels;
 using Newtonsoft.Json;
 using System.Text;
-using Microsoft.AspNetCore.Identity;
-using Entities.Models;
 using Entities.DTO.UserDto.Create;
-using Microsoft.Extensions.Configuration;
 using Entities.ViewModels;
 
 namespace Services
@@ -19,10 +16,6 @@ namespace Services
 
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IConfiguration _configuration;
-
-        private AppUser _user;
 
         public AuthenticationService(HttpClient client, ILoggerManager logger,IMapper mapper)
         {

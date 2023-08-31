@@ -29,7 +29,7 @@ namespace Forum.ActionsFilters.Consumer.Forum
 
                 if(user == null)
                 {
-                    _logger.LogInfo($"Invalid user.");
+                    _logger.LogError($"Invalid user.");
                     context.ModelState.AddModelError("", "Invalid user");
                     await next();
                 }
@@ -41,7 +41,7 @@ namespace Forum.ActionsFilters.Consumer.Forum
             }
             else
             {
-                _logger.LogInfo($"LoginViewModel is empty.");
+                _logger.LogError($"LoginViewModel is empty.");
                 context.ModelState.AddModelError("", "Invalid model");
                 await next();
             }

@@ -57,19 +57,9 @@ namespace Forum.Controllers
                 return View(userModel);
             }
 
-            /*var user = await _userManager.FindByNameAsync(userModel.UserName);
-
-            if (user == null)
-            {
-                ModelState.AddModelError("", "Invalid UserName or Password");
-                return View(userModel);
-            }*/
-
-
             var user = HttpContext.Items["loginUser"] as AppUser;
             var result = await _signInManager
                 .PasswordSignInAsync(user, userModel.Password, userModel.RememberMe, true);
-
 
             _logger.LogInfo($"User {user.Id} is signed in? {result.Succeeded}");
 
@@ -106,15 +96,11 @@ namespace Forum.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
         }
-        public async Task<IActionResult> RegisterAsync()
+        [HttpGet]
+        [ServiceFilter(typeof(ValidateUserRolesExistAttribute))]
+        public async Task<IActionResult> Register()
         {
-            var dbRoles = await _repositoryApiManager.ForumUserApis.GetUserRoles();
-
-            if (dbRoles == null || dbRoles.Count == 0)
-            {
-                _logger.LogError($"Db roles is empty");
-                return NotFound();
-            }
+            var dbRoles = HttpContext.Items["dbRoles"] as List<string>;
 
             var registerTableViewModel = await _repositoryApiManager.ForumUserApis.GetUsersData();
             var model = new RegisterViewModel()
@@ -126,36 +112,16 @@ namespace Forum.Controllers
             return View(model);
         }
         [HttpPost]
+        [ServiceFilter(typeof(ValidateUserRolesExistAttribute))]
+        [ServiceFilter(typeof(ValidateUserRegisteredAttribute))]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            // TODO. Email uniqueness check
-            if (ModelState.IsValid)
-            {
-                var result = await _authenticationService.Register(model);
+            bool isUserRegistered = (bool)HttpContext.Items["isUserRegitered"];
 
-                if(result.IsSuccessStatusCode)
-                {
-                    TempData["Success"] = "User registered successfully!";
-                }
-                else
-                {
-                    var errorsRaw = await result.Content.ReadAsStringAsync();
-                    ModelState.AddModelError(string.Empty, errorsRaw);
-                }
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid registration attempt");
-            }
+            if(isUserRegistered)
+                TempData["Success"] = "User registered successfully!";
 
-            var dbRoles = await _repositoryApiManager.ForumUserApis
-                .GetUserRoles();
-
-            if (dbRoles == null || dbRoles.Count == 0)
-            {
-                _logger.LogError($"Db roles is empty");
-                return NotFound();
-            }
+            var dbRoles = HttpContext.Items["dbRoles"] as List<string>;
             var registerTableViewModel = await _repositoryApiManager.ForumUserApis
                 .GetUsersData();
 

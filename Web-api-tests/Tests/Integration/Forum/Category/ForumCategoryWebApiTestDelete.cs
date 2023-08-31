@@ -1,6 +1,5 @@
 ﻿using Entities;
 using ForumTest.Tests.Integration.Forum.TestCases;
-using System.Net.Http.Headers;
 using System.Net;
 
 namespace ForumTest.Tests.Integration.Forum.Category
