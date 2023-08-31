@@ -69,12 +69,7 @@ namespace Forum
             services.AddCustomMediaTypes();
 
             // HATEOAS
-            services.AddScoped<CategoryLinks>();
-            services.AddScoped<ForumBaseLinks>();
-            services.AddScoped<TopicLinks>();
-            services.AddScoped<PostLinks>();
-
-            services.AddScoped<UserDataLinks>();
+            services.ConfigureHATEOAS();
 
             // Versioning service
             services.ConfigureVersioning();

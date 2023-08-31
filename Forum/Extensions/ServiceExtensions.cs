@@ -367,5 +367,15 @@ namespace Forum.Extensions
             services.AddScoped<IDataShaper<ForumPostDto>, DataShaper<ForumPostDto>>();
             services.AddScoped<IDataShaper<ForumUserDto>, DataShaper<ForumUserDto>>();
         }
+        public static void ConfigureHATEOAS(this IServiceCollection services)
+        {
+            services.AddScoped<CategoryLinks>();
+            services.AddScoped<ForumBaseLinks>();
+            services.AddScoped<TopicLinks>();
+            services.AddScoped<PostLinks>();
+
+            services.AddScoped<UserDataLinks>();
+        }
     }
+}
 }
