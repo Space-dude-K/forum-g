@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
 using System.Text;
 using Interfaces.Forum.API;
+using Entities.DTO.ForumDto.Update;
 
 namespace Repository.API.Forum
 {
@@ -38,7 +39,8 @@ namespace Repository.API.Forum
 
             return totalPosts;
         }
-        public async Task<bool> UpdatePost(int categoryId, int forumId, int topicId, int postId, string newText)
+        public async Task<bool> UpdatePost(int categoryId, int forumId, int topicId, int postId, 
+            ForumPostForUpdateDto newPostDto)
         {
             bool result = false;
 
@@ -54,9 +56,10 @@ namespace Repository.API.Forum
                 var rawData = await response.Content.ReadAsStringAsync();
                 var postDto = JsonConvert.DeserializeObject<IEnumerable<ForumPostDto>>(rawData).First();
 
-                postDto.PostText = newText;
+                postDto.PostText = newPostDto.PostText;
                 postDto.UpdatedAt = DateTime.Now;
-                postDto.ForumUserId = 1;
+                postDto.Likes = newPostDto.Likes;
+                //postDto.ForumUserId = 1;
 
                 var jsonAfterUpdade = JsonConvert.SerializeObject(postDto);
                 var responseAfterUpdate =
@@ -202,6 +205,54 @@ namespace Repository.API.Forum
                 else
                 {
                     _logger.LogError($"Unable to update post counter for user id: {userId}");
+                }
+            }
+
+            return result;
+        }
+        public async Task<bool> UpdatePostLikeCounter(int categoryId, int forumId, int topicId, int postId, bool incresase)
+        {
+            bool result = false;
+
+            string uri = "api/categories/" +
+                categoryId.ToString() + "/forums/" +
+                forumId.ToString() + "/topics/" +
+                topicId.ToString() + "/posts/" +
+                postId.ToString();
+
+            var response = await _httpForumService.Client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+
+                // Nothing to update. Post deleted.
+                if (string.IsNullOrEmpty(rawData))
+                    return true;
+
+                int totalLikes = JsonConvert.DeserializeObject<ICollection<ForumPostDto>>(rawData).First().Likes;
+
+                if (incresase)
+                    totalLikes++;
+                else
+                {
+                    totalLikes--;
+                }
+
+                JsonPatchDocument<ForumPostForUpdateDto> jsonPatchObject = new();
+                jsonPatchObject.Replace(fc => fc.Likes, totalLikes);
+
+                var jsonAfterUpdated = JsonConvert.SerializeObject(jsonPatchObject);
+                var responseAfterUpdate = await _httpForumService.Client
+                    .PatchAsync(uri, new StringContent(jsonAfterUpdated, Encoding.UTF8, "application/json"));
+
+                if (responseAfterUpdate.IsSuccessStatusCode)
+                {
+                    result = true;
+                }
+                else
+                {
+                    _logger.LogError($"Unable to update like counter for topic id: {postId}");
                 }
             }
 

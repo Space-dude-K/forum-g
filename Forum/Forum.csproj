@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Site\**" />
+    <Content Remove="Views\Site\**" />
+    <EmbeddedResource Remove="Views\Site\**" />
+    <None Remove="Views\Site\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Marvin.Cache.Headers" Version="6.1.0" />
@@ -33,7 +40,6 @@
   <ItemGroup>
     <Folder Include="ActionsFilters\API\Printer\" />
     <Folder Include="ActionsFilters\Helpers\" />
-    <Folder Include="Views\Site\" />
   </ItemGroup>
 
   <ItemGroup>
