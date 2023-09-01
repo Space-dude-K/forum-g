@@ -7,6 +7,7 @@ using Interfaces;
 using Entities.DTO.UserDto;
 using Marvin.Cache.Headers;
 using Forum.ActionsFilters.Consumer.Forum;
+using Entities.DTO.ForumDto.Update;
 
 namespace Forum.Controllers
 {
@@ -80,7 +81,8 @@ namespace Forum.Controllers
         public async Task<IActionResult> ForumTopics(int categoryId, int forumId)
         {
             var model = await _forumModelService.GetForumTopicsForModel(categoryId, forumId);
-            await _repositoryApiManager.ForumApis.IncreaseViewCounterForForumBase(categoryId, forumId);
+            await _repositoryApiManager.ForumApis
+                .IncreaseViewCounterForForumBase(categoryId, forumId);
 
             return View("~/Views/Forum/ForumBase.cshtml", model);
         }
@@ -161,10 +163,11 @@ namespace Forum.Controllers
                 new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
         }
         [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
-        public async Task<ActionResult> UpdatePost(int categoryId, int forumId, int topicId, int postId, int pageId, string newText)
+        public async Task<ActionResult> UpdatePost(int categoryId, int forumId, int topicId, int postId, int pageId, 
+            ForumPostForUpdateDto forumPostForUpdateDto)
         {
             var res = await _repositoryApiManager.PostApis
-                .UpdatePost(categoryId, forumId, topicId, postId, newText);
+                .UpdatePost(categoryId, forumId, topicId, postId, forumPostForUpdateDto);
 
             return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 
                 new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = pageId }) });
@@ -197,6 +200,18 @@ namespace Forum.Controllers
             model.AvatarImgSrc = user.LoadAvatar(_env.WebRootPath);
 
             return View("~/Views/Forum/User/ForumUserPage.cshtml", model);
+        }
+        public async Task<IActionResult> UpdateForumPostLikes(int categoryId, int forumId, int topicId, int postId, int pageId)
+        {
+            var res = await _repositoryApiManager.PostApis
+                .UpdatePostLikeCounter(categoryId, forumId, topicId, postId, true);
+
+            if (!res)
+            {
+                return BadRequest($"Unable to update like for post id: {postId}");
+            }
+
+            return RedirectToAction("TopicPosts", new { categoryId, forumId, topicId, postId, pageId });
         }
     }
 }

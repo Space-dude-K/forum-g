@@ -51,73 +51,85 @@
     tinymce.init(postViewConfig);
 </script>
 <script>
-    function CreatePost(categoryId, forumId, topicId, totalPages) {
+    function CreatePost(categoryId, forumId, topicId, totalPages)
+    {
         var postText = (((tinyMCE.get("text-area-tiny-mce-forum-post-add").getContent())
             .replace(/(&nbsp;)*/g, ""))
             .replace(/(<p>)*/g, ""))
             .replace(/<(\/)?p[^>]*>/g, "");
 
-        if (jQuery.isEmptyObject(postText)) {
+        if (jQuery.isEmptyObject(postText))
+        {
             console.log('Сообщение не может быть пустым.');
             alert('Сообщение не может быть пустым.');
         }
-        else {
+        else
+        {
             $.ajax(
                 {
                     type: "POST",
                     data: { categoryId: categoryId, forumId: forumId, topicId: topicId, totalPages: totalPages, postText: postText },
                     url: "@Url.Action("CreateForumPost", "ForumPostCreation")"
                 })
-                .done(function (r) 
+                .done(function (r)
                 {
                     window.location.href = r.redirectToUrl;
                     //window.location.href = r.redirectToUrl + "?c=" + (new Date()).valueOf();
                 })
-                .fail(function (jqXHR, exception) {
+                .fail(function (jqXHR, exception)
+                {
                     var msg = '';
-                    if (jqXHR.status === 0) {
+                    if (jqXHR.status === 0)
+                    {
                         msg = 'Not connect.\n Verify Network.';
-                    } else if (jqXHR.status == 404) {
+                    } else if (jqXHR.status == 404)
+                    {
                         msg = 'Requested page not found. [404]';
-                    } else if (jqXHR.status == 500) {
+                    } else if (jqXHR.status == 500)
+                    {
                         msg = 'Internal Server Error [500].';
-                    } else if (exception === 'parsererror') {
+                    } else if (exception === 'parsererror')
+                    {
                         msg = 'Requested JSON parse failed.';
-                    } else if (exception === 'timeout') {
+                    } else if (exception === 'timeout')
+                    {
                         msg = 'Time out error.';
-                    } else if (exception === 'abort') {
+                    } else if (exception === 'abort')
+                    {
                         msg = 'Ajax request aborted.';
-                    } else {
+                    } else
+                    {
                         msg = 'Uncaught Error.\n' + jqXHR.responseText;
                     }
 
                     console.log("Ошибка при создании сообщения: " + msg);
                     //$('#post').html(msg);
                 })
-                .always(function () {
+                .always(function ()
+                {
                     console.log("CreatePost - complete.");
                 });;
         }
     }
 </script>
 <script>
-    function DeleteForumPost(categoryId, forumId, topicId, postId) 
+    function DeleteForumPost(categoryId, forumId, topicId, postId)
     {
-        if (confirm("Вы действительно хотите удалить это сообщение?")) 
+        if (confirm("Вы действительно хотите удалить это сообщение?"))
         {
-            if (postId == 0) 
+            if (postId == 0)
             {
                 console.log('Сообщение с заданным id не найдено.');
                 alert('Сообщение с заданным id не найдено.');
             }
-            else 
+            else
             {
                 $.ajax(
                     {
                         type: "POST",
                         data: { categoryId: categoryId, forumId: forumId, topicId: topicId, postId: postId },
                         url: "@Url.Action("DeletePost", "ForumHome")"
-                    }).done(function (r) 
+                    }).done(function (r)
                     {
                         window.location.href = r.redirectToUrl;
                     });
@@ -126,7 +138,8 @@
     }
 </script>
 <script>
-    function EnableEditModeForumPost(postId) {
+    function EnableEditModeForumPost(postId)
+    {
         var postEditConfig =
         {
             selector: "#forum-post-body-message-main-content-div-" + postId,
@@ -157,17 +170,20 @@
     }
 </script>
 <script>
-    function SaveChangesForumPost(categoryId, forumId, topicId, postId, pageId) {
+    function SaveChangesForumPost(categoryId, forumId, topicId, postId, pageId)
+    {
         var newText = tinymce.get("forum-post-body-message-main-content-div-" + postId).getContent();
         tinymce.remove("#forum-post-body-message-main-content-div-" + postId);
 
         alert(newText);
 
-        if (postId == 0) {
+        if (postId == 0)
+        {
             console.log('Сообщение с заданным id не найдено.');
             alert('Сообщение с заданным id не найдено.');
         }
-        else {
+        else
+        {
             $.ajax(
                 {
                     type: "POST",
@@ -178,20 +194,20 @@
     }
 </script>
 <script>
-    function ForumPostReply(postId, userName, msgDate) 
+    function ForumPostReply(postId, userName, msgDate)
     {
-        if (postId == 0) 
+        if (postId == 0)
         {
             console.log('Сообщение с заданным id не найдено.');
             alert('Сообщение с заданным id не найдено.');
         }
-        else 
+        else
         {
             var msgData = document.getElementById("forum-post-body-message-main-content-div-" + postId).innerHTML;
             var editor = tinyMCE.get("text-area-tiny-mce-forum-post-add");
-            var data = '<blockquote>' 
-            + '<p> В ответ на сообщение № ' 
-            + postId + ' от ' + userName + ' ' + msgDate + '</p><br>' + '<p>' + msgData + '</p></blockquote><br>';
+            var data = '<blockquote>'
+                + '<p> В ответ на сообщение № '
+                + postId + ' от ' + userName + ' ' + msgDate + '</p><br>' + '<p>' + msgData + '</p></blockquote><br>';
             var addButton = document.getElementById("post-add-button");
 
             editor.execCommand("mceInsertContent", true, data);
@@ -210,9 +226,11 @@
                     </div>
                 </div>
                 <div class="mt-2 mb-2">
-                    <button type="button" class="btn btn-light" onclick="location.href='@Url.RouteUrl("ForumTopics", 
-                    new { categoryId = @Context.Request.RouteValues["categoryId"], 
-                    forumId = @Context.Request.RouteValues["forumId"] })'">Вернуться к списку тем</button>
+                    <button type="button" class="btn btn-light" onclick="location.href='@Url.RouteUrl("ForumTopics",
+                    new { categoryId = @Context.Request.RouteValues["categoryId"],
+                    forumId = @Context.Request.RouteValues["forumId"] })'">
+                        Вернуться к списку тем
+                    </button>
                 </div>
             </div>
         </div>
@@ -229,15 +247,29 @@
                     </div>
                     <div class="col text-center d-flex flex-row-reverse mt-2">
                         <button type="button" class="btn btn-light "
-                                onclick="ForumPostReply(@post.Id, '@post.ForumUser.FirstAndLastNames', '@post.CreatedAt')" 
-                        title="Ответить">Ответить</button>
+                                onclick="ForumPostReply(@post.Id, '@post.ForumUser.FirstAndLastNames', '@post.CreatedAt')"
+                                title="Ответить">
+                            Ответить
+                        </button>
+                        <button type="button" class="btn btn-light me-1"
+                                onclick="location.href='@Url.Action("UpdateForumPostLikes", "ForumHome", new {
+                                categoryId = @Context.Request.RouteValues["categoryId"],
+                                forumId = @Context.Request.RouteValues["forumId"],
+                                topicId = @Context.Request.RouteValues["topicId"],
+                                pageId = @Context.Request.RouteValues["pageId"],
+                                postId = post.Id })'"
+                                title="Поставить лайк">
+                            Лайк
+                        </button>
                     </div>
                 </div>
 
                 <div class="row border">
                     <div class="col-md-2 text-left border-end">
-                        <p class="d-flex justify-content-center">@Html.ActionLink(@post.ForumUser.FirstAndLastNames, 
-                            "ForumAccount", "Account", null)</p>
+                        <p class="d-flex justify-content-center">
+                            @Html.ActionLink(@post.ForumUser.FirstAndLastNames,
+                        "ForumAccount", "Account", null)
+                        </p>
                         <img class="rounded rounded mx-auto d-block mt-3" src="@Url.Content(@post.ForumUser.AvatarImgSrc)" alt="Empty avatar" />
                         <div>
                             <p class="m-0 mt-3 d-flex justify-content-center">Сообщений:</p>
@@ -275,15 +307,21 @@
                     </div>
                     <div class="col">
                         <div class="forum-post-body-message-main row border-left" id="forum-post-body-message-main">
-                            <div 
-                                class="forum-post-body-message-main-content-div mt-2 ml-2" 
-                                id="forum-post-body-message-main-content-div-@post.Id">@Html.Raw(post.PostText)</div>
+                            <div class="forum-post-body-message-main-content-div mt-2 ml-2"
+                                 id="forum-post-body-message-main-content-div-@post.Id">
+                                @Html.Raw(post.PostText)
+                            </div>
                         </div>
+                    </div>
+                    <div class="d-flex flex-row-reverse">
+                        <button id="post-likes" class="p-2 btn btn-light disabled" data-toggle="tooltip"
+                                data-placement="right" title="Лайки :)">
+                            @post.Likes
+                        </button>
                     </div>
                 </div>
                 <div class="forum-post-footer row">
-                    <div class="col text-center">
-                    </div>
+                    <div class="col text-center"></div>
                 </div>
             </div>
         </div>
@@ -293,14 +331,15 @@
             <div class="wrapper wrapper-content animated fadeInRight">
                 <div class="ibox-content m-b-sm justify-content-md-center text-center" id="text-area-tiny-mce-forum-post-container">
                     <textarea id="text-area-tiny-mce-forum-post-add" name="input"> </textarea>
-                    <button 
-                        id="post-add-button" 
-                        type="button" 
-                        class="btn btn-light mt-2" 
-                        onclick="return CreatePost(@Context.Request.RouteValues["categoryId"], 
-                        @Context.Request.RouteValues["forumId"], 
-                        @Context.Request.RouteValues["topicId"], 
-                        @Model.TotalPages)">Отправить сообщение</button>
+                    <button id="post-add-button"
+                            type="button"
+                            class="btn btn-light mt-2"
+                            onclick="return CreatePost(@Context.Request.RouteValues["categoryId"],
+                        @Context.Request.RouteValues["forumId"],
+                        @Context.Request.RouteValues["topicId"],
+                        @Model.TotalPages)">
+                        Отправить сообщение
+                    </button>
                 </div>
             </div>
         </div>
@@ -313,15 +352,16 @@
                     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                         @for (int i = 1; i < @Model.TotalPages + 1; i++)
                         {
-                            <button 
-                                type="button" 
-                                class="btn btn-light" 
-                                onclick="location.href='@Url.RouteUrl("TopicPosts", 
-                                new { categoryId = 
-                                    @Context.Request.RouteValues["categoryId"], 
-                                    forumId = @Context.Request.RouteValues["forumId"], 
-                                    topicId = @Context.Request.RouteValues["topicId"], 
-                                    pageId = i })'">@i</button>
+                            <button type="button"
+                                    class="btn btn-light"
+                                    onclick="location.href='@Url.RouteUrl("TopicPosts",
+                                new { categoryId =
+                                    @Context.Request.RouteValues["categoryId"],
+                                    forumId = @Context.Request.RouteValues["forumId"],
+                                    topicId = @Context.Request.RouteValues["topicId"],
+                                    pageId = i })'">
+                                @i
+                            </button>
                         }
                     </div>
                 </div>
