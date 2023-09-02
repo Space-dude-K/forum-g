@@ -34,7 +34,7 @@
                     {
                         <a class="nav-link text-dark link-success"
                            asp-area="" asp-controller="ForumHome" asp-action="ForumUserPage"
-                           asp-route-id="@userManager.FindByNameAsync(@User.Identity.Name).Result.Id">Hello, @User.Identity.Name</a>
+                           asp-route-id="@userManager.FindByNameAsync(@User.Identity.Name).Result.Id">Hello, @User.Identity.Name (личный кабинет)</a>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
