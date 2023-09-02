@@ -281,7 +281,7 @@
                                 <p class="d-flex justify-content-center">@post.CreatedAt</p>
                             </div>
 
-                            @if (@userManager.FindByNameAsync(@User.Identity.Name).Result.Id.Equals(@post.ForumUserId))
+                            @if(post.ForumUser.IsUserHasAccess)
                             {
                                 <div class="d-flex justify-content-center mb-4 mr-1">
                                     <button type="button" class="btn btn-light mr-0 ml-1"
