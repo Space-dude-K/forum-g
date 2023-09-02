@@ -13,6 +13,15 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
+                
+                @if (ViewContext.ViewData.ModelState.ErrorCount > 0)
+                {
+                    @foreach (var error in ViewContext.ModelState.Values)
+                    {
+                        <div class="text-danger me-2">@error.RawValue</div>
+                    }
+                }
+
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SiteGu</a>
                 <a class="navbar-brand" href="@Url.Content("~/swagger/index.html")">Swagger</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" 
@@ -25,11 +34,7 @@
                     {
                         <a class="nav-link text-dark link-success"
                            asp-area="" asp-controller="ForumHome" asp-action="ForumUserPage"
-                           asp-route-id="@userManager.FindByNameAsync(@User.Identity.Name).Result.Id">Hello, @User.Identity.Name</a>
-                    }
-
-                    @if (SignInManager.IsSignedIn(User))
-                    {
+                           asp-route-id="@userManager.FindByNameAsync(@User.Identity.Name).Result.Id">Hello, @User.Identity.Name (личный кабинет)</a>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>

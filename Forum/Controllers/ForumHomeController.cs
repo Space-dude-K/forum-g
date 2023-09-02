@@ -8,6 +8,9 @@ using Entities.DTO.UserDto;
 using Marvin.Cache.Headers;
 using Forum.ActionsFilters.Consumer.Forum;
 using Entities.DTO.ForumDto.Update;
+using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Hosting;
 
 namespace Forum.Controllers
 {
@@ -19,17 +22,20 @@ namespace Forum.Controllers
         private readonly ILoggerManager _logger;
         private readonly IForumModelService _forumModelService;
         private readonly IRepositoryApiManager _repositoryApiManager;
+        private readonly UserManager<AppUser> _userManager;
 
         public ForumHomeController(IMapper mapper, IWebHostEnvironment env, ILoggerManager logger,
-            IForumModelService forumModelService, IRepositoryApiManager repositoryApiManager)
+            IForumModelService forumModelService, IRepositoryApiManager repositoryApiManager, 
+            UserManager<AppUser> userManager)
         {
             _mapper = mapper;
             _env = env;
             _logger = logger;
             _forumModelService = forumModelService;
             _repositoryApiManager = repositoryApiManager;
+            _userManager = userManager;
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         public async Task<IActionResult> ForumHome()
         {
             var model = await _forumModelService
@@ -37,7 +43,7 @@ namespace Forum.Controllers
 
             return View("~/Views/Forum/ForumHome.cshtml", model);
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<ActionResult> DeleteForumBase(int categoryId, int forumId)
         {
@@ -45,7 +51,7 @@ namespace Forum.Controllers
             int userForumPosts = 0;
             var userTopics = await _repositoryApiManager.TopicApis.GetForumTopics(categoryId, forumId);
 
-            // TODO
+            // TODO. Refactoring
             foreach(var topic in userTopics)
             {
                 var userTopicPosts = 
@@ -66,17 +72,17 @@ namespace Forum.Controllers
             }
             else
             {
-                return BadRequest("Cannot delete forum base with id: " + forumId);
+                return BadRequest("Unable to delete forum base with id: " + forumId);
             }
 
             return RedirectToAction("ForumHome");
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         public async Task<IActionResult> RedirectToCreateCategory()
         {
             return View("~/Views/Forum/Add/ForumAddCategory.cshtml");
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [Route("categories/{categoryId}/forums/{forumId}/topics", Name = "ForumTopics")]
         public async Task<IActionResult> ForumTopics(int categoryId, int forumId)
         {
@@ -86,7 +92,7 @@ namespace Forum.Controllers
 
             return View("~/Views/Forum/ForumBase.cshtml", model);
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<ActionResult> DeleteTopic(int categoryId, int forumId, int topicId)
         {
@@ -110,20 +116,22 @@ namespace Forum.Controllers
 
             return RedirectToAction("ForumTopics", new { categoryId = categoryId, forumId = forumId });
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [Route("categories/{categoryId}/forums/{forumId}/topics/{topicId}/{pageId}", Name = "TopicPosts")]
         public async Task<IActionResult> TopicPosts(int categoryId, int forumId, int topicId, int pageId = 0)
         {
             int maxiumPostsPerPage = 4;
             var model = await _forumModelService
                 .GetTopicPostsForModel(categoryId, forumId, topicId, pageId, maxiumPostsPerPage);
+            int userId = (int)HttpContext.Items["userId"];
 
             // TODO. Refactoring
             var tasks = model.Posts.Select(
                 async p => new
                 {
                     Item = p,
-                    Dto = await _repositoryApiManager.ForumUserApis.GetForumUserDto(p.ForumUser.Id)
+                    Dto = await _repositoryApiManager.ForumUserApis
+                    .GetForumUserDto(p.ForumUser.Id)
                 });
             var tuples = await Task.WhenAll(tasks);
 
@@ -134,13 +142,15 @@ namespace Forum.Controllers
             {
                 user.ForumUser.TotalPostCounter = item.Dto.TotalPostCounter;
                 user.ForumUser.AvatarImgSrc = user.ForumUser.LoadAvatar(_env.WebRootPath);
+                user.ForumUser.IsUserHasAccess = user.ForumUser.Id.Equals(userId);
             }
 
-            var updateCounterRes = await _repositoryApiManager.TopicApis.IncreaseViewCounterForTopic(categoryId, forumId, topicId);
+            var updateCounterRes = await _repositoryApiManager.TopicApis
+                .IncreaseViewCounterForTopic(categoryId, forumId, topicId);
 
             return View("~/Views/Forum/ForumTopic.cshtml", model);
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         public async Task<ActionResult> DeletePost(int categoryId, int forumId, int topicId, int postId, ForumTopicViewModel model)
         {
             var res = await _repositoryApiManager.PostApis.DeleteForumPost(categoryId, forumId, topicId, postId);
@@ -162,7 +172,7 @@ namespace Forum.Controllers
             return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 
                 new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         public async Task<ActionResult> UpdatePost(int categoryId, int forumId, int topicId, int postId, int pageId, 
             ForumPostForUpdateDto forumPostForUpdateDto)
         {
@@ -173,7 +183,7 @@ namespace Forum.Controllers
                 new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = pageId }) });
         }
         [HttpCacheIgnore]
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<IActionResult> ForumUserPage(int id)
         {
@@ -184,7 +194,7 @@ namespace Forum.Controllers
             return View("~/Views/Forum/User/ForumUserPage.cshtml", model);
         }
         [HttpCacheIgnore]
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<IActionResult> UpdateForumUserPage(int id, ForumUserPageViewModel model)
         {

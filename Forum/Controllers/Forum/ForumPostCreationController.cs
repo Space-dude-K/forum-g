@@ -18,7 +18,7 @@ namespace Forum.Controllers.Forum
             _mapper = mapper;
             _repositoryApiManager = repositoryApiManager;
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [HttpPost]
         [Route("ForumPostCreation/CreateForumPost")]
         public async Task<IActionResult> CreateForumPost(int categoryId, int forumId, int topicId, int totalPages, ForumTopicViewModel model)

@@ -24,7 +24,7 @@ namespace Forum.Controllers.Forum
         {
             return View("~/Views/Forum/Add/ForumAddTopic.cshtml");
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [HttpPost]
         [Route("categories/{categoryId}/forums/{forumId}/add", Name = "ForumTopicAdd")]
         public async Task<IActionResult> CreateForumTopic(int categoryId, int forumId, ForumTopicCreationView model)

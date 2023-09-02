@@ -6,8 +6,11 @@ namespace Forum.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(string exceptionText)
         {
+            if(!string.IsNullOrEmpty(exceptionText))
+                ModelState.AddModelError("auth_error", exceptionText);
+
             return View();
         }
         public IActionResult Privacy()

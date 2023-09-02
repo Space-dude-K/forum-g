@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Entities.Models.Forum;
+using System.Net;
 
 namespace Forum.ActionsFilters.Consumer.Forum
 {
-    public class ValidateAuthorizeAttribute : IAsyncActionFilter
+    public class ValidateAuthenticationAttribute : IAsyncActionFilter
     {
         private readonly ILoggerManager _logger;
-        public ValidateAuthorizeAttribute(IRepositoryManager repository, ILoggerManager logger)
+        public ValidateAuthenticationAttribute(ILoggerManager logger)
         {
             _logger = logger;
         }
@@ -21,8 +22,15 @@ namespace Forum.ActionsFilters.Consumer.Forum
 
             if (!user.Identity.IsAuthenticated)
             {
-                _logger.LogInfo($"User id: {user.Identity.Name} is not authenticated.");
-                context.Result = new UnauthorizedResult();
+                _logger.LogInfo($"User authentication error.");
+
+                var values = new RouteValueDictionary(new
+                {
+                    action = "Index",
+                    controller = "Home",
+                    exceptionText = "Аутентифицируйтесь"
+                });
+                context.Result = new RedirectToRouteResult(values);
 
                 return;
             }

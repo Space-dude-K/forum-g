@@ -16,6 +16,7 @@
         public string PhoneNumber { get; set; }
         public string? AvatarImgSrc { get; set; }
         public int TotalPostCounter { get; set; }
+        public bool IsUserHasAccess { get; set; }
         public DateTime? CreatedAt { get; set; }
         public ICollection<string> Roles { get; set; }
     }

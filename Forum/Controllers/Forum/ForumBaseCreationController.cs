@@ -28,7 +28,7 @@ namespace Forum.Controllers.Forum
             var catAddModel = _mapper.Map<ForumBaseCreationView>(JsonConvert.DeserializeObject<ForumHomeViewModel>(model));
             return View("~/Views/Forum/Add/ForumAddForumBase.cshtml", catAddModel);
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [HttpPost]
         public async Task<IActionResult> RedirectToCreateForumBase(ForumBaseCreationView model)
         {

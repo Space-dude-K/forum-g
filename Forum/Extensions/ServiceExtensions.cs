@@ -81,7 +81,7 @@ namespace Forum.Extensions
             services.AddScoped<ValidateAppUserExistsAttribute>();
             services.AddScoped<ValidateMediaTypeAttribute>();
 
-            services.AddScoped<ValidateAuthorizeAttribute>();
+            services.AddScoped<ValidateAuthenticationAttribute>();
             services.AddScoped<ValidateForumUserExistAttribute>();
             services.AddScoped<ValidateAppUserExistAttribute>();
 

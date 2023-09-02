@@ -265,60 +265,68 @@
                 </div>
 
                 <div class="row border">
-                    <div class="col-md-2 text-left border-end">
-                        <p class="d-flex justify-content-center">
-                            @Html.ActionLink(@post.ForumUser.FirstAndLastNames,
-                        "ForumAccount", "Account", null)
-                        </p>
-                        <img class="rounded rounded mx-auto d-block mt-3" src="@Url.Content(@post.ForumUser.AvatarImgSrc)" alt="Empty avatar" />
-                        <div>
-                            <p class="m-0 mt-3 d-flex justify-content-center">Сообщений:</p>
-                            <p class="d-flex justify-content-center">@post.ForumUser.TotalPostCounter</p>
-                        </div>
-                        <div class="forum-post-body-account-date">
-                            <p class="m-0 d-flex justify-content-center">Дата регистрации:</p>
-                            <p class="d-flex justify-content-center">@post.CreatedAt</p>
-                        </div>
+                    <div class="row">
+                        <div class="col-md-2 text-left border-end">
+                            <p class="d-flex justify-content-center">
+                                @Html.ActionLink(@post.ForumUser.FirstAndLastNames,
+                            "ForumAccount", "Account", null)
+                            </p>
+                            <img class="rounded rounded mx-auto d-block mt-3" src="@Url.Content(@post.ForumUser.AvatarImgSrc)" alt="Empty avatar" />
+                            <div>
+                                <p class="m-0 mt-3 d-flex justify-content-center">Сообщений:</p>
+                                <p class="d-flex justify-content-center">@post.ForumUser.TotalPostCounter</p>
+                            </div>
+                            <div class="forum-post-body-account-date">
+                                <p class="m-0 d-flex justify-content-center">Дата регистрации:</p>
+                                <p class="d-flex justify-content-center">@post.CreatedAt</p>
+                            </div>
 
-                        @if (@userManager.FindByNameAsync(@User.Identity.Name).Result.Id.Equals(@post.ForumUserId))
-                        {
-                            <div class="d-flex justify-content-center mb-4 mr-1">
-                                <button type="button" class="btn btn-light mr-0 ml-1"
-                                        onclick="EnableEditModeForumPost(@post.Id)" title="Редактировать сообщение">
-                                    <img src="~/images/icons/bootstrap-icons-1.5.0/pencil.svg" width="12" height="12" />
-                                </button>
+                            @if(post.ForumUser.IsUserHasAccess)
+                            {
+                                <div class="d-flex justify-content-center mb-4 mr-1">
+                                    <button type="button" class="btn btn-light mr-0 ml-1"
+                                            onclick="EnableEditModeForumPost(@post.Id)" title="Редактировать сообщение">
+                                        <img src="~/images/icons/bootstrap-icons-1.5.0/pencil.svg" width="12" height="12" />
+                                    </button>
 
-                                <button type="button" class="btn btn-light mr-0 ml-1"
-                                        onclick="SaveChangesForumPost(@Context.Request.RouteValues["categoryId"],
+                                    <button type="button" class="btn btn-light mr-0 ml-1"
+                                            onclick="SaveChangesForumPost(@Context.Request.RouteValues["categoryId"],
                                 @Context.Request.RouteValues["forumId"],
                                 @Context.Request.RouteValues["topicId"],
                                 @post.Id, @Context.Request.RouteValues["pageId"])" title="Сохранить изменения">
-                                    <img src="~/images/icons/bootstrap-icons-1.5.0/save.svg" width="12" height="12" />
-                                </button>
+                                        <img src="~/images/icons/bootstrap-icons-1.5.0/save.svg" width="12" height="12" />
+                                    </button>
 
-                                <button type="button" class="btn btn-light mr-1 ml-1"
-                                        onclick="DeleteForumPost(@Context.Request.RouteValues["categoryId"],
+                                    <button type="button" class="btn btn-light mr-1 ml-1"
+                                            onclick="DeleteForumPost(@Context.Request.RouteValues["categoryId"],
                                 @Context.Request.RouteValues["forumId"],
                                 @Context.Request.RouteValues["topicId"], @post.Id)" title="Удалить сообщение">
-                                    <img src="~/images/icons/bootstrap-icons-1.5.0/recycle.svg" width="12" height="12" />
-                                </button>
-                            </div>
-                        }
-                    </div>
-                    <div class="col">
-                        <div class="forum-post-body-message-main row border-left" id="forum-post-body-message-main">
-                            <div class="forum-post-body-message-main-content-div mt-2 ml-2"
-                                 id="forum-post-body-message-main-content-div-@post.Id">
-                                @Html.Raw(post.PostText)
+                                        <img src="~/images/icons/bootstrap-icons-1.5.0/recycle.svg" width="12" height="12" />
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                        <div class="col">
+                            <div class="forum-post-body-message-main row border-left" id="forum-post-body-message-main">
+                                <div class="forum-post-body-message-main-content-div mt-2 ml-2"
+                                     id="forum-post-body-message-main-content-div-@post.Id">
+                                    @Html.Raw(post.PostText)
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex flex-row-reverse">
-                        <button id="post-likes" class="p-2 btn btn-light disabled" data-toggle="tooltip"
-                                data-placement="right" title="Лайки :)">
-                            @post.Likes
-                        </button>
+                    <div class="row">
+                        <div id="file-row" class="col-md-2 border-end">
+                            <link href="../Styles.css" rel="stylesheet" type="text/css" />
+                        </div>
+                        <div class="col d-flex flex-row-reverse">
+                            <button id="post-likes" class="p-2 btn btn-light disabled" data-toggle="tooltip"
+                                    data-placement="right" title="Лайки :)">
+                                @post.Likes
+                            </button>
+                        </div>
                     </div>
+                    
                 </div>
                 <div class="forum-post-footer row">
                     <div class="col text-center"></div>
