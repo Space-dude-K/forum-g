@@ -23,7 +23,7 @@ namespace Forum.Controllers.Forum
         {
             return View("~/Views/Forum/Add/ForumAddCategory.cshtml");
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [HttpPost]
         public async Task<IActionResult> RedirectToCreateCategory(ForumCategoryCreationView model)
         {

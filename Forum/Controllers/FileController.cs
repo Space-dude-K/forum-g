@@ -25,7 +25,7 @@ namespace Forum.Controllers
             _logger = logger;
             _repositoryApiManager = repositoryApiManager;
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [HttpPost]
         public async Task<IActionResult> UploadFileForUser(IFormFile uploadedFile)
         {

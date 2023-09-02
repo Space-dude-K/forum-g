@@ -29,15 +29,16 @@ namespace Forum.Controllers
             _forumModelService = forumModelService;
             _repositoryApiManager = repositoryApiManager;
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         public async Task<IActionResult> ForumHome()
         {
+            
             var model = await _forumModelService
                 .GetForumCategoriesAndForumBasesForModel();
 
             return View("~/Views/Forum/ForumHome.cshtml", model);
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<ActionResult> DeleteForumBase(int categoryId, int forumId)
         {
@@ -71,12 +72,12 @@ namespace Forum.Controllers
 
             return RedirectToAction("ForumHome");
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         public async Task<IActionResult> RedirectToCreateCategory()
         {
             return View("~/Views/Forum/Add/ForumAddCategory.cshtml");
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [Route("categories/{categoryId}/forums/{forumId}/topics", Name = "ForumTopics")]
         public async Task<IActionResult> ForumTopics(int categoryId, int forumId)
         {
@@ -86,7 +87,7 @@ namespace Forum.Controllers
 
             return View("~/Views/Forum/ForumBase.cshtml", model);
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<ActionResult> DeleteTopic(int categoryId, int forumId, int topicId)
         {
@@ -110,7 +111,7 @@ namespace Forum.Controllers
 
             return RedirectToAction("ForumTopics", new { categoryId = categoryId, forumId = forumId });
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [Route("categories/{categoryId}/forums/{forumId}/topics/{topicId}/{pageId}", Name = "TopicPosts")]
         public async Task<IActionResult> TopicPosts(int categoryId, int forumId, int topicId, int pageId = 0)
         {
@@ -140,7 +141,7 @@ namespace Forum.Controllers
 
             return View("~/Views/Forum/ForumTopic.cshtml", model);
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         public async Task<ActionResult> DeletePost(int categoryId, int forumId, int topicId, int postId, ForumTopicViewModel model)
         {
             var res = await _repositoryApiManager.PostApis.DeleteForumPost(categoryId, forumId, topicId, postId);
@@ -162,7 +163,7 @@ namespace Forum.Controllers
             return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 
                 new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
         }
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         public async Task<ActionResult> UpdatePost(int categoryId, int forumId, int topicId, int postId, int pageId, 
             ForumPostForUpdateDto forumPostForUpdateDto)
         {
@@ -173,7 +174,7 @@ namespace Forum.Controllers
                 new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = pageId }) });
         }
         [HttpCacheIgnore]
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<IActionResult> ForumUserPage(int id)
         {
@@ -184,7 +185,7 @@ namespace Forum.Controllers
             return View("~/Views/Forum/User/ForumUserPage.cshtml", model);
         }
         [HttpCacheIgnore]
-        [ServiceFilter(typeof(ValidateAuthorizeAttribute))]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         [ServiceFilter(typeof(ValidateForumUserExistAttribute))]
         public async Task<IActionResult> UpdateForumUserPage(int id, ForumUserPageViewModel model)
         {
