@@ -9,6 +9,7 @@ using NLog;
 using Services;
 using Forum.Utility.UserLinks;
 using Services.Forum;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Forum
 {
@@ -27,7 +28,24 @@ namespace Forum
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureCors();
+
             services.ConfigureIISIntegration();
+            /*services.Configure<IISServerOptions>(options =>
+            {
+                options.MaxRequestBodySize = int.MaxValue;
+            });
+            services.Configure<FormOptions>(o =>
+            {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MultipartBoundaryLengthLimit = int.MaxValue;
+                o.MultipartHeadersCountLimit = int.MaxValue;
+                o.MultipartHeadersLengthLimit = int.MaxValue;
+                o.BufferBodyLengthLimit = int.MaxValue;
+                o.BufferBody = true;
+                o.ValueCountLimit = int.MaxValue;
+            });*/
+
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(Configuration);
 
@@ -150,8 +168,8 @@ namespace Forum
             app.UseSwagger();
             app.UseSwaggerUI(s =>
             {
-                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Site API v1");
-                s.SwaggerEndpoint("/swagger/v2/swagger.json", "Site API v2");
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Forum API v1");
+                s.SwaggerEndpoint("/swagger/v2/swagger.json", "Forum API v2");
             });
 
         }

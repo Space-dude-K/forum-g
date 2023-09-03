@@ -25,8 +25,10 @@ namespace Forum.Controllers
             _logger = logger;
             _repositoryApiManager = repositoryApiManager;
         }
-        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
+        [RequestSizeLimit(100 * 1024 * 1024)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 100 * 1024 * 1024)]
         [HttpPost]
+        [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
         public async Task<IActionResult> UploadFileForUser(IFormFile uploadedFile)
         {
             int userId = (int)HttpContext.Items["userId"];
@@ -51,7 +53,8 @@ namespace Forum.Controllers
                 var fileToDb = _mapper.Map<ForumFileDto>(file);
                 fileToDb.ForumUserId = userId;
 
-                var fileFromDb = await _repositoryApiManager.FileApis.GetForumFileByUserId(userId);
+                var fileFromDb = await _repositoryApiManager.FileApis
+                    .GetForumFileByUserId(userId);
                 if (fileFromDb != null)
                 {
                     var updateRes = _repositoryApiManager.FileApis.UpdateForumFile(fileFromDb.ForumUserId, fileToDb);
