@@ -11,6 +11,39 @@
         document.getElementById("userPage").src = document.getElementById("userPage").src + "?t=" + d;
     });
 </script>
+<script>
+    function ValidateImages()
+    {
+        var maxFileSize = 4194304; // 4MB -> 4 * 1024 * 1024
+        var fileUpload = $('#fileUpload');
+        var button = $('#fileUploadButton');
+
+        if (fileUpload.val() == '')
+        {
+            alert('Пожалуйста, выберите файл.');
+            button.prop('disabled', true);
+            return false;
+        }
+        else
+        {
+            if (fileUpload[0].files[0].size < maxFileSize)
+            {
+                button.prop('disabled', false);
+                return true;
+            } 
+            else
+            {
+                alert('Файл слишком большой. Выберите файл меньше ' 
+                + maxFileSize / 1024 / 1024 + ' мб.');
+
+                fileUpload.val('');
+                button.prop('disabled', true);
+
+                return false;
+            }
+        }
+    }
+</script>
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
@@ -27,8 +60,9 @@
                     <h3 class="text-center">Изменить аватар</h3>
                     <form asp-action="UploadFileForUser" asp-controller="File"
                           method="post" enctype="multipart/form-data" class="input-group mb-3 justify-content-center">
-                        <input type="file" name="uploadedFile" accept=".jpg" class="custom-file-input btn btn-outline-secondary" /><br>
-                        <input type="submit" value="Загрузить" class="btn btn-outline-secondary" />
+                        <input type="file" id="fileUpload" onchange="ValidateImages()" name="uploadedFile" 
+                            accept=".jpg" class="custom-file-input btn btn-outline-secondary" /><br>
+                        <input disabled type="submit" id="fileUploadButton" value="Загрузить" class="btn btn-outline-secondary" />
                     </form>
                 </div>
                 
