@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 Forum/wwwroot/images/avatars/*
+Forum/wwwroot/attachments/*
 !Forum/wwwroot/images/avatars/EmptyAvatar.jpg
 
 # User-specific files (MonoDevelop/Xamarin Studio)

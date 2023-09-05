@@ -85,6 +85,7 @@ namespace Services.Forum
             int forumId, int topicId, int pageNumber, int pageSize)
         {
             ForumTopicViewModel forumHomeViewModel = new();
+
             var topicAuthor = await _repositoryApiManager.ForumUserApis.GetForumUser(topicId);
             forumHomeViewModel.SubTopicAuthor = topicAuthor.FirstAndLastNames;
 
@@ -101,6 +102,17 @@ namespace Services.Forum
 
             forumHomeViewModel.Posts = await _repositoryApiManager
                 .TopicApis.GetTopicPosts(categoryId, forumId, topicId, pageNumber, pageSize);
+
+            foreach(var post in forumHomeViewModel.Posts)
+            {
+                var forumFiles = await _repositoryApiManager.FileApis
+                    .GetForumFilesByUserAndPostId(post.ForumUserId, post.Id);
+
+                if(forumFiles != null && forumFiles.Count > 0)
+                {
+                    post.ForumFiles = new(forumFiles);
+                }
+            }
 
             var postUserTask = forumHomeViewModel.Posts.Select(async p => p.ForumUser = 
             await _repositoryApiManager.ForumUserApis.GetForumUser(p.ForumUserId));

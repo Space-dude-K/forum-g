@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Forum.ActionsFilters.API;
 using Forum.ActionsFilters.API.File;
+using Entities.DTO.ForumDto;
+using Entities.RequestFeatures.Forum;
+using Forum.Utility.ForumLinks;
+using Forum.ModelBinders;
 
 namespace Forum.ApiControllers.File
 {
@@ -57,6 +61,36 @@ namespace Forum.ApiControllers.File
             }
 
             return Ok(file);
+        }
+        /// <summary>
+        /// Gets the file for user avatar
+        /// </summary>
+        /// <param name="forumUserId"></param>
+        /// <param name="postId"></param>
+        /// <returns>The file</returns>
+        /// <response code="200">User avatar image</response>
+        /// <response code="401">If unauthorized</response>
+        /// <response code="400">If forum user not found</response>
+        /// /// <response code="401">If file doesn't exist</response>
+        [HttpGet("file/{forumUserId}/{postId}", Name = "GetForumFileByUserAndPostId")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
+        public async Task<IActionResult> GetForumFileByUserAndPostId(int forumUserId, int postId)
+        {
+            if (forumUserId == 0)
+                return BadRequest("Bad request. Missing forum user id.");
+
+            var files = await _repository.ForumFile.GetFilesAsync(forumUserId, postId, trackChanges: false);
+
+            /*if (file == null)
+            {
+                _logger.LogInfo($"File with user id: {forumUserId} doesn't exist in the database.");
+                return NotFound();
+            }*/
+
+            return Ok(files);
         }
         /// <summary>
         /// Writes the file data for the user avatar

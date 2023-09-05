@@ -6,6 +6,106 @@
 
 <script src="~/lib/tinymce/tinymce.min.js"></script>
 <script>
+    var uploadedFileCounter = 0;
+    function UpdateTextForToolbarAttachmentCounter(counterValue)
+    {
+        let uploadedFilesCounterToolbarName = 'Файлов к загрузке';
+        let deleteFilesToolbarName = 'Удалить вложения';
+
+        var $button = $('span:contains(' + deleteFilesToolbarName + ')').closest('button');
+
+        if (counterValue > 0)
+        {
+            $button.attr("class", "tox-tbtn tox-tbtn--select");
+            $button.attr("aria-disabled", "false");
+        }
+        else
+        {
+            $button.attr("class", "tox-tbtn tox-tbtn--select tox-tbtn--disabled");
+            $button.attr("aria-disabled", "true");
+        }
+
+        let uploadedFilesCounterToolbar = $('span:contains(' + uploadedFilesCounterToolbarName + ')');
+        let newTextForCounter = uploadedFilesCounterToolbarName + ': ' + counterValue;
+        uploadedFilesCounterToolbar.text(newTextForCounter);
+    }
+    function IsDuplicate(fileName)
+    {
+        let isDuplicate = true;
+        let inputs = $("#tiny-mce-file-container-attachments").find("input[type=file]");
+
+        if(inputs.length > 0)
+        {
+            inputs.each(function (index, field)
+            {
+                let fieldFile = field.value.split("\\").pop();
+
+                if (fieldFile === fileName)
+                {
+                    return true;
+                }
+
+                isDuplicate = false;
+            });
+        }
+        else
+        {
+            isDuplicate = false;
+        }
+
+        return isDuplicate;
+    }
+    function ValidateImages()
+    {
+        var maxFileSize = 4194304; // 4MB -> 4 * 1024 * 1024
+        var fileUploadInput = $('#tiny-mce-file-input');
+
+        if (fileUploadInput.val() == '')
+        {
+            alert('Пожалуйста, выберите файл.');
+        }
+        else
+        {
+            var file = fileUploadInput[0].files[0];
+            var isDuplicate = IsDuplicate($('#tiny-mce-file-input').val().split("\\").pop());
+
+            if (!isDuplicate)
+            {
+                if (file.size < maxFileSize)
+                {
+                    var newFileInputName = 'tiny-mce-uploaded-file-' + uploadedFileCounter++;
+                    jQuery('<input>',
+                        {
+                            id: newFileInputName,
+                            style: 'visibility:hidden',
+                            type: 'file',
+                            accept: '*.*',
+                            class: 'custom-file-input btn btn-outline-secondary'
+                        }).appendTo('#tiny-mce-file-container-attachments');
+
+                    $('#' + newFileInputName).prop("files", fileUploadInput.prop("files"));
+
+                    UpdateTextForToolbarAttachmentCounter(uploadedFileCounter);
+                }
+                else
+                {
+                    alert('Файл слишком большой. Выберите файл меньше ' + maxFileSize / 1024 / 1024 + ' мб.');
+
+                    fileUploadInput.val('');
+                }
+            }
+            else
+            {
+                alert('Такой файл уже загружен. Выберите другой.');
+            }
+        }
+
+        fileUploadInput.val('');
+        $('#tiny-mce-file-input').val('');
+        file = null;
+    }
+</script>
+<script>
     tinymce.init({
         selector: "#text-area-tiny-mce-forum-post-add",
         language: 'ru',
@@ -20,7 +120,44 @@
         toolbar: 'undo redo | formatselect | ' +
             'bold italic backcolor | alignleft aligncenter ' +
             'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help',
+            'removeformat | file counter dfiles | help',
+        setup: function (editor)
+        {
+            editor.ui.registry.addButton('file', 
+            {
+                text: 'Добавить вложения',
+                onAction: function (_)
+                {
+                    var fileInput = $('#tiny-mce-file-input');
+                    fileInput.click();
+                }
+            });
+            editor.ui.registry.addButton('counter',
+                {
+                text: 'Файлов к загрузке',
+                disabled: true,
+                onAction: function (_)
+                {}
+            });
+            editor.ui.registry.addButton('dfiles',
+            {
+                text: 'Удалить вложения',
+                disabled: true,
+                onAction: function (_)
+                {
+                    if (confirm("Удалить все вложения?"))
+                    {
+                        $('#tiny-mce-file-container-attachments').children().each(function ()
+                        {
+                            this.remove();
+                            uploadedFileCounter--;
+                        });
+
+                        UpdateTextForToolbarAttachmentCounter(uploadedFileCounter);
+                    }  
+                }
+            });
+        },
         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
     });
 </script>
@@ -51,6 +188,131 @@
     tinymce.init(postViewConfig);
 </script>
 <script>
+    // TODO. Refactoring
+    function UploadFilesAndCreatePost(categoryId, forumId, topicId, totalPages)
+    {
+        var postText = (((tinyMCE.get("text-area-tiny-mce-forum-post-add").getContent())
+            .replace(/(&nbsp;)*/g, ""))
+            .replace(/(<p>)*/g, ""))
+            .replace(/<(\/)?p[^>]*>/g, "");
+
+        if (jQuery.isEmptyObject(postText))
+        {
+            console.log('Сообщение не может быть пустым.');
+            alert('Сообщение не может быть пустым.');
+        }
+        else
+        {
+            if (uploadedFileCounter > 0)
+            {
+                var formData = new FormData();
+                $("#tiny-mce-file-container-attachments").find("input[type=file]").each(function (index, field)
+                {
+                    formData.append("files", field.files[0]);
+
+                    this.remove();
+                    uploadedFileCounter--;
+                });
+
+                UpdateTextForToolbarAttachmentCounter(uploadedFileCounter);
+                
+                $.ajax(
+                    {
+                        type: "POST",
+                        data: { categoryId: categoryId, forumId: forumId, topicId: topicId, totalPages: totalPages, postText: postText },
+                        url: "@Url.Action("CreateForumPost", "ForumPostCreation")",
+                        success: function (res)
+                        {
+                            formData.append("createdPostId", res.createdPostId);
+                        },
+                        error: function (err)
+                        {
+                            console.log('Create post attachments error.');
+                        }
+                    })
+                    .then(function (createdPostRes)
+                    {
+                        return $.ajax(
+                            {
+                                type: 'POST',
+                                url: '/file/UploadFilesForUser',
+                                data: formData,
+                                crossDomain: true,
+                                processData: false,
+                                contentType: false,
+                                success: function ()
+                                {
+                                    window.location.href = createdPostRes.redirectToUrl;
+                                },
+                                error: function (data)
+                                {
+                                    console.log('Create post attachments error.');
+                                }
+                            })
+                    })
+                    .done(function ()
+                    {
+                        console.log('Post with attachments -> completed.');
+                    })
+            }
+            else
+            {
+                $.ajax(
+                    {
+                        type: "POST",
+                        data: { categoryId: categoryId, forumId: forumId, topicId: topicId, totalPages: totalPages, postText: postText },
+                        url: "@Url.Action("CreateForumPost", "ForumPostCreation")",
+                        success: function (res)
+                        {
+                            window.location.href = res.redirectToUrl;
+                        },
+                        error: function (err)
+                        {
+                            console.log('Create post without attachments error.');
+                        }
+                    })
+            }
+        }
+    }
+    function UploadFiles()
+    {
+        var formData = new FormData();
+        $("#tiny-mce-file-container-attachments").find("input[type=file]").each(function (index, field)
+        {
+            for (var i = 0; i < field.files.length; i++)
+            {
+                formData.append("files", field.files[i]);
+            }
+
+            this.remove();
+            uploadedFileCounter--;
+        });
+
+        UpdateTextForToolbarAttachmentCounter(uploadedFileCounter);
+
+        alert(Array.from(formData.keys()).length + ' ' + uploadedFileCounter);
+
+        return $.ajax(
+            {
+                type: 'POST',
+                url: '/file/UploadFilesForUser',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                crossDomain: true,
+                success: function (data)
+                {
+                    console.log(data);
+                },
+                error: function (data)
+                {
+                    //alert(data);
+                    //console.log(data);
+                    alert(data.responseJSON.error);
+                }
+            })
+    }
     function CreatePost(categoryId, forumId, topicId, totalPages)
     {
         var postText = (((tinyMCE.get("text-area-tiny-mce-forum-post-add").getContent())
@@ -65,50 +327,20 @@
         }
         else
         {
-            $.ajax(
+                $.ajax(
                 {
                     type: "POST",
                     data: { categoryId: categoryId, forumId: forumId, topicId: topicId, totalPages: totalPages, postText: postText },
-                    url: "@Url.Action("CreateForumPost", "ForumPostCreation")"
-                })
-                .done(function (r)
-                {
-                    window.location.href = r.redirectToUrl;
-                    //window.location.href = r.redirectToUrl + "?c=" + (new Date()).valueOf();
-                })
-                .fail(function (jqXHR, exception)
-                {
-                    var msg = '';
-                    if (jqXHR.status === 0)
+                    url: "@Url.Action("CreateForumPost", "ForumPostCreation")",
+                    beforeSend: function ()
                     {
-                        msg = 'Not connect.\n Verify Network.';
-                    } else if (jqXHR.status == 404)
+                        
+                    },
+                    success: function(r)
                     {
-                        msg = 'Requested page not found. [404]';
-                    } else if (jqXHR.status == 500)
-                    {
-                        msg = 'Internal Server Error [500].';
-                    } else if (exception === 'parsererror')
-                    {
-                        msg = 'Requested JSON parse failed.';
-                    } else if (exception === 'timeout')
-                    {
-                        msg = 'Time out error.';
-                    } else if (exception === 'abort')
-                    {
-                        msg = 'Ajax request aborted.';
-                    } else
-                    {
-                        msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                        window.location.href = r.redirectToUrl;
                     }
-
-                    console.log("Ошибка при создании сообщения: " + msg);
-                    //$('#post').html(msg);
                 })
-                .always(function ()
-                {
-                    console.log("CreatePost - complete.");
-                });;
         }
     }
 </script>
@@ -328,13 +560,24 @@
                     </div>
                     
                 </div>
-                <div class="forum-post-footer row">
-                    <div class="col text-center"></div>
+
+                <div class="forum-post-footer-attachments row border border-top-0">
+                    @if (@post.ForumFiles.Count > 0)
+                    {
+                        <div id="post-attachments" class="text-center text-center">
+                            <h6>Вложения:</h6>
+                            @foreach (var file in post.ForumFiles)
+                            {
+                                <a class="link-primary m-2" href="@Url.Content(@file.Path)">@file.Name</a>
+                            }
+                        </div>
+                    }
+                    
                 </div>
             </div>
         </div>
     }
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-lg-12">
             <div class="wrapper wrapper-content animated fadeInRight">
                 <div class="ibox-content m-b-sm justify-content-md-center text-center" id="text-area-tiny-mce-forum-post-container">
@@ -342,7 +585,7 @@
                     <button id="post-add-button"
                             type="button"
                             class="btn btn-light mt-2"
-                            onclick="return CreatePost(@Context.Request.RouteValues["categoryId"],
+                            onclick="UploadFilesAndCreatePost(@Context.Request.RouteValues["categoryId"],
                         @Context.Request.RouteValues["forumId"],
                         @Context.Request.RouteValues["topicId"],
                         @Model.TotalPages)">
@@ -352,7 +595,21 @@
             </div>
         </div>
     </div>
-
+    <@* div class="row">
+        <input id="tiny-mce-file-input" type="file" style="visibility:hidden" />
+    </div> *@
+    <div id="tiny-mce-file-container" style="display:none">
+        <form asp-action="UploadFilesForUser" asp-controller="File"
+                method="post" enctype="multipart/form-data" class="input-group mb-3 justify-content-center">
+                <input style="visibility:hidden" type="file" id="tiny-mce-file-input" onchange="ValidateImages();"
+                accept="*.*" class="custom-file-input btn btn-outline-secondary" /><br>
+                <div id="tiny-mce-file-container-attachments"></div>
+                <button id="tiny-mce-file-container-attachments-save" type="submit" value="Submit" class="btn btn-secondary mt-2"></button>
+        </form>
+        
+        @* <input style="visibility:hidden" type="file" id="tiny-mce-file-selected-files"
+                accept="*.*" class="custom-file-input btn btn-outline-secondary" /><br> *@
+    </div>
     <div class="row mt-3 ">
         <div class="col-lg-12">
             <div class="wrapper wrapper-content animated fadeInRight">

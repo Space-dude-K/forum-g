@@ -10,7 +10,7 @@ namespace Interfaces.Forum.API
 {
     public interface IForumPostApiRepository
     {
-        Task<bool> CreateForumPost(int categoryId, int forumId, int topicId, ForumPostForCreationDto post);
+        Task<int> CreateForumPost(int categoryId, int forumId, int topicId, ForumPostForCreationDto post);
         Task<bool> DeleteForumPost(int categoryId, int forumId, int topicId, int postId);
         Task<int> GetTopicPostCount(int topicId);
         Task<bool> UpdatePost(int categoryId, int forumId, int topicId, int postId, ForumPostForUpdateDto newPostDto);

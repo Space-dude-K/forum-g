@@ -28,7 +28,7 @@ namespace Forum.ActionsFilters.Consumer.Forum
                 {
                     action = "Index",
                     controller = "Home",
-                    exceptionText = "Аутентифицируйтесь"
+                    exceptionText = "Авторизируйтесь"
                 });
                 context.Result = new RedirectToRouteResult(values);
 
