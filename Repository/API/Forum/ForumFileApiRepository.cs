@@ -40,7 +40,8 @@ namespace Repository.API.Forum
 
             var jsonContent = JsonConvert.SerializeObject(file);
 
-            var response = await _httpForumService.Client.PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+            var response = await _httpForumService.Client
+                .PostAsync(uri, new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
