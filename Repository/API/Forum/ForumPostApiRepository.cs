@@ -100,9 +100,9 @@ namespace Repository.API.Forum
 
             return result;
         }
-        public async Task<bool> CreateForumPost(int categoryId, int forumId, int topicId, ForumPostForCreationDto post)
+        public async Task<int> CreateForumPost(int categoryId, int forumId, int topicId, ForumPostForCreationDto post)
         {
-            bool result = false;
+            int createdPostId = 0;
             string uri = "api/categories/" 
                 + categoryId.ToString() + "/forums/" + forumId.ToString() + "/topics/" + topicId.ToString() + "/posts";
 
@@ -113,14 +113,17 @@ namespace Repository.API.Forum
 
             if (response.IsSuccessStatusCode)
             {
-                result = true;
+                var rawData = await response.Content.ReadAsStringAsync();
+                var createdPostDto = JsonConvert.DeserializeObject<ForumPostDto>(rawData);
+                createdPostId = createdPostDto.Id;
+                _logger.LogInfo($"Created post id: {createdPostId}");
             }
             else
             {
                 _logger.LogError($"Unable create post for topic id: {topicId}");
             }
 
-            return result;
+            return createdPostId;
         }
         public async Task<bool> UpdatePostCounter(int topicId, bool incresase, int postCountToDelete = 0)
         {

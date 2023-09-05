@@ -26,13 +26,14 @@ namespace Forum.Controllers.Forum
             /*if (!ModelState.IsValid)
                 return BadRequest(ModelState);*/
 
+            int createdPostId = 0;
             int userId = (int)HttpContext.Items["userId"];
             var postToAdd = _mapper.Map<ForumPostForCreationDto>(model);
 
             if(userId > 0)
             {
                 postToAdd.ForumUserId = userId;
-                var res = await _repositoryApiManager.PostApis.CreateForumPost(categoryId, forumId, topicId, postToAdd);
+                createdPostId = await _repositoryApiManager.PostApis.CreateForumPost(categoryId, forumId, topicId, postToAdd);
                 var resCounter = await _repositoryApiManager.PostApis.UpdatePostCounter(topicId, true);
                 var resUserCounter = await _repositoryApiManager.PostApis.UpdatePostCounterForUser(userId, true);
 
@@ -44,8 +45,9 @@ namespace Forum.Controllers.Forum
                 return BadRequest("User ID error.");
             }
 
-            return Json(new { redirectToUrl = Url.Action("TopicPosts", "ForumHome", 
-                new { categoryId = categoryId, forumId = forumId, topicId = topicId, pageId = model.TotalPages }) });
+            //return Json(new { createdPostId = createdPostId });
+            return Json(new { createdPostId, 
+                redirectToUrl = Url.Action("TopicPosts", "ForumHome", new { categoryId, forumId, topicId, pageId = model.TotalPages }) });
         }
     }
 }

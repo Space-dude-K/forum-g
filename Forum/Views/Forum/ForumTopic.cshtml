@@ -125,53 +125,23 @@
                 {}
             });
             editor.ui.registry.addButton('dfiles',
-                {
-                    text: 'Удалить вложения',
-                    onAction: function (_)
-                    {
-                        if (confirm("Удалить все вложения?"))
-                        {
-                            alert(uploadedFileCounter);
-
-                            $('#tiny-mce-file-container-attachments').children().each(function ()
-                            {
-                                this.remove();
-                                uploadedFileCounter--;
-                            });
-
-                            alert(uploadedFileCounter);
-                            UpdateTextForToolbarAttachmentCounter(uploadedFileCounter);
-                        }  
-                    }
-                });
-
-            var toTimeHtml = function (date)
             {
-                return '<time datetime="' + date.toString() + '">' + date.toDateString() + '</time>';
-            };
-
-            editor.ui.registry.addButton('customDateButton', 
-            {
-                icon: 'insert-time',
-                tooltip: 'Insert Current Date',
-                disabled: true,
+                text: 'Удалить вложения',
                 onAction: function (_)
                 {
-                    editor.insertContent(toTimeHtml(new Date()));
-                },
-                onSetup: function (buttonApi)
-                {
-                    var editorEventCallback = function (eventApi)
+                    if (confirm("Удалить все вложения?"))
                     {
-                        buttonApi.setDisabled(eventApi.element.nodeName.toLowerCase() === 'time');
-                    };
-                    editor.on('NodeChange', editorEventCallback);
+                        alert(uploadedFileCounter);
 
-                    /* onSetup should always return the unbind handlers */
-                    return function (buttonApi)
-                    {
-                        editor.off('NodeChange', editorEventCallback);
-                    };
+                        $('#tiny-mce-file-container-attachments').children().each(function ()
+                        {
+                            this.remove();
+                            uploadedFileCounter--;
+                        });
+
+                        alert(uploadedFileCounter);
+                        UpdateTextForToolbarAttachmentCounter(uploadedFileCounter);
+                    }  
                 }
             });
         },
@@ -225,8 +195,6 @@
                 var formData = new FormData();
                 $("#tiny-mce-file-container-attachments").find("input[type=file]").each(function (index, field)
                 {
-                    
-
                     for (var i = 0; i < field.files.length; i++)
                     {
                         //alert(field.files[i].filename);
@@ -246,40 +214,40 @@
                 });
 
                 UpdateTextForToolbarAttachmentCounter(uploadedFileCounter);
+                
                 $.ajax(
                     {
-                        type: 'POST',
-                        url: '/file/UploadFilesForUser',
-                        data: formData,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        crossDomain: true,
-                        success: function (data)
+                        type: "POST",
+                        data: { categoryId: categoryId, forumId: forumId, topicId: topicId, totalPages: totalPages, postText: postText },
+                        url: "@Url.Action("CreateForumPost", "ForumPostCreation")",
+                        success: function (res)
                         {
-                            console.log(data);
+                            formData.append("createdPostId", res.createdPostId);
                         },
-                        error: function (data)
+                        error: function (err)
                         {
-                            alert(data.responseJSON.error);
+                            console.log('Create post attachments error.');
                         }
                     })
-                    .then(function ()
+                    .then(function (createdPostRes)
                     {
                         return $.ajax(
                             {
-                                type: "POST",
-                                data: { categoryId: categoryId, forumId: forumId, topicId: topicId, totalPages: totalPages, postText: postText },
-                                url: "@Url.Action("CreateForumPost", "ForumPostCreation")",
-                                beforeSend: function ()
+                                type: 'POST',
+                                url: '/file/UploadFilesForUser',
+                                data: formData,
+                                crossDomain: true,
+                                processData: false,
+                                contentType: false,
+                                success: function ()
                                 {
-
+                                    window.location.href = createdPostRes.redirectToUrl;
                                 },
-                                success: function (r)
+                                error: function (data)
                                 {
-                                    window.location.href = r.redirectToUrl;
+                                    console.log('Create post attachments error.');
                                 }
-                            }) //second ajax call
+                            })
                     })
                     .done(function (resp)
                     {
@@ -293,13 +261,13 @@
                         type: "POST",
                         data: { categoryId: categoryId, forumId: forumId, topicId: topicId, totalPages: totalPages, postText: postText },
                         url: "@Url.Action("CreateForumPost", "ForumPostCreation")",
-                        beforeSend: function ()
+                        success: function (res)
                         {
-
+                            window.location.href = res.redirectToUrl;
                         },
-                        success: function (r)
+                        error: function (err)
                         {
-                            window.location.href = r.redirectToUrl;
+                            console.log('Create post without attachments error.');
                         }
                     })
             }

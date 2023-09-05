@@ -30,9 +30,15 @@ namespace Forum.Controllers
         [RequestFormLimits(MultipartBodyLengthLimit = 1000 * 1024 * 1024)]
         [HttpPost]
         [ServiceFilter(typeof(ValidateAuthenticationAttribute))]
-        public async Task<IActionResult> UploadFilesForUser(List<IFormFile> files)
+        public async Task<IActionResult> UploadFilesForUser(int createdPostId, List<IFormFile> files)
         {
             int userId = (int)HttpContext.Items["userId"];
+
+            // TODO
+            if(createdPostId == 0)
+            {
+                return BadRequest("Bad request for file creation");
+            }
 
             if(files.Count > 0)
             {
@@ -43,9 +49,8 @@ namespace Forum.Controllers
                         + DateTime.Now.ToString("_dd-MM-yyyy-HH-mm-ss") + fileExt;
                     string filePath = "/attachments/" + User.Identity.Name + "/" + fileName;
 
-                    ForumFile forumFile = new() { Name = fileName, Path = filePath };
+                    ForumFile forumFile = new() { Name = fileName, Path = filePath, ForumUserId = userId, ForumPostId = createdPostId };
                     var fileToDb = _mapper.Map<ForumFileDto>(forumFile);
-                    fileToDb.ForumUserId = userId;
 
                     // TODO. Path.Combine
                     string fullPathToFile = _env.WebRootPath + filePath;

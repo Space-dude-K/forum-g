@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Entities.Models.File;
+using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Models.Forum
 {
@@ -15,5 +16,7 @@ namespace Entities.Models.Forum
         public int? ForumTopicId { get; set; }
         public virtual ForumUser? ForumUser { get; set; }
         public int? ForumUserId { get; set; }
+        public virtual ICollection<ForumFile>? ForumFiles { get; set; }
+        public int ForumFileId { get; set; }
     }
 }

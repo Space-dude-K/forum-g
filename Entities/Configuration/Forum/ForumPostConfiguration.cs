@@ -46,6 +46,11 @@ namespace Entities.Configuration.Forum
                 .WithMany()
                 .HasConstraintName("FK_ForumPost_ForumUser_Id")
                 .OnDelete(DeleteBehavior.SetNull);
+            builder
+                .HasMany(p => p.ForumFiles)
+                .WithOne(p => p.ForumPost)
+                .HasConstraintName("FK_ForumPost_ForumFile_Id")
+                .OnDelete(DeleteBehavior.SetNull);
             #endregion
             #region DbDataSeed
             builder.HasData(
