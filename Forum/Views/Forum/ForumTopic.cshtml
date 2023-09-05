@@ -10,6 +10,21 @@
     function UpdateTextForToolbarAttachmentCounter(counterValue)
     {
         let uploadedFilesCounterToolbarName = 'Файлов к загрузке';
+        let deleteFilesToolbarName = 'Удалить вложения';
+        //let uploadedFilesCounterToolbar = $('span:contains(' + deleteFilesToolbarName + ')').parent();
+        var $button = $('span:contains(' + deleteFilesToolbarName + ')').closest('button');
+
+        if (counterValue > 0)
+        {
+            $button.attr("class", "tox-tbtn tox-tbtn--select");
+            $button.attr("aria-disabled", "false");
+        }
+        else
+        {
+            $button.attr("class", "tox-tbtn tox-tbtn--select tox-tbtn--disabled");
+            $button.attr("aria-disabled", "true");
+        }
+
         let uploadedFilesCounterToolbar = $('span:contains(' + uploadedFilesCounterToolbarName + ')');
         let newTextForCounter = uploadedFilesCounterToolbarName + ': ' + counterValue;
         uploadedFilesCounterToolbar.text(newTextForCounter);
@@ -127,19 +142,17 @@
             editor.ui.registry.addButton('dfiles',
             {
                 text: 'Удалить вложения',
+                disabled: true,
                 onAction: function (_)
                 {
                     if (confirm("Удалить все вложения?"))
                     {
-                        alert(uploadedFileCounter);
-
                         $('#tiny-mce-file-container-attachments').children().each(function ()
                         {
                             this.remove();
                             uploadedFileCounter--;
                         });
 
-                        alert(uploadedFileCounter);
                         UpdateTextForToolbarAttachmentCounter(uploadedFileCounter);
                     }  
                 }
