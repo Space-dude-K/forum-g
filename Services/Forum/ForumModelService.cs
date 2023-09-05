@@ -91,7 +91,8 @@ namespace Services.Forum
 
             var topics = await _repositoryApiManager.TopicApis.GetForumTopics(categoryId, forumId);
             forumHomeViewModel.TopicId = topicId;
-            forumHomeViewModel.SubTopicCreatedAt = topics.FirstOrDefault(t => t.Id == topicId).CreatedAt.Value.ToShortDateString();
+            forumHomeViewModel.SubTopicCreatedAt = 
+                topics.FirstOrDefault(t => t.Id == topicId).CreatedAt.Value.ToShortDateString();
             forumHomeViewModel.TotalPosts = await _repositoryApiManager.PostApis.GetTopicPostCount(topicId);
 
             // Default paging to latest topic message.
