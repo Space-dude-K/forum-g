@@ -4,15 +4,35 @@ using Interfaces;
 using Interfaces.Forum;
 using Interfaces.Forum.API;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Text;
 
-namespace Repository.API.Forum
+namespace Repository.API.File
 {
     public class ForumFileApiRepository : RepositoryApi<ForumFile, ILoggerManager, IHttpForumService>, IForumFileApiRepository
     {
         public ForumFileApiRepository(ILoggerManager logger, IHttpForumService httpClient) : base(logger, httpClient)
         {
 
+        }
+        public async Task<List<ForumFileDto>> GetForumFilesByUserAndPostId(int forumUserId, int postId)
+        {
+            List<ForumFileDto> forumFilesDtoFromDb = new();
+
+            string uri = "api/file/" + forumUserId.ToString() + "/" + postId.ToString();
+            var response = await _httpForumService.Client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var rawData = await response.Content.ReadAsStringAsync();
+                forumFilesDtoFromDb = JsonConvert.DeserializeObject<IEnumerable<ForumFileDto>>(rawData).ToList();
+            }
+            else
+            {
+                _logger.LogError($"Missing forum files for user id: {forumUserId} and postId: {postId}");
+            }
+
+            return forumFilesDtoFromDb;
         }
         public async Task<ForumFileDto> GetForumFileByUserId(int forumUserId)
         {
@@ -28,7 +48,7 @@ namespace Repository.API.Forum
             }
             else
             {
-                _logger.LogInfo($"Missing forum file for user id: {forumUserId}");
+                _logger.LogError($"Missing forum file for user id: {forumUserId}");
             }
 
             return forumFileDtoFromDb;

@@ -2,6 +2,7 @@
 using Entities.Models.File;
 using Interfaces.File;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace Repository.File
 {
@@ -14,6 +15,12 @@ namespace Repository.File
         {
             return await FindByCondition(c => c.ForumUserId.Equals(forumUserId), trackChanges)
                 .SingleOrDefaultAsync();
+        }
+        public async Task<IEnumerable<ForumFile>> GetFilesAsync(int forumUserId, int postId, bool trackChanges)
+        {
+            return await FindByCondition(c => c.ForumUserId.Equals(forumUserId) 
+            && c.ForumPostId.Equals(postId), trackChanges)
+                .ToListAsync();
         }
         public async Task<ForumFile> GetFileAsyncById(int id, bool trackChanges)
         {

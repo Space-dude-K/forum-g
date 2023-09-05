@@ -2,6 +2,7 @@
 using Interfaces;
 using Repository.API.Forum;
 using Interfaces.Forum.API;
+using Repository.API.File;
 
 namespace Repository
 {

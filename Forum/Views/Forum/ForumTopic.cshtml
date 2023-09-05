@@ -11,7 +11,7 @@
     {
         let uploadedFilesCounterToolbarName = 'Файлов к загрузке';
         let deleteFilesToolbarName = 'Удалить вложения';
-        //let uploadedFilesCounterToolbar = $('span:contains(' + deleteFilesToolbarName + ')').parent();
+
         var $button = $('span:contains(' + deleteFilesToolbarName + ')').closest('button');
 
         if (counterValue > 0)
@@ -208,20 +208,8 @@
                 var formData = new FormData();
                 $("#tiny-mce-file-container-attachments").find("input[type=file]").each(function (index, field)
                 {
-                    for (var i = 0; i < field.files.length; i++)
-                    {
-                        //alert(field.files[i].filename);
-                        //var d = new Date().getTime();
-                        //field.files[i].filename = field.files[i].filename + "_" + i + "_" + d;
-                        //var newFileName = field.files[i].filename + "_" + i + "_" + d;
+                    formData.append("files", field.files[0]);
 
-                        //alert(newFileName);
-
-                        formData.append("files", field.files[i]);
-                        //field.files[i].filename = '';
-                    }
-
-                    //this.val('');
                     this.remove();
                     uploadedFileCounter--;
                 });
@@ -262,9 +250,9 @@
                                 }
                             })
                     })
-                    .done(function (resp)
+                    .done(function ()
                     {
-                        //handle final response here
+                        console.log('Post with attachments -> completed.');
                     })
             }
             else
@@ -572,13 +560,24 @@
                     </div>
                     
                 </div>
-                <div class="forum-post-footer row">
-                    <div class="col text-center"></div>
+
+                <div class="forum-post-footer-attachments row border border-top-0">
+                    @if (@post.ForumFiles.Count > 0)
+                    {
+                        <div id="post-attachments" class="text-center text-center">
+                            <h6>Вложения:</h6>
+                            @foreach (var file in post.ForumFiles)
+                            {
+                                <a class="link-primary m-2" href="@Url.Content(@file.Path)">@file.Name</a>
+                            }
+                        </div>
+                    }
+                    
                 </div>
             </div>
         </div>
     }
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-lg-12">
             <div class="wrapper wrapper-content animated fadeInRight">
                 <div class="ibox-content m-b-sm justify-content-md-center text-center" id="text-area-tiny-mce-forum-post-container">

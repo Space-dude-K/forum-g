@@ -11,6 +11,7 @@ namespace Interfaces.Forum.API
     {
         Task<bool> CreateForumFile(ForumFileDto file);
         Task<ForumFileDto> GetForumFileByUserId(int forumUserId);
+        Task<List<ForumFileDto>> GetForumFilesByUserAndPostId(int forumUserId, int postId);
         Task<bool> UpdateForumFile(int forumUserId, ForumFileDto forumFileDto);
     }
 }

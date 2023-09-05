@@ -46,7 +46,7 @@ namespace Forum.Controllers
                 {
                     var fileExt = Path.GetExtension(file.FileName);
                     var fileName = Path.GetFileNameWithoutExtension(file.FileName) 
-                        + DateTime.Now.ToString("_dd-MM-yyyy-HH-mm-ss") + fileExt;
+                        + DateTime.Now.ToString("_dd-MM-yyyy-HH-mm-ss.fff") + fileExt;
                     string filePath = "/attachments/" + User.Identity.Name + "/" + fileName;
 
                     ForumFile forumFile = new() { Name = fileName, Path = filePath, ForumUserId = userId, ForumPostId = createdPostId };

@@ -1,5 +1,7 @@
 ﻿using Entities.Models.Forum;
 using Entities.DTO.UserDto;
+using Entities.Models.File;
+using Entities.DTO.FileDto;
 
 namespace Entities.DTO.ForumDto
 {
@@ -14,5 +16,6 @@ namespace Entities.DTO.ForumDto
         public int ForumTopicId { get; set; }
         public int ForumUserId { get; set; }
         public ForumUserDto ForumUser { get; set; }
+        public List<ForumFileDto> ForumFiles { get; set; }
     }
 }
